@@ -10,4 +10,8 @@ public class DateTime extends Timestamp {
 		super(time);
 	}
 
+	public static DateTime Now() {
+		return new DateTime(System.currentTimeMillis());
+	}
+
 }

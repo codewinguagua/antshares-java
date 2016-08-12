@@ -83,7 +83,7 @@ public class JObject
         return properties.containsKey(key);
     }
 
-    public static JObject Parse(Reader reader)
+    public static JObject Parse(Reader reader) throws IOException
     {
     // TODO
     	return new JObject();
@@ -127,13 +127,13 @@ public class JObject
 //        return obj;
     }
 
-    public static JObject Parse(String value)
+    public static JObject Parse(String value) throws IOException
     {
     	StringReader reader = new StringReader(value);
         return Parse(reader);
     }
 
-    private static JObject ParseNull(Reader reader) throws IOException
+    static JObject ParseNull(Reader reader) throws IOException
     {
         char firstChar = (char)reader.read();
         if (firstChar == 'n')
