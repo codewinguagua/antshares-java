@@ -1,13 +1,11 @@
 package AntShares.Network;
 
-import java.io.Reader;
-import java.io.Writer;
-
 import AntShares.UInt160;
 import AntShares.UInt256;
+import AntShares.Core.ISignable;
 import AntShares.Core.Scripts.Script;
 
-public abstract class Inventory // TODO : ISignable
+public abstract class Inventory implements ISignable
 {
     //[NonSerialized]
     private UInt256 _hash = null;
@@ -27,10 +25,6 @@ public abstract class Inventory // TODO : ISignable
 
     public abstract InventoryType getInventoryType();
 
-    public abstract void Deserialize(Reader reader);
-
-    public abstract void DeserializeUnsigned(Reader reader);
-
     // TODO
 //    protected virtual byte[] GetHashData()
 //    {
@@ -44,10 +38,6 @@ public abstract class Inventory // TODO : ISignable
 //    }
 
     public abstract UInt160[] GetScriptHashesForVerifying();
-
-    public abstract void Serialize(Writer writer);
-
-    public abstract void SerializeUnsigned(Writer writer);
 
     public abstract boolean Verify();
 }

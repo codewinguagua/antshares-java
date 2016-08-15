@@ -1,15 +1,18 @@
 package AntShares.Core;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import AntShares.Fixed8;
 import AntShares.UInt160;
 import AntShares.UInt256;
+import AntShares.Core.Scripts.Script;
 
 /**
  *  订单
  */
 public class Order implements ISignable
 {
-	private static final long serialVersionUID = -2997974583041202362L;
 	/**
      *  资产编号
      */
@@ -42,41 +45,43 @@ public class Order implements ISignable
 //    /**
 //     *  用于验证该订单的脚本列表
 //     */
-//    public Script[] Scripts;
-//
-//    Script[] ISignable.Scripts
-//    {
-//        get
-//        {
-//            return Scripts;
-//        }
-//        set
-//        {
-//            Scripts = value;
-//        }
-//    }
-//
-//    void ISerializable.Deserialize(BinaryReader reader)
-//    {
+    public Script[] scripts;
+
+    @Override
+    public Script[] getScripts()
+    {
+    	return scripts;
+    }
+    
+    @Override
+    public void setScripts(Script[] scrpts)
+    {
+    	scripts = scrpts;
+    }
+
+    @Override
+    public void Deserialize(InputStream reader)
+    {
 //        ((ISignable)this).DeserializeUnsigned(reader);
 //        Scripts = reader.ReadSerializableArray<Script>();
-//    }
-//
+    }
+
 //    internal void DeserializeInTransaction(BinaryReader reader, AgencyTransaction tx)
 //    {
 //        DeserializeUnsignedInternal(reader, tx.AssetId, tx.ValueAssetId, tx.Agent);
 //        Scripts = reader.ReadSerializableArray<Script>();
 //    }
-//
-//    void ISignable.DeserializeUnsigned(BinaryReader reader)
-//    {
+
+    @Override
+    public void DeserializeUnsigned(InputStream reader)
+    {
 //        UInt256 asset_id = reader.ReadSerializable<UInt256>();
 //        UInt256 value_asset_id = reader.ReadSerializable<UInt256>();
 //        if (asset_id == value_asset_id) throw new FormatException();
 //        UInt160 agent = reader.ReadSerializable<UInt160>();
 //        DeserializeUnsignedInternal(reader, asset_id, value_asset_id, agent);
-//    }
-//
+    }
+
 //    private void DeserializeUnsignedInternal(BinaryReader reader, UInt256 asset_id, UInt256 value_asset_id, UInt160 agent)
 //    {
 //        AssetId = asset_id;
@@ -112,13 +117,14 @@ public class Order implements ISignable
 //        return hashes.OrderBy(p => p).ToArray();
     	return null;
     }
-//
-//    void ISerializable.Serialize(BinaryWriter writer)
-//    {
+
+    @Override
+    public void Serialize(OutputStream writer)
+    {
 //        ((ISignable)this).SerializeUnsigned(writer);
 //        writer.Write(Scripts);
-//    }
-//
+    }
+
 //    internal void SerializeInTransaction(BinaryWriter writer)
 //    {
 //        writer.Write(Amount);
@@ -128,8 +134,9 @@ public class Order implements ISignable
 //        writer.Write(Scripts);
 //    }
 //
-//    void ISignable.SerializeUnsigned(BinaryWriter writer)
-//    {
+    @Override
+    public void SerializeUnsigned(OutputStream writer)
+    {
 //        writer.Write(AssetId);
 //        writer.Write(ValueAssetId);
 //        writer.Write(Agent);
@@ -137,5 +144,5 @@ public class Order implements ISignable
 //        writer.Write(Price);
 //        writer.Write(Client);
 //        writer.Write(Inputs);
-//    }
+    }
 }

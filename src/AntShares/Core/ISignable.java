@@ -1,30 +1,35 @@
 package AntShares.Core;
 
-import java.io.Serializable;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import AntShares.UInt160;
+import AntShares.Core.Scripts.Script;
+import AntShares.IO.ISerializable;
 
 /**
  *  为需要签名的数据提供一个接口
  */
-public interface ISignable extends Serializable
+public interface ISignable extends ISerializable
 {
     /**
      *  用于验证该对象的脚本列表
      */
-    //Script[] Scripts { get; set; }
+    Script[] getScripts();
+
+    void setScripts(Script[] scripts);
 
     /**
      *  反序列化未签名的数据
      *  <param name="reader">数据来源</param>
      */
-    //void DeserializeUnsigned(BinaryReader reader);
+    void DeserializeUnsigned(InputStream reader);
 
     /**
      *  序列化未签名的数据
      *  <param name="writer">存放序列化后的结果</param>
      */
-    //void SerializeUnsigned(BinaryWriter writer);
+    void SerializeUnsigned(OutputStream writer);
 
     /**
      *  获得需要校验的脚本Hash值

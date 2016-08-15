@@ -1,0 +1,110 @@
+package AntShares.Network.Payloads;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import AntShares.UInt160;
+import AntShares.UInt256;
+import AntShares.Core.ISignable;
+import AntShares.Core.Scripts.Script;
+import AntShares.Network.Inventory;
+import AntShares.Network.InventoryType;
+
+public class ConsensusPayload extends Inventory
+{
+    public int Version;
+    public UInt256 PrevHash;
+    public int Height;
+    public short MinerIndex;
+    public int Timestamp;
+    public byte[] Data;
+    public AntShares.Core.Scripts.Script script;
+
+    @Override
+    public InventoryType getInventoryType() {
+    	return InventoryType.Consensus;
+    }
+
+    @Override
+    public Script[] getScripts()
+    {
+    	return new Script[] { script }; 
+    }
+    
+    @Override
+    public void setScripts(Script[] scripts)
+    {
+        if (scripts.length != 1) throw new IllegalArgumentException();
+        script = scripts[0];
+    }
+
+    @Override
+    public void Deserialize(InputStream reader)
+    {
+        ((ISignable)this).DeserializeUnsigned(reader);
+        // TODO if (reader.read() != 1) throw new FormatException();
+        // TODO
+        //Script = reader.ReadSerializable<Script>();
+    }
+
+    @Override
+    public void DeserializeUnsigned(InputStream reader)
+    {
+    	// TODO
+//        Version = reader.ReadUInt32();
+//        PrevHash = reader.ReadSerializable<UInt256>();
+//        Height = reader.ReadUInt32();
+//        MinerIndex = reader.ReadUInt16();
+//        Timestamp = reader.ReadUInt32();
+//        Data = reader.ReadVarBytes();
+    }
+
+    @Override
+    public UInt160[] GetScriptHashesForVerifying()
+    {
+    	// TODO
+//        if (Blockchain.Default == null)
+//            throw new InvalidOperationException();
+//        if (PrevHash != Blockchain.Default.CurrentBlockHash)
+//            throw new InvalidOperationException();
+//        ECPoint[] miners = Blockchain.Default.GetMiners();
+//        if (miners.Length <= MinerIndex)
+//            throw new InvalidOperationException();
+//        return new[] { SignatureContract.Create(miners[MinerIndex]).ScriptHash };
+    	return new UInt160[1];
+    }
+
+    @Override
+    public void Serialize(OutputStream writer)
+    {
+        ((ISignable)this).SerializeUnsigned(writer);
+        // TODO writer.write((byte)1); // TODO writer.Write(Script);
+    }
+
+    @Override
+    public void SerializeUnsigned(OutputStream writer)
+    {
+    	// TODO
+//        writer.Write(Version);
+//        writer.Write(PrevHash);
+//        writer.Write(Height);
+//        writer.Write(MinerIndex);
+//        writer.Write(Timestamp);
+//        writer.WriteVarBytes(Data);
+    }
+
+    @Override
+    public boolean Verify()
+    {
+    	// TODO
+//        if (Blockchain.Default == null) return false;
+//        if (!Blockchain.Default.Ability.HasFlag(BlockchainAbility.TransactionIndexes) || !Blockchain.Default.Ability.HasFlag(BlockchainAbility.UnspentIndexes))
+//            return false;
+//        if (PrevHash != Blockchain.Default.CurrentBlockHash)
+//            return false;
+//        if (Height != Blockchain.Default.Height + 1)
+//            return false;
+//        return this.VerifySignature();
+    	return false;
+    }
+
+}

@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 import AntShares.IO.ISerializable;
 
-class AddrPayload implements ISerializable
+public class AddrPayload implements ISerializable
 {
 	public Object /* TODO NetworkAddressWithTime*/[] AddressList;
 
