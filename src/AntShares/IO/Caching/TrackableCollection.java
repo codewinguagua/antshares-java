@@ -1,6 +1,6 @@
 package AntShares.IO.Caching;
 
-class TrackableCollection<TKey, TItem> 
+public class TrackableCollection<TKey, TItem> 
 	// TODO extends KeyedCollection<TKey, ? extends ITrackable<TKey>>
 {
     public TrackableCollection() { }

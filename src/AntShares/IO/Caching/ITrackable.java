@@ -1,6 +1,6 @@
 package AntShares.IO.Caching;
 
-interface ITrackable<TKey>
+public interface ITrackable<TKey>
 {
     TKey getKey();
     TrackState getTrackState();
