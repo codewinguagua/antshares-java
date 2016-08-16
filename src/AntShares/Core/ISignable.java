@@ -5,12 +5,12 @@ import java.io.OutputStream;
 
 import AntShares.UInt160;
 import AntShares.Core.Scripts.Script;
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
 /**
  *  为需要签名的数据提供一个接口
  */
-public interface ISignable extends ISerializable
+public interface ISignable extends Serializable
 {
     /**
      *  用于验证该对象的脚本列表

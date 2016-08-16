@@ -2,8 +2,6 @@ package AntShares.IO.Json;
 
 import java.io.Reader;
 
-import AntShares.DateTime;
-
 public class JNumber extends JObject
 {
     private double value;
@@ -102,10 +100,4 @@ public class JNumber extends JObject
         return AsString();
     }
 
-    public DateTime ToTimestamp()
-    {
-        if (value < 0 || value > Long.MAX_VALUE)
-            throw new RuntimeException("InvalidCast");
-        return new DateTime((long) value);
-    }
 }

@@ -1,35 +1,34 @@
 package AntShares;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.math.BigDecimal;
 
 /**
  * 精确到10^-8的64位定点数，将舍入误差降到最低。
  * 通过控制乘数的精度，可以完全消除舍入误差。
  */
-public class Fixed8 implements Comparable<Fixed8>, Serializable // TODO IFormattable
+public class Fixed8 implements Comparable<Fixed8>, Serializable
 {
 	private static final long serialVersionUID = 6881908032750414861L;
 	private static final long D = 100000000L;
     long value;
 
-    public static final Fixed8 MaxValue = new Fixed8(Long.MAX_VALUE);
+    public static final Fixed8 MAX_VALUE = new Fixed8(Long.MAX_VALUE);
 
-    public static final Fixed8 MinValue = new Fixed8(Long.MIN_VALUE);
+    public static final Fixed8 MIN_VALUE = new Fixed8(Long.MIN_VALUE);
 
-    public static final Fixed8 One = new Fixed8(D);
+    public static final Fixed8 ONE = new Fixed8(D);
 
-    public static final Fixed8 Satoshi = new Fixed8(1);
+    public static final Fixed8 SATOSHI = new Fixed8(1);
 
-    public static final Fixed8 Zero = new Fixed8(0);
+    public static final Fixed8 ZERO = new Fixed8(0);
 
     public Fixed8(long data)
     {
         this.value = data;
     }
 
-    public Fixed8 Abs()
+    public Fixed8 abs()
     {
         if (value >= 0) return this;
         return new Fixed8(-value);
@@ -48,15 +47,12 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable // TODO IFormatt
         return value == ((Fixed8) obj).value;
     }
 
-    public static Fixed8 FromDecimal(double val)
+    public static Fixed8 fromDecimal(BigDecimal val)
     {
-        val *= D;
-        if (val < Long.MIN_VALUE || val > Long.MAX_VALUE)
-            throw new OverflowException();
-        return new Fixed8((long)val);
+        return new Fixed8(val.multiply(new BigDecimal(D)).longValueExact());
     }
 
-    public long GetData() { return value; }
+    public long getData() { return value; }
 
     @Override
     public int hashCode()
@@ -64,7 +60,7 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable // TODO IFormatt
         return Long.valueOf(value).hashCode();
     }
 
-    public static Fixed8 Max(Fixed8 first, Fixed8[] others)
+    public static Fixed8 max(Fixed8 first, Fixed8 ...others)
     {
         for (Fixed8 other : others)
         {
@@ -74,7 +70,7 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable // TODO IFormatt
         return first;
     }
 
-    public static Fixed8 Min(Fixed8 first, Fixed8[] others)
+    public static Fixed8 min(Fixed8 first, Fixed8 ...others)
     {
         for (Fixed8 other : others)
         {
@@ -84,85 +80,36 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable // TODO IFormatt
         return first;
     }
 
-    public static Fixed8 Parse(String s)
+    public static Fixed8 parse(String s)
     {
-        return FromDecimal(Double.parseDouble(s));
+        return fromDecimal(new BigDecimal(s));
     }
 
     @Override
     public String toString()
     {
-        return Double.valueOf(decimal()).toString();
+        BigDecimal v = new BigDecimal(value);
+        v = v.divide(new BigDecimal(D), 8, BigDecimal.ROUND_UNNECESSARY);
+        return v.toPlainString();
     }
 
-    public String toString(String format)
+    public static boolean tryParse(String s, Fixed8 result)
     {
-    	NumberFormat nf = new DecimalFormat(format);
-        return nf.format(decimal());
-    }
-
-// TODO
-//    public string ToString(string format, IFormatProvider formatProvider)
-//    {
-//        return ((decimal)this).ToString(format, formatProvider);
-//    }
-
-    public static boolean TryParse(String s, Fixed8 result)
-    {
-    	double d;
-    	try {
-    		d = Double.parseDouble(s);
-    	} catch (NumberFormatException nfe) {
+    	try
+    	{
+    		BigDecimal val = new BigDecimal(s);
+    		result.value = val.longValueExact();
+    		return true;
+    	}
+    	catch(NumberFormatException | ArithmeticException ex)
+    	{
     		return false;
     	}
-        d *= D;
-        if (d < Long.MIN_VALUE || d > Long.MAX_VALUE)
-        {
-            return false;
-        }
-        result = new Fixed8((long)d);
-        return true;
-    }
-
-    // TODO Use double to replace decimal. It might not work.
-    public double decimal()
-    {
-        return value / (double)D;
     }
 
     public long toLong()
     {
         return value / D;
-    }
-
-    public static boolean isEqual(Fixed8 x, Fixed8 y)
-    {
-        return x.equals(y);
-    }
-
-    public static boolean isNotEqual(Fixed8 x, Fixed8 y)
-    {
-        return !x.equals(y);
-    }
-
-    public static boolean isGreaterThan(Fixed8 x, Fixed8 y)
-    {
-        return x.compareTo(y) > 0;
-    }
-
-    public static boolean isLessThan(Fixed8 x, Fixed8 y)
-    {
-        return x.compareTo(y) < 0;
-    }
-
-    public static boolean isGreaterOrEqual(Fixed8 x, Fixed8 y)
-    {
-        return x.compareTo(y) >= 0;
-    }
-
-    public static boolean isLessOrEqual(Fixed8 x, Fixed8 y)
-    {
-        return x.compareTo(y) <= 0;
     }
 
 //TODO
@@ -193,35 +140,30 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable // TODO IFormatt
 //        return x;
 //    }
 
-    public static Fixed8 Multiply(Fixed8 x, long y)
+    public static Fixed8 multiply(Fixed8 x, long y)
     {
-        x.value *= y;
-        return x;
+        return new Fixed8(x.value * y);
     }
 
-    public static Fixed8 Divide(Fixed8 x, long y)
+    public static Fixed8 divide(Fixed8 x, long y)
     {
-        x.value /= y;
-        return x;
+        return new Fixed8(x.value / y);
     }
 
-    public static Fixed8 Add(Fixed8 x, Fixed8 y)
+    public static Fixed8 add(Fixed8 x, Fixed8 y)
     {
     	// TODO checked(...);
-        x.value = x.value + y.value;
-        return x;
+        return new Fixed8(x.value + y.value);
     }
 
-    public static Fixed8 Subtract(Fixed8 x, Fixed8 y)
+    public static Fixed8 subtract(Fixed8 x, Fixed8 y)
     {
     	// TODO checked(...);
-        x.value = x.value - y.value;
-        return x;
+    	return new Fixed8(x.value - y.value);
     }
 
-    public static Fixed8 Minus(Fixed8 value)
+    public static Fixed8 minus(Fixed8 value)
     {
-        value.value = -value.value;
-        return value;
+    	return new Fixed8(-value.value);
     }
 }

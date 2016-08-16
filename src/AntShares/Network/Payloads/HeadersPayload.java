@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import AntShares.Core.Block;
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
-public class HeadersPayload implements ISerializable
+public class HeadersPayload implements Serializable
 {
     public Block[] Headers;
     

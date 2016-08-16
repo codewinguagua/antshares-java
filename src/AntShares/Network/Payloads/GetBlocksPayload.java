@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import AntShares.UInt256;
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
-public class GetBlocksPayload implements ISerializable
+public class GetBlocksPayload implements Serializable
 {
 	public UInt256[] HashStart;
     public UInt256 HashStop;

@@ -4,10 +4,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import AntShares.UInt256;
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 import AntShares.Network.InventoryType;
 
-public class InvPayload implements ISerializable
+public class InvPayload implements Serializable
 {
     public InventoryVector[] Inventories;
 

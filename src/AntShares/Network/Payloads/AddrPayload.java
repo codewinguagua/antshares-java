@@ -3,9 +3,9 @@ package AntShares.Network.Payloads;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
-public class AddrPayload implements ISerializable
+public class AddrPayload implements Serializable
 {
 	public Object /* TODO NetworkAddressWithTime*/[] AddressList;
 

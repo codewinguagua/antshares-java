@@ -6,9 +6,9 @@ import java.io.OutputStream;
 import java.math.BigInteger;
 
 import AntShares.FormatException;
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
-public class ECPoint implements Comparable<ECPoint>, ISerializable
+public class ECPoint implements Comparable<ECPoint>, Serializable
 {
     ECFieldElement X, Y;
     ECCurve Curve;

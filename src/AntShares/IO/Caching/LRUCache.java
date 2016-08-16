@@ -1,6 +1,6 @@
 package AntShares.IO.Caching;
 
-import AntShares.DateTime;
+import java.util.Date;
 
 abstract class LRUCache<TKey, TValue> extends Cache<TKey, TValue>
 {
@@ -12,6 +12,6 @@ abstract class LRUCache<TKey, TValue> extends Cache<TKey, TValue>
     @Override
     protected void OnAccess(CacheItem item)
     {
-        item.Time = DateTime.Now();
+        item.Time = new Date();
     }
 }

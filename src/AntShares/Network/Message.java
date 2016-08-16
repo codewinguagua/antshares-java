@@ -3,9 +3,9 @@ package AntShares.Network;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
-class Message implements ISerializable
+class Message implements Serializable
 {
 //#if TESTNET
 //    public const uint Magic = 0x74746e41;

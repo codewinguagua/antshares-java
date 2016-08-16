@@ -3,9 +3,9 @@ package AntShares.Network.Payloads;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
-public class VersionPayload implements ISerializable
+public class VersionPayload implements Serializable
 {
     public int Version;
     public long Services;

@@ -1,10 +1,7 @@
 package AntShares.IO.Caching;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import AntShares.DateTime;
 import AntShares.KeyNotFoundException;
 
 abstract class Cache<TKey, TValue> implements Collection<TValue> // TODO, IDisposable
@@ -13,13 +10,13 @@ abstract class Cache<TKey, TValue> implements Collection<TValue> // TODO, IDispo
     {
         public TKey Key;
         public TValue Value;
-        public DateTime Time;
+        public Date Time;
 
         public CacheItem(TKey key, TValue value)
         {
             this.Key = key;
             this.Value = value;
-            this.Time = DateTime.Now();
+            this.Time = new Date();
         }
     }
 

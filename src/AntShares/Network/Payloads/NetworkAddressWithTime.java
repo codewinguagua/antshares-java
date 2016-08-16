@@ -3,9 +3,9 @@ package AntShares.Network.Payloads;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
-public class NetworkAddressWithTime implements ISerializable
+public class NetworkAddressWithTime implements Serializable
 {
     public static final long NODE_NETWORK = 1;
 

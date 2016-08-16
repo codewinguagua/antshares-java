@@ -1,7 +1,7 @@
 package AntShares;
 
 import java.math.BigInteger;
-import java.util.Random;
+import java.util.*;
 
 public class Helper
 {
@@ -132,14 +132,14 @@ public class Helper
 	 * @param timestamp in seconds
 	 * @return
 	 */
-	public DateTime ToDateTime(int timestamp)
+	public static Date ToDateTime(int timestamp)
 	{
-	    return new DateTime(timestamp * 1000L);
+	    return new Date(timestamp * 1000L);
 	}
 	
-	public static DateTime ToDateTime(long timestamp)
+	public static Date ToDateTime(long timestamp)
 	{
-	    return new DateTime(timestamp * 1000L);
+	    return new Date(timestamp * 1000L);
 	}
 	
 	public static String ToHexString(Iterable<Byte> value)
@@ -153,7 +153,7 @@ public class Helper
         return sb.toString();
     }
 
-    public static int ToTimestamp(DateTime time)
+    public static int ToTimestamp(Date time)
     {
         return (int) (time.getTime() / 1000);
     }
