@@ -1,13 +1,9 @@
 package AntShares.Network.Payloads;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import AntShares.UInt160;
-import AntShares.UInt256;
-import AntShares.Core.ISignable;
+import AntShares.*;
 import AntShares.Core.Scripts.Script;
-import AntShares.Network.Inventory;
-import AntShares.Network.InventoryType;
+import AntShares.IO.*;
+import AntShares.Network.*;
 
 public class ConsensusPayload extends Inventory
 {
@@ -29,25 +25,18 @@ public class ConsensusPayload extends Inventory
     {
         return new Script[] { script }; 
     }
-    
-    @Override
-    public void setScripts(Script[] scripts)
-    {
-        if (scripts.length != 1) throw new IllegalArgumentException();
-        script = scripts[0];
-    }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
-        ((ISignable)this).DeserializeUnsigned(reader);
+        deserializeUnsigned(reader);
         // TODO if (reader.read() != 1) throw new FormatException();
         // TODO
         //Script = reader.ReadSerializable<Script>();
     }
 
     @Override
-    public void DeserializeUnsigned(InputStream reader)
+    public void deserializeUnsigned(BinaryReader reader)
     {
         // TODO
 //        Version = reader.ReadUInt32();
@@ -59,7 +48,7 @@ public class ConsensusPayload extends Inventory
     }
 
     @Override
-    public UInt160[] GetScriptHashesForVerifying()
+    public UInt160[] getScriptHashesForVerifying()
     {
         // TODO
 //        if (Blockchain.Default == null)
@@ -74,14 +63,14 @@ public class ConsensusPayload extends Inventory
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
-        ((ISignable)this).SerializeUnsigned(writer);
+        serializeUnsigned(writer);
         // TODO writer.write((byte)1); // TODO writer.Write(Script);
     }
 
     @Override
-    public void SerializeUnsigned(OutputStream writer)
+    public void serializeUnsigned(BinaryWriter writer)
     {
         // TODO
 //        writer.Write(Version);

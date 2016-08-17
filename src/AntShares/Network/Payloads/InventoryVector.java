@@ -1,10 +1,7 @@
 package AntShares.Network.Payloads;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import AntShares.UInt256;
-import AntShares.IO.Serializable;
+import AntShares.IO.*;
 import AntShares.Network.InventoryType;
 
 public class InventoryVector implements Serializable
@@ -13,7 +10,7 @@ public class InventoryVector implements Serializable
     public UInt256 Hash;
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
         // TODO
 //        Type = (InventoryType)reader.ReadUInt32();
@@ -37,7 +34,7 @@ public class InventoryVector implements Serializable
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
 //        writer.Write((uint)Type);
 //        writer.Write(Hash);

@@ -1,9 +1,6 @@
 package AntShares.Network.Payloads;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import AntShares.IO.Serializable;
+import AntShares.IO.*;
 
 public class VersionPayload implements Serializable
 {
@@ -33,7 +30,7 @@ public class VersionPayload implements Serializable
     }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
         // TODO
 //        Version = reader.ReadUInt32();
@@ -46,7 +43,7 @@ public class VersionPayload implements Serializable
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
         // TODO
 //        writer.Write(Version);

@@ -1,9 +1,6 @@
 package AntShares.Network;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import AntShares.IO.Serializable;
+import AntShares.IO.*;
 
 class Message implements Serializable
 {
@@ -13,7 +10,7 @@ class Message implements Serializable
 //    public const uint Magic = 0x00746e41;
 //#endif
     // TODO
-    public static final int Magic = 0x00746e41;
+    public static final int Magic = 0x74746e41;
     
     public String Command;
     public int Checksum;
@@ -38,7 +35,7 @@ class Message implements Serializable
 
     // TODO
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
 //        if (reader.ReadUInt32() != Magic)
 //            throw new FormatException();
@@ -61,7 +58,7 @@ class Message implements Serializable
 
     // TODO
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
 //        writer.Write(Magic);
 //        writer.WriteFixedString(Command, 12);

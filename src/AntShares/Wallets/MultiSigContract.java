@@ -1,13 +1,12 @@
 package AntShares.Wallets;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.Arrays;
 
 import AntShares.UInt160;
 import AntShares.Core.Scripts.ScriptBuilder;
 import AntShares.Cryptography.ECC.ECPoint;
+import AntShares.IO.*;
 
 /**
  *  多方签名合约，该合约需要指定的N个账户中至少M个账户签名后才能生效
@@ -72,7 +71,7 @@ public class MultiSigContract extends Contract
      *  反序列化
      *  <param name="reader">反序列化的数据来源</param>
      */
-    @Override public void Deserialize(InputStream reader)
+    @Override public void deserialize(BinaryReader reader)
     {
         // TODO
 //        m = (int)reader.ReadVarInt(Integer.MAX_VALUE);
@@ -89,7 +88,7 @@ public class MultiSigContract extends Contract
      *  序列化
      *  <param name="writer">存放序列化后的结果</param>
      */
-    @Override public void Serialize(OutputStream writer)
+    @Override public void serialize(BinaryWriter writer)
     {
 //        writer.WriteVarInt(m);
 //        writer.Write(publicKeys);

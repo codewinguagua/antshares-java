@@ -1,9 +1,7 @@
 package AntShares.Wallets;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import AntShares.UInt160;
+import AntShares.IO.*;
 
 public class CustomContract extends Contract
 {
@@ -26,7 +24,7 @@ public class CustomContract extends Contract
     }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
         // TODO
         //parameterList = reader.ReadVarBytes().Cast<ContractParameterType>().ToArray();
@@ -35,7 +33,7 @@ public class CustomContract extends Contract
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
         // TODO
 //        writer.WriteVarBytes(parameterList.Cast<byte>().ToArray());

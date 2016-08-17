@@ -1,9 +1,6 @@
 package AntShares.Network.Payloads;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import AntShares.IO.Serializable;
+import AntShares.IO.*;
 
 public class AddrPayload implements Serializable
 {
@@ -20,14 +17,14 @@ public class AddrPayload implements Serializable
     }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
         // TODO
         //this.AddressList = reader.ReadSerializableArray<NetworkAddressWithTime>();
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
         // TODO
         //writer.Write(AddressList);

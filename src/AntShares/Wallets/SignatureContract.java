@@ -1,11 +1,8 @@
 package AntShares.Wallets;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import AntShares.Core.Scripts.ScriptBuilder;
-import AntShares.Core.Scripts.ScriptOp;
+import AntShares.Core.Scripts.*;
 import AntShares.Cryptography.ECC.ECPoint;
+import AntShares.IO.*;
 
 /**
  *  简单签名合约，该合约只需要一个指定账户的签名即可生效
@@ -57,7 +54,7 @@ public class SignatureContract extends Contract
      *  反序列化
      *  <param name="reader">反序列化的数据来源</param>
      */
-    @Override public void Deserialize(InputStream reader)
+    @Override public void deserialize(BinaryReader reader)
     {
         // TODO
         //publicKey = ECPoint.DeserializeFrom(reader, ECCurve.Secp256r1);
@@ -69,10 +66,10 @@ public class SignatureContract extends Contract
      *  序列化
      *  <param name="writer">存放序列化后的结果</param>
      */
-    @Override public void Serialize(OutputStream writer)
+    @Override public void serialize(BinaryWriter writer)
     {
         // TODO
         //writer.Write(publicKey);
-        publicKey.Serialize(writer);
+        publicKey.serialize(writer);
     }
 }

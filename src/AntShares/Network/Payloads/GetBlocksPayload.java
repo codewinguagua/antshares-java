@@ -1,10 +1,7 @@
 package AntShares.Network.Payloads;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import AntShares.UInt256;
-import AntShares.IO.Serializable;
+import AntShares.IO.*;
 
 public class GetBlocksPayload implements Serializable
 {
@@ -22,14 +19,14 @@ public class GetBlocksPayload implements Serializable
     }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
 //        HashStart = reader.ReadSerializableArray<UInt256>();
 //        HashStop = reader.ReadSerializable<UInt256>();
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
 //        writer.Write(HashStart);
 //        writer.Write(HashStop);

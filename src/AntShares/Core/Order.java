@@ -1,17 +1,13 @@
 package AntShares.Core;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import AntShares.Fixed8;
-import AntShares.UInt160;
-import AntShares.UInt256;
+import AntShares.*;
 import AntShares.Core.Scripts.Script;
+import AntShares.IO.*;
 
 /**
  *  ¶©µ¥
  */
-public class Order implements ISignable
+public class Order implements Signable
 {
     /**
      *  ×Ê²ú±àºÅ
@@ -52,18 +48,12 @@ public class Order implements ISignable
     {
         return scripts;
     }
-    
-    @Override
-    public void setScripts(Script[] scrpts)
-    {
-        scripts = scrpts;
-    }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
-//        ((ISignable)this).DeserializeUnsigned(reader);
-//        Scripts = reader.ReadSerializableArray<Script>();
+        //deserializeUnsigned(reader);
+        //Scripts = reader.ReadSerializableArray<Script>();
     }
 
 //    internal void DeserializeInTransaction(BinaryReader reader, AgencyTransaction tx)
@@ -73,7 +63,7 @@ public class Order implements ISignable
 //    }
 
     @Override
-    public void DeserializeUnsigned(InputStream reader)
+    public void deserializeUnsigned(BinaryReader reader)
     {
 //        UInt256 asset_id = reader.ReadSerializable<UInt256>();
 //        UInt256 value_asset_id = reader.ReadSerializable<UInt256>();
@@ -99,7 +89,8 @@ public class Order implements ISignable
 //            throw new FormatException();
 //    }
 
-    public UInt160[] GetScriptHashesForVerifying()
+    @Override
+    public UInt160[] getScriptHashesForVerifying()
     {
 //        HashSet<UInt160> hashes = new HashSet<UInt160>();
 //        RegisterTransaction asset = Blockchain.Default.GetTransaction(AssetId) as RegisterTransaction;
@@ -119,7 +110,7 @@ public class Order implements ISignable
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
 //        ((ISignable)this).SerializeUnsigned(writer);
 //        writer.Write(Scripts);
@@ -135,7 +126,7 @@ public class Order implements ISignable
 //    }
 //
     @Override
-    public void SerializeUnsigned(OutputStream writer)
+    public void serializeUnsigned(BinaryWriter writer)
     {
 //        writer.Write(AssetId);
 //        writer.Write(ValueAssetId);

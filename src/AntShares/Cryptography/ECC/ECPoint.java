@@ -1,12 +1,10 @@
 package AntShares.Cryptography.ECC;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 
 import AntShares.FormatException;
-import AntShares.IO.Serializable;
+import AntShares.IO.*;
 
 public class ECPoint implements Comparable<ECPoint>, Serializable
 {
@@ -126,7 +124,7 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
     }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
         throw new UnsupportedOperationException();
     }
@@ -138,13 +136,13 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
      *  <returns></returns>
      * @throws IOException 
      */
-    public static ECPoint DeserializeFrom(InputStream reader, ECCurve curve) throws IOException
+    public static ECPoint deserializeFrom(BinaryReader reader, ECCurve curve) throws IOException
     {
         //int expectedLength = (curve.Q.GetBitLength() + 7) / 8;
         // TODO
-        int expectedLength = 1;
+        int expectedLength = 32;
         byte[] buffer = new byte[1 + expectedLength * 2];
-        buffer[0] = (byte) reader.read();
+        buffer[0] = (byte) reader.readByte();
         switch (buffer[0])
         {
             case 0x00:
@@ -356,7 +354,7 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
         // TODO
         //writer.write(EncodePoint(true));

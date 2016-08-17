@@ -1,10 +1,7 @@
 package AntShares.Network.Payloads;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import AntShares.UInt256;
-import AntShares.IO.Serializable;
+import AntShares.IO.*;
 import AntShares.Network.InventoryType;
 
 public class InvPayload implements Serializable
@@ -31,14 +28,14 @@ public class InvPayload implements Serializable
     }
 
     @Override
-    public void Deserialize(InputStream reader)
+    public void deserialize(BinaryReader reader)
     {
         //TODO
         //Inventories = reader.ReadSerializableArray<InventoryVector>();
     }
 
     @Override
-    public void Serialize(OutputStream writer)
+    public void serialize(BinaryWriter writer)
     {
         // TODO
         //writer.Write(Inventories);

@@ -1,8 +1,5 @@
 package AntShares.Wallets;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import AntShares.UInt160;
 import AntShares.IO.Serializable;
 
@@ -54,13 +51,6 @@ public abstract class Contract implements Serializable
     }
 
     /**
-     *  反序列化
-     *  <param name="reader">数据来源</param>
-     */
-    @Override
-    public abstract void Deserialize(InputStream reader);
-
-    /**
      *  比较与另一个对象是否相等
      *  <param name="obj">另一个对象</param>
      *  <returns>返回比较的结果</returns>
@@ -82,10 +72,4 @@ public abstract class Contract implements Serializable
     {
         return getScriptHash().hashCode();
     }
-
-    /**
-     *  序列化
-     *  <param name="writer">存放序列化后的结果</param>
-     */
-    public abstract void Serialize(OutputStream writer);
 }

@@ -1,7 +1,9 @@
 package AntShares;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.math.BigDecimal;
+
+import AntShares.IO.*;
 
 /**
  * 精确到10^-8的64位定点数，将舍入误差降到最低。
@@ -9,7 +11,6 @@ import java.math.BigDecimal;
  */
 public class Fixed8 implements Comparable<Fixed8>, Serializable
 {
-    private static final long serialVersionUID = 6881908032750414861L;
     private static final long D = 100000000L;
     long value;
 
@@ -166,4 +167,17 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
     {
         return new Fixed8(-value.value);
     }
+
+	@Override
+	public void serialize(BinaryWriter writer) throws IOException
+	{
+		writer.writeLong(value);
+	}
+
+	@Override
+	public void deserialize(BinaryReader reader) throws IOException
+	{
+		// TODO Auto-generated method stub
+		value = reader.readLong();
+	}
 }

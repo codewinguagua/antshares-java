@@ -1,11 +1,9 @@
 package AntShares.Network;
 
-import AntShares.UInt160;
 import AntShares.UInt256;
-import AntShares.Core.ISignable;
-import AntShares.Core.Scripts.Script;
+import AntShares.Core.Signable;
 
-public abstract class Inventory implements ISignable
+public abstract class Inventory implements Signable
 {
     //[NonSerialized]
     private UInt256 _hash = null;
@@ -20,9 +18,6 @@ public abstract class Inventory implements ISignable
         return _hash;
     }
 
-    public abstract Script[] getScripts();
-    public abstract void setScripts(Script[] scripts);
-
     public abstract InventoryType getInventoryType();
 
     // TODO
@@ -36,8 +31,6 @@ public abstract class Inventory implements ISignable
 //            return ms.ToArray();
 //        }
 //    }
-
-    public abstract UInt160[] GetScriptHashesForVerifying();
 
     public abstract boolean Verify();
 }
