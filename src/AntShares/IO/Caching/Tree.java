@@ -14,13 +14,13 @@ class Tree<TKey, TValue>
 
     public TValue get(TKey key)
     {
-    	TreeNode<TValue> node = _nodes.get(key);
-    	return node == null ? null : node.getItem();
+        TreeNode<TValue> node = _nodes.get(key);
+        return node == null ? null : node.getItem();
     }
     public void set(TKey key, TValue value)
     {
-    	// TODO
-//    	TreeNode<TValue> node = _nodes.get(key);
+        // TODO
+//        TreeNode<TValue> node = _nodes.get(key);
 //      _nodes[key].Item = value;
     }
     
@@ -68,7 +68,7 @@ class Tree<TKey, TValue>
         }
         
         for (nodes2 = nodes2.stream().distinct().collect(Collectors.toList());
-        		nodes2.size() > 1; nodes2 = nodes2.stream().distinct().collect(Collectors.toList()))
+                nodes2.size() > 1; nodes2 = nodes2.stream().distinct().collect(Collectors.toList()))
         {
             for (int i = 0; i < nodes2.size(); i++)
             {

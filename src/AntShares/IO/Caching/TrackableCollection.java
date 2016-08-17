@@ -1,7 +1,7 @@
 package AntShares.IO.Caching;
 
 public class TrackableCollection<TKey, TItem> 
-	// TODO extends KeyedCollection<TKey, ? extends ITrackable<TKey>>
+    // TODO extends KeyedCollection<TKey, ? extends ITrackable<TKey>>
 {
     public TrackableCollection() { }
 
@@ -18,7 +18,7 @@ public class TrackableCollection<TKey, TItem>
     //@Override
     protected void ClearItems()
     {
-    	// TODO
+        // TODO
 //        for (int i = Count - 1; i >= 0; i--)
 //            RemoveItem(i);
     }

@@ -12,7 +12,7 @@ public class HeadersPayload implements Serializable
     
     private HeadersPayload(Block[] hds)
     {
-    	Headers = hds;
+        Headers = hds;
     }
 
     public static HeadersPayload Create(Block[] headers)
@@ -23,7 +23,7 @@ public class HeadersPayload implements Serializable
     @Override
     public void Deserialize(InputStream reader)
     {
-    	// TODO
+        // TODO
 //        Headers = reader.ReadSerializableArray<Block>();
 //        if (Headers.Any(p => !p.IsHeader))
 //            throw new FormatException();

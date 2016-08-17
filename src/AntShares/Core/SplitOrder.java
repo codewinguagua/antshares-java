@@ -10,8 +10,8 @@ import AntShares.UInt160;
  */
 public class SplitOrder implements Serializable
 {
-	private static final long serialVersionUID = 8781924160988999643L;
-	/**
+    private static final long serialVersionUID = 8781924160988999643L;
+    /**
      *  买入或卖出的数量
      */
     public Fixed8 Amount;

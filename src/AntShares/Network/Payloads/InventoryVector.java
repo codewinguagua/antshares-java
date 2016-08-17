@@ -15,7 +15,7 @@ public class InventoryVector implements Serializable
     @Override
     public void Deserialize(InputStream reader)
     {
-    	// TODO
+        // TODO
 //        Type = (InventoryType)reader.ReadUInt32();
 //        if (!Enum.IsDefined(typeof(InventoryType), Type))
 //            throw new FormatException();

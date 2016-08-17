@@ -9,8 +9,8 @@ import AntShares.UInt256;
  */
 public class TransactionInput implements Serializable
 {
-	private static final long serialVersionUID = -1788728962124438893L;
-	/**
+    private static final long serialVersionUID = -1788728962124438893L;
+    /**
      *  引用交易的散列值
      */
     public UInt256 PrevHash;

@@ -22,38 +22,38 @@ class TreeNode<TValue>
     }
 
 
-	public TValue getItem() {
-		return item;
-	}
+    public TValue getItem() {
+        return item;
+    }
 
 
-	public void setItem(TValue item) {
-		this.item = item;
-	}
+    public void setItem(TValue item) {
+        this.item = item;
+    }
 
 
-	public int getHeight() {
-		return height;
-	}
+    public int getHeight() {
+        return height;
+    }
 
 
-	void setHeight(int height) {
-		this.height = height;
-	}
+    void setHeight(int height) {
+        this.height = height;
+    }
 
 
-	public TreeNode<TValue> getParent() {
-		return parent;
-	}
+    public TreeNode<TValue> getParent() {
+        return parent;
+    }
 
 
-	void setParent(TreeNode<TValue> parent) {
-		this.parent = parent;
-	}
+    void setParent(TreeNode<TValue> parent) {
+        this.parent = parent;
+    }
 
 
 //  public IReadOnlyCollection<TreeNode<TValue>> Children => _children;
-	public List<TreeNode<TValue>> getChildren() {
-		return Collections.unmodifiableList(_children);
-	}
+    public List<TreeNode<TValue>> getChildren() {
+        return Collections.unmodifiableList(_children);
+    }
 }

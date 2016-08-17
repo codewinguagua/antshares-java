@@ -13,11 +13,11 @@ public class CustomContract extends Contract
         this.parameterList = parameterList2;
         RedeemScript = redeemScript;
         PublicKeyHash = publicKeyHash;
-	}
+    }
 
-	@Override
+    @Override
     public ContractParameterType[] getParameterList() {
-    	return parameterList;
+        return parameterList;
     }
 
     public static CustomContract Create(UInt160 publicKeyHash, ContractParameterType[] parameterList, byte[] redeemScript)
@@ -28,7 +28,7 @@ public class CustomContract extends Contract
     @Override
     public void Deserialize(InputStream reader)
     {
-    	// TODO
+        // TODO
         //parameterList = reader.ReadVarBytes().Cast<ContractParameterType>().ToArray();
         //RedeemScript = reader.ReadVarBytes();
         //PublicKeyHash = reader.ReadSerializable<UInt160>();
@@ -37,7 +37,7 @@ public class CustomContract extends Contract
     @Override
     public void Serialize(OutputStream writer)
     {
-    	// TODO
+        // TODO
 //        writer.WriteVarBytes(parameterList.Cast<byte>().ToArray());
 //        writer.WriteVarBytes(RedeemScript);
 //        writer.Write(PublicKeyHash);

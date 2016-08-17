@@ -4,12 +4,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import AntShares.UInt160;
-import AntShares.IO.ISerializable;
+import AntShares.IO.Serializable;
 
 /**
  *  所有合约的基类
  */
-public abstract class Contract implements ISerializable
+public abstract class Contract implements Serializable
 {
     /**
      *  合约脚本代码
@@ -28,7 +28,7 @@ public abstract class Contract implements ISerializable
     {
         if (_address == null)
         {
-        	// TODO
+            // TODO
             //_address = Wallet.ToAddress(ScriptHash);
         }
         return _address;
@@ -48,7 +48,7 @@ public abstract class Contract implements ISerializable
         if (_scriptHash == null)
         {
             // TODO
-        	//_scriptHash = RedeemScript.ToScriptHash();
+            //_scriptHash = RedeemScript.ToScriptHash();
         }
         return _scriptHash;
     }

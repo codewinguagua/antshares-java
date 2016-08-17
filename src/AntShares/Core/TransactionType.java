@@ -39,16 +39,16 @@ public enum TransactionType
     AgencyTransaction(0xb0),
     ;
 
-	private byte value;
+    private byte value;
 
-	TransactionType(int v)
-	{
-		value = (byte)v;
-	}
+    TransactionType(int v)
+    {
+        value = (byte)v;
+    }
 
-	public byte getByte()
-	{
-		return value;
-	}
+    public byte getByte()
+    {
+        return value;
+    }
 
 }

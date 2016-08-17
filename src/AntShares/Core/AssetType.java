@@ -32,15 +32,15 @@ public enum AssetType
 
     Token(CreditFlag.getByte() | 0x20);
 
-	private byte value;
+    private byte value;
 
-	AssetType(int v)
-	{
-		value = (byte)v;
-	}
+    AssetType(int v)
+    {
+        value = (byte)v;
+    }
 
-	public byte getByte()
-	{
-		return value;
-	}
+    public byte getByte()
+    {
+        return value;
+    }
 }

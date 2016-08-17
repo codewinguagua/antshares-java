@@ -35,12 +35,12 @@ public class ECCurve
      */
     public static final ECCurve Secp256k1 = new ECCurve
     (
-		// TODO
-    	BigInteger.ONE,
-    	BigInteger.ONE,
-    	BigInteger.ONE,
-    	BigInteger.ONE,
-    	null
+        // TODO
+        BigInteger.ONE,
+        BigInteger.ONE,
+        BigInteger.ONE,
+        BigInteger.ONE,
+        null
 //        BigInteger.Parse("00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F", NumberStyles.AllowHexSpecifier),
 //        BigInteger.Zero,
 //        7,
@@ -53,12 +53,12 @@ public class ECCurve
      */
     public static final ECCurve Secp256r1 = new ECCurve
     (
-		// TODO
-		BigInteger.ONE,
-		BigInteger.ONE,
-		BigInteger.ONE,
-		BigInteger.ONE,
-		null
+        // TODO
+        BigInteger.ONE,
+        BigInteger.ONE,
+        BigInteger.ONE,
+        BigInteger.ONE,
+        null
 //        BigInteger.Parse("00FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", NumberStyles.AllowHexSpecifier),
 //        BigInteger.Parse("00FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC", NumberStyles.AllowHexSpecifier),
 //        BigInteger.Parse("005AC635D8AA3A93E7B3EBBD55769886BC651D06B0CC53B0F63BCE3C3E27D2604B", NumberStyles.AllowHexSpecifier),

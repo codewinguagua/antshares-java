@@ -19,15 +19,15 @@ public class JString extends JObject
     @Override
     public boolean AsBoolean()
     {
-    	Collection<String> falseValues = new HashSet<String>();
-    	falseValues.add("0");
+        Collection<String> falseValues = new HashSet<String>();
+        falseValues.add("0");
         falseValues.add("0");
         falseValues.add("f");
         falseValues.add("false");
         falseValues.add("n");
         falseValues.add("no");
         falseValues.add("off");
-    	return ! falseValues.contains(value.toLowerCase());
+        return ! falseValues.contains(value.toLowerCase());
     }
 
 // TODO
@@ -72,7 +72,7 @@ public class JString extends JObject
 
     public static JString Parse(Reader reader)
     {
-    	// TODO
+        // TODO
 //        SkipSpace(reader);
 //        char[] buffer = new char[4];
 //        char firstChar = (char)reader.Read();
@@ -95,14 +95,14 @@ public class JString extends JObject
 //            sb.Append(c);
 //        }
 //        return new JString(sb.ToString());
-    	return new JString("");
+        return new JString("");
     }
 
     @Override
     public String toString()
     {
-    	// TODO
+        // TODO
         //return HttpUtility.JavaScriptStringEncode(Value, true);
-    	return value;
+        return value;
     }
 }

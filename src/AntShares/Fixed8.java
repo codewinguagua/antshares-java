@@ -9,8 +9,8 @@ import java.math.BigDecimal;
  */
 public class Fixed8 implements Comparable<Fixed8>, Serializable
 {
-	private static final long serialVersionUID = 6881908032750414861L;
-	private static final long D = 100000000L;
+    private static final long serialVersionUID = 6881908032750414861L;
+    private static final long D = 100000000L;
     long value;
 
     public static final Fixed8 MAX_VALUE = new Fixed8(Long.MAX_VALUE);
@@ -95,16 +95,16 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
 
     public static boolean tryParse(String s, Fixed8 result)
     {
-    	try
-    	{
-    		BigDecimal val = new BigDecimal(s);
-    		result.value = val.longValueExact();
-    		return true;
-    	}
-    	catch(NumberFormatException | ArithmeticException ex)
-    	{
-    		return false;
-    	}
+        try
+        {
+            BigDecimal val = new BigDecimal(s);
+            result.value = val.longValueExact();
+            return true;
+        }
+        catch(NumberFormatException | ArithmeticException ex)
+        {
+            return false;
+        }
     }
 
     public long toLong()
@@ -152,18 +152,18 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
 
     public static Fixed8 add(Fixed8 x, Fixed8 y)
     {
-    	// TODO checked(...);
+        // TODO checked(...);
         return new Fixed8(x.value + y.value);
     }
 
     public static Fixed8 subtract(Fixed8 x, Fixed8 y)
     {
-    	// TODO checked(...);
-    	return new Fixed8(x.value - y.value);
+        // TODO checked(...);
+        return new Fixed8(x.value - y.value);
     }
 
     public static Fixed8 minus(Fixed8 value)
     {
-    	return new Fixed8(-value.value);
+        return new Fixed8(-value.value);
     }
 }

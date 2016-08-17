@@ -2,18 +2,18 @@ package AntShares;
 
 public class UInt160 extends UIntBase implements Comparable<UInt160>
 {
-	private static final long serialVersionUID = -8298908044339492750L;
+    private static final long serialVersionUID = -8298908044339492750L;
 
-	public static final UInt160 Zero = new UInt160();
+    public static final UInt160 Zero = new UInt160();
 
     public UInt160()
     {
-    	this(null);
+        this(null);
     }
 
     public UInt160(byte[] value)
     {
-    	super(20, value);
+        super(20, value);
     }
 
     @Override
@@ -45,13 +45,13 @@ public class UInt160 extends UIntBase implements Comparable<UInt160>
 
     public static boolean TryParse(String s, UInt160 result)
     {
-    	try {
-    		UInt160 v = Parse(s);
-    		result.data_bytes = v.data_bytes;
-    		return true;
-    	} catch (Exception e) {
-    		return false;
-    	}
+        try {
+            UInt160 v = Parse(s);
+            result.data_bytes = v.data_bytes;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static boolean greaterThan(UInt160 left, UInt160 right)

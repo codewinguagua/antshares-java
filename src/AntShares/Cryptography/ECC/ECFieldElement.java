@@ -29,7 +29,7 @@ public class ECFieldElement implements Comparable<ECFieldElement>
             return true;
 
         if (!(obj instanceof ECFieldElement)) {
-        	return false;
+            return false;
         }
         ECFieldElement other = (ECFieldElement) obj;
 
@@ -83,8 +83,8 @@ public class ECFieldElement implements Comparable<ECFieldElement>
 //        }
 //
 //        return new BigInteger[] { Uh, Vl };
-    	// TODO
-    	return new BigInteger[1];
+        // TODO
+        return new BigInteger[1];
     }
 
     @Override
@@ -133,15 +133,15 @@ public class ECFieldElement implements Comparable<ECFieldElement>
 //            }
 //        }
 //        while (U.Equals(BigInteger.One) || U.Equals(qMinusOne));
-    	// TODO
+        // TODO
         return null;
     }
 
     public ECFieldElement Square()
     {
         //return new ECFieldElement((Value * Value).Mod(curve.Q), curve);
-    	// TODO
-    	return new ECFieldElement(null, null);
+        // TODO
+        return new ECFieldElement(null, null);
     }
 
     public byte[] ToByteArray()
@@ -152,7 +152,7 @@ public class ECFieldElement implements Comparable<ECFieldElement>
 //        if (data.Length > 32)
 //            return data.Take(32).Reverse().ToArray();
 //        return Enumerable.Repeat<byte>(0, 32 - data.Length).Concat(data.Reverse()).ToArray();
-    	return new byte[1];
+        return new byte[1];
     }
 
 //    public static ECFieldElement operator -(ECFieldElement x)

@@ -49,10 +49,10 @@ public class Base58
     public static String Encode(byte[] input)
     {
         //BigInteger value = new BigInteger(new byte[1].Concat(input).Reverse().ToArray());
-    	byte[] tmp = new byte[input.length + 1];
-    	System.arraycopy(input, 0, tmp, 1, input.length);
-    	byte[] rev = Helper.reverse(tmp);
-    	BigInteger value = new BigInteger(rev);
+        byte[] tmp = new byte[input.length + 1];
+        System.arraycopy(input, 0, tmp, 1, input.length);
+        byte[] rev = Helper.reverse(tmp);
+        BigInteger value = new BigInteger(rev);
 
         StringBuilder sb = new StringBuilder();
         BigInteger base58 = BigInteger.valueOf(58);

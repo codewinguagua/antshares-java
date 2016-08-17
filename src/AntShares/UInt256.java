@@ -2,13 +2,13 @@ package AntShares;
 
 public class UInt256 extends UIntBase implements Comparable<UInt256>
 {
-	private static final long serialVersionUID = -5460860333759761748L;
+    private static final long serialVersionUID = -5460860333759761748L;
 
-	public static final UInt256 Zero = new UInt256();
+    public static final UInt256 Zero = new UInt256();
 
     public UInt256()
     {
-    	this(null);
+        this(null);
     }
 
     public UInt256(byte[] value)
@@ -45,13 +45,13 @@ public class UInt256 extends UIntBase implements Comparable<UInt256>
 
     public static boolean TryParse(String s, UInt256 result)
     {
-    	try {
-    		UInt256 v = Parse(s);
-    		result.data_bytes = v.data_bytes;
-    		return true;
-    	} catch (Exception e) {
-    		return false;
-    	}
+        try {
+            UInt256 v = Parse(s);
+            result.data_bytes = v.data_bytes;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static boolean greaterThan(UInt256 left, UInt256 right)

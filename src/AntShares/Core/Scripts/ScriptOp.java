@@ -152,21 +152,21 @@ public enum ScriptOp
     OP_MAXITEM(0xD1),
     OP_MINITEM(0xD2),
     ;
-	private byte value;
+    private byte value;
 
-	ScriptOp(int v)
-	{
-		value = (byte)v;
-	}
+    ScriptOp(int v)
+    {
+        value = (byte)v;
+    }
 
-	ScriptOp(ScriptOp v)
-	{
-		value = v.value;
-	}
+    ScriptOp(ScriptOp v)
+    {
+        value = v.value;
+    }
 
-	public byte getByte()
-	{
-		return value;
-	}
+    public byte getByte()
+    {
+        return value;
+    }
 
 }

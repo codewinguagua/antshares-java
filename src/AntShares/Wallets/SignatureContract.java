@@ -15,19 +15,19 @@ public class SignatureContract extends Contract
     private ECPoint publicKey;
 
     public SignatureContract(ECPoint publicKey2) {
-    	RedeemScript = CreateSignatureRedeemScript(publicKey2);
-    	// TODO
-    	//PublicKeyHash = publicKey.EncodePoint(true).ToScriptHash(),
-    	publicKey = publicKey2;
-	}
+        RedeemScript = CreateSignatureRedeemScript(publicKey2);
+        // TODO
+        //PublicKeyHash = publicKey.EncodePoint(true).ToScriptHash(),
+        publicKey = publicKey2;
+    }
 
-	/**
+    /**
      *  合约的形式参数列表
      */
     @Override
     public ContractParameterType[] getParameterList()
     {
-    	return new ContractParameterType[] { ContractParameterType.Signature };
+        return new ContractParameterType[] { ContractParameterType.Signature };
     }
 
     /**
@@ -47,7 +47,7 @@ public class SignatureContract extends Contract
      */
     public static byte[] CreateSignatureRedeemScript(ECPoint publicKey)
     {
-    	ScriptBuilder sb = new ScriptBuilder();
+        ScriptBuilder sb = new ScriptBuilder();
         sb.Push(publicKey.EncodePoint(true));
         sb.Add(ScriptOp.OP_CHECKSIG);
         return sb.ToArray();
@@ -59,7 +59,7 @@ public class SignatureContract extends Contract
      */
     @Override public void Deserialize(InputStream reader)
     {
-    	// TODO
+        // TODO
         //publicKey = ECPoint.DeserializeFrom(reader, ECCurve.Secp256r1);
         //RedeemScript = CreateSignatureRedeemScript(publicKey);
         //PublicKeyHash = publicKey.EncodePoint(true).ToScriptHash();
@@ -71,8 +71,8 @@ public class SignatureContract extends Contract
      */
     @Override public void Serialize(OutputStream writer)
     {
-    	// TODO
+        // TODO
         //writer.Write(publicKey);
-    	publicKey.Serialize(writer);
+        publicKey.Serialize(writer);
     }
 }

@@ -21,9 +21,9 @@ public class Account
         System.arraycopy(privateKey, privateKey.length - 32, PrivateKey, 0, 32);
         if (privateKey.length == 32)
         {
-        	// TODO
+            // TODO
             //this.PublicKey = ECCurve.Secp256r1.G * privateKey;
-        	this.PublicKey = ECPoint.FromBytes(null, null);
+            this.PublicKey = ECPoint.FromBytes(null, null);
         }
         else
         {
@@ -51,7 +51,7 @@ public class Account
 
     public String Export()
     {
-    	// TODO
+        // TODO
 //        using (Decrypt())
 //        {
             byte[] data = new byte[38];

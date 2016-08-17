@@ -10,7 +10,7 @@ import AntShares.UIntBase;
  */
 public class ScriptBuilder // TODO : IDisposable
 {
-	private ByteArrayOutputStream ms = new ByteArrayOutputStream();
+    private ByteArrayOutputStream ms = new ByteArrayOutputStream();
 
     /**
      *  Ìí¼Ó²Ù×÷·û
@@ -52,15 +52,15 @@ public class ScriptBuilder // TODO : IDisposable
      */
     public ScriptBuilder Push(BigInteger number)
     {
-    	int n = 0;
-    	try {
-    		n = number.intValueExact();
+        int n = 0;
+        try {
+            n = number.intValueExact();
             if (n == -1) return Add(ScriptOp.OP_1NEGATE);
             if (n == 0) return Add(ScriptOp.OP_0);
             if (n > 0 && n <= 16) return Add((byte)(ScriptOp.OP_1.getByte() - 1 + n));
-    	} catch (ArithmeticException ae) {
-    		// do nothing.
-    	}
+        } catch (ArithmeticException ae) {
+            // do nothing.
+        }
         return Push(number.toByteArray());
     }
 

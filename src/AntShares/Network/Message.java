@@ -12,17 +12,17 @@ class Message implements Serializable
 //#else
 //    public const uint Magic = 0x00746e41;
 //#endif
-	// TODO
-	public static final int Magic = 0x00746e41;
-	
+    // TODO
+    public static final int Magic = 0x00746e41;
+    
     public String Command;
     public int Checksum;
     public byte[] Payload;
 
     private Message(String cmd, int chks, byte[] pl) {
-    	Command = cmd;
-    	Checksum = chks;
-    	Payload = pl;
+        Command = cmd;
+        Checksum = chks;
+        Payload = pl;
     }
 
     // TODO
@@ -54,7 +54,7 @@ class Message implements Serializable
 
     private static int GetChecksum(byte[] value)
     {
-    	// TODO
+        // TODO
         //return BitConverter.ToUInt32(value.Sha256().Sha256(), 0);
         return 0;
     }

@@ -13,7 +13,7 @@ public class InvPayload implements Serializable
 
     private InvPayload(InventoryVector[] vcts)
     {
-    	Inventories = vcts;
+        Inventories = vcts;
     }
     
     public static InvPayload Create(InventoryVector[] vectors)
@@ -33,14 +33,14 @@ public class InvPayload implements Serializable
     @Override
     public void Deserialize(InputStream reader)
     {
-    	//TODO
+        //TODO
         //Inventories = reader.ReadSerializableArray<InventoryVector>();
     }
 
     @Override
     public void Serialize(OutputStream writer)
     {
-    	// TODO
+        // TODO
         //writer.Write(Inventories);
     }
 }

@@ -18,20 +18,20 @@ public class MultiSigContract extends Contract
     private ECPoint[] publicKeys;
 
     public MultiSigContract(UInt160 publicKeyHash, int m2, ECPoint[] publicKeys2) {
-		// TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
         RedeemScript = CreateMultiSigRedeemScript(m, publicKeys);
         PublicKeyHash = publicKeyHash;
         m = m2;
         publicKeys = publicKeys2;
-	}
+    }
 
-	/**
+    /**
      *  合约的形式参数列表
      */
     @Override public ContractParameterType[] getParameterList() {
-    	// TODO
-    	//return Enumerable.Repeat(ContractParameterType.Signature, m).ToArray();
-    	return null;
+        // TODO
+        //return Enumerable.Repeat(ContractParameterType.Signature, m).ToArray();
+        return null;
     }
 
     /**
@@ -74,7 +74,7 @@ public class MultiSigContract extends Contract
      */
     @Override public void Deserialize(InputStream reader)
     {
-    	// TODO
+        // TODO
 //        m = (int)reader.ReadVarInt(Integer.MAX_VALUE);
 //        publicKeys = new ECPoint[reader.ReadVarInt(0x10000000)];
 //        for (int i = 0; i < publicKeys.Length; i++)

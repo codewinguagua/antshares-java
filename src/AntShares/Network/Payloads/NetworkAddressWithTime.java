@@ -16,9 +16,9 @@ public class NetworkAddressWithTime implements Serializable
 
     private NetworkAddressWithTime(Object /*IPEndPoint*/ endpoint, long services, int timestamp)
     {
-    	EndPoint = endpoint;
-    	Services = services;
-    	Timestamp = timestamp;
+        EndPoint = endpoint;
+        Services = services;
+        Timestamp = timestamp;
     }
 
     public static NetworkAddressWithTime Create(Object /*IPEndPoint*/ endpoint, long services, int timestamp)
@@ -29,7 +29,7 @@ public class NetworkAddressWithTime implements Serializable
     @Override
     public void Deserialize(InputStream reader)
     {
-    	// TODO
+        // TODO
 //        Timestamp = reader.ReadUInt32();
 //        Services = reader.ReadUInt64();
 //        IPAddress address = new IPAddress(reader.ReadBytes(16));
@@ -40,7 +40,7 @@ public class NetworkAddressWithTime implements Serializable
     @Override
     public void Serialize(OutputStream writer)
     {
-    	// TODO
+        // TODO
 //        writer.Write(Timestamp);
 //        writer.Write(Services);
 //        writer.Write(EndPoint.Address.GetAddressBytes());

@@ -118,7 +118,7 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
         if (bit0 != yTilde)
         {
             // Use the other root
-        	// TODO
+            // TODO
             beta = null;//new ECFieldElement(curve.Q - betaValue, curve);
         }
 
@@ -141,8 +141,8 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
     public static ECPoint DeserializeFrom(InputStream reader, ECCurve curve) throws IOException
     {
         //int expectedLength = (curve.Q.GetBitLength() + 7) / 8;
-    	// TODO
-    	int expectedLength = 1;
+        // TODO
+        int expectedLength = 1;
         byte[] buffer = new byte[1 + expectedLength * 2];
         buffer[0] = (byte) reader.read();
         switch (buffer[0])
@@ -221,11 +221,11 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
                 return DecodePoint(pubkey, curve);
             case 64:
             case 72:
-            	// TODO
+                // TODO
                 //return DecodePoint(new byte[] { 0x04 }.Concat(pubkey.Skip(pubkey.length - 64)).ToArray(), curve);
             case 96:
             case 104:
-            	// TODO
+                // TODO
                 //return DecodePoint(new byte[] { 0x04 }.Concat(pubkey.Skip(pubkey.length - 96).Take(64)).ToArray(), curve);
             default:
                 throw new FormatException();
@@ -312,7 +312,7 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
                 // Compute the new ECPoints for the precomputation array.
                 // The values 1, 3, 5, ..., 2^(width-1)-1 times p are
                 // computed
-            	// TODO
+                // TODO
                 //preComp[i] = twiceP + preComp[i - 1];
             }
         }
@@ -333,12 +333,12 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
             {
                 if (wnaf[i] > 0)
                 {
-                	// TODO
+                    // TODO
                     //q += preComp[(wnaf[i] - 1) / 2];
                 }
                 else
                 {
-                	// TODO
+                    // TODO
                     // wnaf[i] < 0
                     //q -= preComp[(-wnaf[i] - 1) / 2];
                 }
@@ -350,15 +350,15 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
 
     public static ECPoint Parse(String value, ECCurve curve)
     {
-    	// TODO
+        // TODO
         //return DecodePoint(value.HexToBytes(), curve);
-    	return null;
+        return null;
     }
 
     @Override
     public void Serialize(OutputStream writer)
     {
-    	// TODO
+        // TODO
         //writer.write(EncodePoint(true));
     }
 
@@ -366,8 +366,8 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
     public String toString()
     {
         //return EncodePoint(true).ToHexString();
-    	// TODO
-    	return "";
+        // TODO
+        return "";
     }
 
     ECPoint Twice()
@@ -390,7 +390,7 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
     //private static sbyte[] WindowNaf(sbyte width, BigInteger k)
     static byte[] WindowNaf(byte width, BigInteger k)
     {
-    	// TODO
+        // TODO
 //        byte[] wnaf = new byte[k.GetBitLength() + 1];
 //        short pow2wB = (short)(1 << width);
 //        int i = 0;
@@ -422,7 +422,7 @@ public class ECPoint implements Comparable<ECPoint>, Serializable
 //        sbyte[] wnafShort = new sbyte[length];
 //        Array.Copy(wnaf, 0, wnafShort, 0, length);
 //        return wnafShort;
-    	return new byte[1];
+        return new byte[1];
     }
 
 //    public static ECPoint operator -(ECPoint x)

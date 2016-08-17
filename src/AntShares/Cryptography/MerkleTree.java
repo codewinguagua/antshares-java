@@ -32,13 +32,13 @@ public class MerkleTree
 //            return hashes[0];
 //        if (hashes.length % 2 == 1)
 //        {
-//        	// TODO
+//            // TODO
 //            //hashes = hashes.Concat(new byte[][] { hashes[hashes.length - 1] }).ToArray();
 //        }
 //        byte[][] hashes_new = new byte[hashes.length / 2][];
 //        for (int i = 0; i < hashes_new.length; i++)
 //        {
-//        	// TODO
+//            // TODO
 //            //hashes_new[i] = hashes[i * 2].Concat(hashes[i * 2 + 1]).Sha256().Sha256();
 //        }
 //        return ComputeRoot(hashes_new);

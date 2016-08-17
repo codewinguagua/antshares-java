@@ -17,7 +17,7 @@ public class VersionPayload implements Serializable
 
     private VersionPayload(int port, int nonce, String userAgent)
     {
-    	// TODO
+        // TODO
 //        Version = LocalNode.PROTOCOL_VERSION,
 //        Services = NetworkAddressWithTime.NODE_NETWORK,
 //        Timestamp = DateTime.Now.ToTimestamp(),
@@ -35,7 +35,7 @@ public class VersionPayload implements Serializable
     @Override
     public void Deserialize(InputStream reader)
     {
-    	// TODO
+        // TODO
 //        Version = reader.ReadUInt32();
 //        Services = reader.ReadUInt64();
 //        Timestamp = reader.ReadUInt32();
@@ -48,7 +48,7 @@ public class VersionPayload implements Serializable
     @Override
     public void Serialize(OutputStream writer)
     {
-    	// TODO
+        // TODO
 //        writer.Write(Version);
 //        writer.Write(Services);
 //        writer.Write(Timestamp);

@@ -11,8 +11,8 @@ import AntShares.UInt256;
  */
 public class TransactionOutput implements Serializable
 {
-	private static final long serialVersionUID = -8486024867292581586L;
-	/**
+    private static final long serialVersionUID = -8486024867292581586L;
+    /**
      *  ×Ê²ú±àºÅ
      */
     public UInt256 AssetId;

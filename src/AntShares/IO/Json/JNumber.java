@@ -74,7 +74,7 @@ public class JNumber extends JObject
 
     public static JNumber Parse(Reader reader)
     {
-//    	 TODO
+//         TODO
 //        SkipSpace(reader);
 //        StringBuilder sb = new StringBuilder();
 //        while (true)
@@ -91,7 +91,7 @@ public class JNumber extends JObject
 //            }
 //        }
 //        return new JNumber(double.Parse(sb.ToString()));
-    	return new JNumber(0);
+        return new JNumber(0);
     }
 
     @Override

@@ -13,7 +13,7 @@ abstract class RelayCache extends FIFOCache<UInt256, Inventory>
     @Override
     protected UInt256 GetKeyForItem(Inventory item)
     {
-    	// TODO
+        // TODO
         //return item.Hash;
         return new UInt256();
     }

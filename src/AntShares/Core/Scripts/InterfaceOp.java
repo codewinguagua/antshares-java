@@ -52,17 +52,17 @@ public enum InterfaceOp
     TXOUT_VALUE(0x71),
     TXOUT_SCRIPTHASH(0x72),
     ;
-	private byte value;
+    private byte value;
 
-	InterfaceOp(int v)
-	{
-		value = (byte)v;
-	}
+    InterfaceOp(int v)
+    {
+        value = (byte)v;
+    }
 
-	public byte getByte()
-	{
-		return value;
-	}
+    public byte getByte()
+    {
+        return value;
+    }
 
 
 }

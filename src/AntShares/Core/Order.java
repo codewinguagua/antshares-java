@@ -13,7 +13,7 @@ import AntShares.Core.Scripts.Script;
  */
 public class Order implements ISignable
 {
-	/**
+    /**
      *  ×Ê²ú±àºÅ
      */
     public UInt256 AssetId;
@@ -50,13 +50,13 @@ public class Order implements ISignable
     @Override
     public Script[] getScripts()
     {
-    	return scripts;
+        return scripts;
     }
     
     @Override
     public void setScripts(Script[] scrpts)
     {
-    	scripts = scrpts;
+        scripts = scrpts;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class Order implements ISignable
 //            hashes.UnionWith(group.Select(p => tx.Outputs[p.PrevIndex].ScriptHash));
 //        }
 //        return hashes.OrderBy(p => p).ToArray();
-    	return null;
+        return null;
     }
 
     @Override

@@ -7,8 +7,8 @@ import AntShares.FormatException;
 
 public class JBoolean extends JObject
 {
-	private boolean value;
-	
+    private boolean value;
+    
     public boolean getValue() { return value; }
 
     public JBoolean(boolean val)
@@ -40,7 +40,7 @@ public class JBoolean extends JObject
 
     public static JBoolean Parse(Reader reader) throws IOException
     {
-    	// TODO
+        // TODO
         //SkipSpace(reader);
         char firstChar = (char)reader.read();
         if (firstChar == 't')

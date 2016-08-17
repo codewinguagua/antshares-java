@@ -11,8 +11,8 @@ public class Helper
      */
     public static UInt160 ToScriptHash(byte[] script)
     {
-    	// TODO
+        // TODO
         //return new UInt160(script.Sha256().RIPEMD160());
-    	return new UInt160();
+        return new UInt160();
     }
 }

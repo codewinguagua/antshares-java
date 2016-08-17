@@ -30,7 +30,7 @@ public class Coin implements ITrackable<TransactionInput>
     private CoinState state;
     public CoinState getState()
     {
-    	return state;
+        return state;
     }
     
     public void setState(CoinState value)
@@ -61,24 +61,24 @@ public class Coin implements ITrackable<TransactionInput>
     // TODO
     //TransactionInput ITrackable<TransactionInput>.Key => Input;
 
-	@Override
-	public TransactionInput getKey() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public TransactionInput getKey() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     // TODO
     //TrackState ITrackable<TransactionInput>.TrackState { get; set; }
 
-	@Override
-	public TrackState getTrackState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public TrackState getTrackState() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void setTrackState(TrackState state) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setTrackState(TrackState state) {
+        // TODO Auto-generated method stub
+        
+    }
 }

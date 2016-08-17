@@ -11,7 +11,7 @@ public class UPnP
 
     public static boolean Discover()
     {
-    	// TODO
+        // TODO
 //        Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 //        s.ReceiveTimeout = (int)TimeOut.TotalMilliseconds;
 //        s.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
@@ -58,7 +58,7 @@ public class UPnP
 
     static String GetServiceUrl(String resp)
     {
-    	// TODO
+        // TODO
 //        try
 //        {
 //            XmlDocument desc = new XmlDocument();
@@ -78,7 +78,7 @@ public class UPnP
 //            return CombineUrls(resp, node.Value);
 //        }
 //        catch { return null; }
-    	return null;
+        return null;
     }
 
     static String CombineUrls(String resp, String p)
@@ -90,7 +90,7 @@ public class UPnP
 
     public static void ForwardPort(int port, Object /*ProtocolType*/ protocol, String description)
     {
-    	// TODO
+        // TODO
 //        if (string.IsNullOrEmpty(_serviceUrl))
 //            throw new Exception("No UPnP service available or Discover() has not been called");
 //        XmlDocument xdoc = SOAPRequest(_serviceUrl, "<u:AddPortMapping xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
@@ -102,7 +102,7 @@ public class UPnP
 
     public static void DeleteForwardingRule(int port, Object /*ProtocolType*/ protocol)
     {
-    	// TODO
+        // TODO
 //        if (string.IsNullOrEmpty(_serviceUrl))
 //            throw new Exception("No UPnP service available or Discover() has not been called");
 //        XmlDocument xdoc = SOAPRequest(_serviceUrl,
@@ -116,7 +116,7 @@ public class UPnP
 
     public static InetAddress GetExternalIP()
     {
-    	// TODO
+        // TODO
 //        if (string.IsNullOrEmpty(_serviceUrl))
 //            throw new Exception("No UPnP service available or Discover() has not been called");
 //        XmlDocument xdoc = SOAPRequest(_serviceUrl, "<u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:WANIPConnection:1\">" +
@@ -125,10 +125,10 @@ public class UPnP
 //        nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
 //        string IP = xdoc.SelectSingleNode("//NewExternalIPAddress/text()", nsMgr).Value;
 //        return IPAddress.Parse(IP);
-    	return null;
+        return null;
     }
 
-    	// TODO
+        // TODO
 //    private static XmlDocument SOAPRequest(string url, string soap, string function)
 //    {
 //        string req = "<?xml version=\"1.0\"?>" +

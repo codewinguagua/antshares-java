@@ -57,99 +57,99 @@ public class Helper
     
     public static byte[] reverse(byte[] v)
     {
-    	byte[] result = new byte[v.length];
-    	for (int i = 0; i < v.length; i++)
-    	{
-    		result[i] = v[v.length - i - 1];
-    	}
-    	return result;
+        byte[] result = new byte[v.length];
+        for (int i = 0; i < v.length; i++)
+        {
+            result[i] = v[v.length - i - 1];
+        }
+        return result;
     }
 
     static BigInteger Mod(BigInteger x, BigInteger y)
     {
-    	return x.mod(y);
+        return x.mod(y);
     }
 
     static BigInteger ModInverse(BigInteger a, BigInteger n)
     {
-    	return a.modInverse(n);
+        return a.modInverse(n);
     }
 
     static BigInteger NextBigInteger(Random rand, int sizeInBits)
     {
         if (sizeInBits < 0)
             throw new IllegalArgumentException("sizeInBits must be non-negative");
-	    if (sizeInBits == 0)
-	        return new BigInteger("0");
-	    byte[] b = new byte[sizeInBits / 8 + 1];
-	    rand.nextBytes(b);
-	    if (sizeInBits % 8 == 0)
-	        b[b.length - 1] = 0;
-	    else
-	        b[b.length - 1] &= (byte)((1 << sizeInBits % 8) - 1);
-	    return new BigInteger(b);
-	}
+        if (sizeInBits == 0)
+            return new BigInteger("0");
+        byte[] b = new byte[sizeInBits / 8 + 1];
+        rand.nextBytes(b);
+        if (sizeInBits % 8 == 0)
+            b[b.length - 1] = 0;
+        else
+            b[b.length - 1] &= (byte)((1 << sizeInBits % 8) - 1);
+        return new BigInteger(b);
+    }
 
 // TODO
 //    internal static BigInteger NextBigInteger(this RNGCryptoServiceProvider rng, int sizeInBits)
-//	{
-//	    if (sizeInBits < 0)
-//	        throw new ArgumentException("sizeInBits must be non-negative");
-//	    if (sizeInBits == 0)
-//	        return 0;
-//	    byte[] b = new byte[sizeInBits / 8 + 1];
-//	    rng.GetNonZeroBytes(b);
-//	    if (sizeInBits % 8 == 0)
-//	        b[b.Length - 1] = 0;
-//	    else
-//	        b[b.Length - 1] &= (byte)((1 << sizeInBits % 8) - 1);
-//	    return new BigInteger(b);
-//	}
-	
-	public static Fixed8 Sum(Iterable<Fixed8> source)
-	{
-	    long sum = 0;
-	    // TODO checked
+//    {
+//        if (sizeInBits < 0)
+//            throw new ArgumentException("sizeInBits must be non-negative");
+//        if (sizeInBits == 0)
+//            return 0;
+//        byte[] b = new byte[sizeInBits / 8 + 1];
+//        rng.GetNonZeroBytes(b);
+//        if (sizeInBits % 8 == 0)
+//            b[b.Length - 1] = 0;
+//        else
+//            b[b.Length - 1] &= (byte)((1 << sizeInBits % 8) - 1);
+//        return new BigInteger(b);
+//    }
+    
+    public static Fixed8 Sum(Iterable<Fixed8> source)
+    {
+        long sum = 0;
+        // TODO checked
         for (Fixed8 item : source)
         {
             sum += item.value;
         }
-	    return new Fixed8(sum);
-	}
-	
+        return new Fixed8(sum);
+    }
+    
 // TODO
-//	public static Fixed8 Sum<TSource>(this IEnumerable<TSource> source, Func<TSource, Fixed8> selector)
-//	{
-//	    return source.Select(selector).Sum();
-//	}
-	
-	static boolean TestBit(BigInteger i, int index)
-	{
-		return i.testBit(index);
-	}
-	
-	/**
-	 * @param timestamp in seconds
-	 * @return
-	 */
-	public static Date ToDateTime(int timestamp)
-	{
-	    return new Date(timestamp * 1000L);
-	}
-	
-	public static Date ToDateTime(long timestamp)
-	{
-	    return new Date(timestamp * 1000L);
-	}
-	
-	public static String ToHexString(Iterable<Byte> value)
-	{
-	    StringBuilder sb = new StringBuilder();
-	    for (byte b : value)
-	    {
-	    	int v = (b + 256) & 0xff;
-	        sb.append(Integer.toHexString(v));
-	    }
+//    public static Fixed8 Sum<TSource>(this IEnumerable<TSource> source, Func<TSource, Fixed8> selector)
+//    {
+//        return source.Select(selector).Sum();
+//    }
+    
+    static boolean TestBit(BigInteger i, int index)
+    {
+        return i.testBit(index);
+    }
+    
+    /**
+     * @param timestamp in seconds
+     * @return
+     */
+    public static Date ToDateTime(int timestamp)
+    {
+        return new Date(timestamp * 1000L);
+    }
+    
+    public static Date ToDateTime(long timestamp)
+    {
+        return new Date(timestamp * 1000L);
+    }
+    
+    public static String ToHexString(Iterable<Byte> value)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : value)
+        {
+            int v = (b + 256) & 0xff;
+            sb.append(Integer.toHexString(v));
+        }
         return sb.toString();
     }
 

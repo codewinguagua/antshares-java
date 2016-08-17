@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public class Script implements Serializable
 {
-	private static final long serialVersionUID = 6681506622785202897L;
-	public byte[] StackScript;
+    private static final long serialVersionUID = 6681506622785202897L;
+    public byte[] StackScript;
     public byte[] RedeemScript;
 
 //TODO

@@ -21,13 +21,13 @@ public class ConsensusPayload extends Inventory
 
     @Override
     public InventoryType getInventoryType() {
-    	return InventoryType.Consensus;
+        return InventoryType.Consensus;
     }
 
     @Override
     public Script[] getScripts()
     {
-    	return new Script[] { script }; 
+        return new Script[] { script }; 
     }
     
     @Override
@@ -49,7 +49,7 @@ public class ConsensusPayload extends Inventory
     @Override
     public void DeserializeUnsigned(InputStream reader)
     {
-    	// TODO
+        // TODO
 //        Version = reader.ReadUInt32();
 //        PrevHash = reader.ReadSerializable<UInt256>();
 //        Height = reader.ReadUInt32();
@@ -61,7 +61,7 @@ public class ConsensusPayload extends Inventory
     @Override
     public UInt160[] GetScriptHashesForVerifying()
     {
-    	// TODO
+        // TODO
 //        if (Blockchain.Default == null)
 //            throw new InvalidOperationException();
 //        if (PrevHash != Blockchain.Default.CurrentBlockHash)
@@ -70,7 +70,7 @@ public class ConsensusPayload extends Inventory
 //        if (miners.Length <= MinerIndex)
 //            throw new InvalidOperationException();
 //        return new[] { SignatureContract.Create(miners[MinerIndex]).ScriptHash };
-    	return new UInt160[1];
+        return new UInt160[1];
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ConsensusPayload extends Inventory
     @Override
     public void SerializeUnsigned(OutputStream writer)
     {
-    	// TODO
+        // TODO
 //        writer.Write(Version);
 //        writer.Write(PrevHash);
 //        writer.Write(Height);
@@ -95,7 +95,7 @@ public class ConsensusPayload extends Inventory
     @Override
     public boolean Verify()
     {
-    	// TODO
+        // TODO
 //        if (Blockchain.Default == null) return false;
 //        if (!Blockchain.Default.Ability.HasFlag(BlockchainAbility.TransactionIndexes) || !Blockchain.Default.Ability.HasFlag(BlockchainAbility.UnspentIndexes))
 //            return false;
@@ -104,7 +104,7 @@ public class ConsensusPayload extends Inventory
 //        if (Height != Blockchain.Default.Height + 1)
 //            return false;
 //        return this.VerifySignature();
-    	return false;
+        return false;
     }
 
 }

@@ -13,9 +13,9 @@ public abstract class Inventory implements ISignable
     {
         if (_hash == null)
         {
-        	// TODO
+            // TODO
             //_hash = new UInt256(GetHashData().Sha256().Sha256());
-        	_hash = new UInt256();
+            _hash = new UInt256();
         }
         return _hash;
     }

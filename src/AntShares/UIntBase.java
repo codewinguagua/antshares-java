@@ -5,9 +5,9 @@ import java.util.Arrays;
 
 public abstract class UIntBase implements Serializable
 {
-	private static final long serialVersionUID = 5471513971344249980L;
-	
-	byte[] data_bytes;
+    private static final long serialVersionUID = 5471513971344249980L;
+    
+    byte[] data_bytes;
 
     protected UIntBase(int bytes, byte[] value)
     {
@@ -24,14 +24,14 @@ public abstract class UIntBase implements Serializable
     @Override
     public boolean equals(Object obj)
     {
-    	if (obj == null)
-    	{
-    		return false;
-    	}
-    	if (obj == this)
-    	{
-    		return true;
-    	}
+        if (obj == null)
+        {
+            return false;
+        }
+        if (obj == this)
+        {
+            return true;
+        }
         if (!(obj instanceof UIntBase))
         {
             return false;
@@ -43,15 +43,15 @@ public abstract class UIntBase implements Serializable
     @Override
     public int hashCode()
     {
-    	//BitConverter.ToInt32(data_bytes, 0)
-    	int v = 0;
-    	v |= data_bytes[3];
-    	v <<= 8;
-    	v |= data_bytes[2];
-    	v <<= 8;
-    	v |= data_bytes[1];
-    	v <<= 8;
-    	v |= data_bytes[0];
+        //BitConverter.ToInt32(data_bytes, 0)
+        int v = 0;
+        v |= data_bytes[3];
+        v <<= 8;
+        v |= data_bytes[2];
+        v <<= 8;
+        v |= data_bytes[1];
+        v <<= 8;
+        v |= data_bytes[0];
         return v;
     }
 
@@ -74,13 +74,13 @@ public abstract class UIntBase implements Serializable
     public static boolean equals(UIntBase left, UIntBase right)
     {
         if (left == null || right == null)
-    	{
-    		return false;
-    	}
-    	if (left == right)
-    	{
-    		return true;
-    	}
+        {
+            return false;
+        }
+        if (left == right)
+        {
+            return true;
+        }
         return left.equals(right);
     }
 

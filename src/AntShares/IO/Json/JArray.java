@@ -12,7 +12,7 @@ public class JArray extends JObject // TODO, IList<JObject>
 
     public JArray(JObject[] items)
     {
-    	this.items.addAll(Arrays.asList(items));
+        this.items.addAll(Arrays.asList(items));
     }
 
     public JArray(Collection<JObject> items)
@@ -22,7 +22,7 @@ public class JArray extends JObject // TODO, IList<JObject>
 
     public JObject get(int index)
     {
-    	return items.get(index);
+        return items.get(index);
     }
     
     public void set(int index, JObject jobj)
@@ -57,12 +57,12 @@ public class JArray extends JObject // TODO, IList<JObject>
 
     public void copyTo(JObject[] array, int arrayIndex)
     {
-    	for (JObject jobj : items) {
-    		array[arrayIndex++] = jobj;
-    		if (arrayIndex >= array.length) {
-    			break;
-    		}
-    	}
+        for (JObject jobj : items) {
+            array[arrayIndex++] = jobj;
+            if (arrayIndex >= array.length) {
+                break;
+            }
+        }
     }
 
     public Iterator<JObject> GetEnumerator()

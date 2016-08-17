@@ -65,15 +65,15 @@ public enum TransactionAttributeUsage
     Remark15(0xff),
 
     ;
-	private byte value;
+    private byte value;
 
-	TransactionAttributeUsage(int v)
-	{
-		value = (byte)v;
-	}
+    TransactionAttributeUsage(int v)
+    {
+        value = (byte)v;
+    }
 
-	public byte getByte()
-	{
-		return value;
-	}
+    public byte getByte()
+    {
+        return value;
+    }
 }

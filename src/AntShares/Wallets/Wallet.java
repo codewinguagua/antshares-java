@@ -19,7 +19,7 @@ import AntShares.IO.Caching.TrackableCollection;
 
 public abstract class Wallet // TODO : IDisposable
 {
-	// TODO
+    // TODO
     //public event EventHandler BalanceChanged;
 
     public static final byte CoinVersion = 0x17;
@@ -38,11 +38,11 @@ public abstract class Wallet // TODO : IDisposable
     protected String getDbPath() { return path; }
     private Object syncRoot;
     protected Object getSyncRoot() {
-    	if (syncRoot == null) syncRoot = new Object();
-    	return syncRoot;
+        if (syncRoot == null) syncRoot = new Object();
+        return syncRoot;
     }
     protected int getWalletHeight() {
-    	return current_height;
+        return current_height;
     }
 
     private Wallet(String path, byte[] passwordKey, boolean create)
@@ -73,7 +73,7 @@ public abstract class Wallet // TODO : IDisposable
         }
         else
         {
-        	// TODO
+            // TODO
 //            byte[] passwordHash = LoadStoredData("PasswordHash");
 //            if (passwordHash != null && !passwordHash.SequenceEqual(passwordKey.Sha256()))
 //                throw new CryptographicException();
@@ -94,9 +94,9 @@ public abstract class Wallet // TODO : IDisposable
 
     protected Wallet(String path, String password, boolean create)
     {
-    	// TODO
+        // TODO
         //this(path, password.ToAesKey(), create)
-    	this(path, password.getBytes(), create);
+        this(path, password.getBytes(), create);
     }
 
     // TODO
@@ -140,7 +140,7 @@ public abstract class Wallet // TODO : IDisposable
 //                unclaimed.Add(claimable[claim.PrevIndex]);
 //            }
 //        }
-        Fixed8 amount_claimed = Fixed8.Zero;
+        Fixed8 amount_claimed = Fixed8.ZERO;
 //        for (var group : unclaimed.GroupBy(p => new { p.StartHeight, p.EndHeight }))
 //        {
 //            uint amount = 0;
@@ -192,15 +192,15 @@ public abstract class Wallet // TODO : IDisposable
 //                Array.Clear(passwordKey, 0, passwordKey.length);
 //            }
 //        }
-    	// TODO
-    	return true;
+        // TODO
+        return true;
     }
 
     public boolean ContainsAccount(ECPoint publicKey)
     {
-    	// TODO
+        // TODO
         //return ContainsAccount(publicKey.EncodePoint(true).ToScriptHash());
-    	return true;
+        return true;
     }
 
     public boolean ContainsAccount(UInt160 publicKeyHash)
@@ -301,8 +301,8 @@ public abstract class Wallet // TODO : IDisposable
 //        {
 //            return decryptedPrivateKey.AesEncrypt(masterKey, iv);
 //        }
-    	// TODO
-    	return null;
+        // TODO
+        return null;
     }
 
     public Iterable<Coin> FindCoins()
@@ -310,7 +310,7 @@ public abstract class Wallet // TODO : IDisposable
         synchronized (coins)
         {
             //return coins.Where(p => p.State == CoinState.Unconfirmed || p.State == CoinState.Unspent).ToArray();
-        	return null;
+            return null;
         }
     }
 
@@ -319,7 +319,7 @@ public abstract class Wallet // TODO : IDisposable
         synchronized (coins)
         {
             //return coins.Where(p => p.State == CoinState.Unspent).ToArray();
-        	return null;
+            return null;
         }
     }
 
@@ -328,7 +328,7 @@ public abstract class Wallet // TODO : IDisposable
         synchronized (coins)
         {
             //return FindUnspentCoins(coins.Where(p => p.State == CoinState.Unspent), asset_id, amount);
-        	return null;
+            return null;
         }
     }
 
@@ -346,13 +346,13 @@ public abstract class Wallet // TODO : IDisposable
 //            return unspents_ordered.Take(i).ToArray();
 //        else
 //            return unspents_ordered.Take(i).Concat(new[] { unspents_ordered.Last(p => p.Value >= amount) }).ToArray();
-    	return null;
+        return null;
     }
 
     public Account GetAccount(ECPoint publicKey)
     {
         //return GetAccount(publicKey.EncodePoint(true).ToScriptHash());
-    	return null;
+        return null;
     }
 
     public Account GetAccount(UInt160 publicKeyHash)
@@ -361,7 +361,7 @@ public abstract class Wallet // TODO : IDisposable
         {
 //            if (!accounts.ContainsKey(publicKeyHash)) return null;
 //            return accounts[publicKeyHash];
-        	return null;
+            return null;
         }
     }
 
@@ -373,7 +373,7 @@ public abstract class Wallet // TODO : IDisposable
             {
 //                if (!contracts.ContainsKey(scriptHash)) return null;
 //                return accounts[contracts[scriptHash].PublicKeyHash];
-            	return null;
+                return null;
             }
         }
     }
@@ -387,7 +387,7 @@ public abstract class Wallet // TODO : IDisposable
 //                yield return pair.Value;
 //            }
 //        }
-    	return null;
+        return null;
     }
 
     public Iterable<UInt160> GetAddresses()
@@ -399,7 +399,7 @@ public abstract class Wallet // TODO : IDisposable
 //                yield return pair.Key;
 //            }
 //        }
-    	return null;
+        return null;
     }
 
     public Fixed8 GetAvailable(UInt256 asset_id)
@@ -408,7 +408,7 @@ public abstract class Wallet // TODO : IDisposable
 //        {
 //            return coins.Where(p => p.State == CoinState.Unspent && p.AssetId == asset_id).Sum(p => p.Value);
 //        }
-    	return null;
+        return null;
     }
 
     public Fixed8 GetBalance(UInt256 asset_id)
@@ -417,7 +417,7 @@ public abstract class Wallet // TODO : IDisposable
 //        {
 //            return coins.Where(p => (p.State == CoinState.Unconfirmed || p.State == CoinState.Unspent) && p.AssetId == asset_id).Sum(p => p.Value);
 //        }
-    	return null;
+        return null;
     }
 
     public UInt160 GetChangeAddress()
@@ -426,7 +426,7 @@ public abstract class Wallet // TODO : IDisposable
 //        {
 //            return contracts.Values.FirstOrDefault(p => p is SignatureContract)?.ScriptHash ?? contracts.Keys.FirstOrDefault();
 //        }
-    	return null;
+        return null;
     }
 
     public Contract GetContract(UInt160 scriptHash)
@@ -446,7 +446,7 @@ public abstract class Wallet // TODO : IDisposable
 //            {
 //                yield return pair.Value;
 //            }
-        	return null;
+            return null;
         }
     }
 
@@ -458,7 +458,7 @@ public abstract class Wallet // TODO : IDisposable
 //            {
 //                yield return contract;
 //            }
-        	return null;
+            return null;
         }
     }
 
@@ -486,7 +486,7 @@ public abstract class Wallet // TODO : IDisposable
 //            {
 //                yield return coin;
 //            }
-        	return null;
+            return null;
         }
     }
 
@@ -521,7 +521,7 @@ public abstract class Wallet // TODO : IDisposable
     // TODO
     public <T> T MakeTransaction(T tx, Fixed8 fee) // TODO where T : Transaction
     {
-		return tx;
+        return tx;
 //        if (tx.Outputs == null) throw new ArgumentException();
 //        if (tx.Attributes == null) tx.Attributes = new TransactionAttribute[0];
 //        fee += tx.SystemFee;
@@ -683,7 +683,7 @@ public abstract class Wallet // TODO : IDisposable
         {
             synchronized (coins)
             {
-            	// TODO
+                // TODO
                 //coins.Clear();
                 coins.Commit();
                 current_height = 0;
@@ -752,7 +752,7 @@ public abstract class Wallet // TODO : IDisposable
     {
 //        byte[] data = new byte[] { CoinVersion }.Concat(scriptHash.ToArray()).ToArray();
 //        return Base58.Encode(data.Concat(data.Sha256().Sha256().Take(4)).ToArray());
-    	return "";
+        return "";
     }
 
     public static UInt160 ToScriptHash(String address)

@@ -18,8 +18,8 @@ public class ECDsa
      */
     public ECDsa(byte[] privateKey, ECCurve curve)
     {
-    	// TODO
-    	//this(curve.G * privateKey);
+        // TODO
+        //this(curve.G * privateKey);
         this.privateKey = privateKey;
     }
 
@@ -42,8 +42,8 @@ public class ECDsa
 //            trunc >>= messageBitLength - n.GetBitLength();
 //        }
 //        return trunc;
-    	// TODO
-    	return BigInteger.ONE;
+        // TODO
+        return BigInteger.ONE;
     }
 
     /**
@@ -83,8 +83,8 @@ public class ECDsa
 //            while (s.Sign == 0);
 //        }
 //        return new BigInteger[] { r, s };
-    	// TODO
-    	return new BigInteger[1];
+        // TODO
+        return new BigInteger[1];
     }
 
     static ECPoint SumOfTwoMultiplies(ECPoint P, BigInteger k, ECPoint Q, BigInteger l)
@@ -109,8 +109,8 @@ public class ECDsa
 //            }
 //        }
 //        return R;
-    	//TODO
-    	return null;
+        //TODO
+        return null;
     }
 
     /**
@@ -131,6 +131,6 @@ public class ECDsa
 //        ECPoint point = SumOfTwoMultiplies(curve.G, u1, publicKey, u2);
 //        BigInteger v = point.X.Value.Mod(curve.N);
 //        return v.Equals(r);
-    	return false;
+        return false;
     }
 }

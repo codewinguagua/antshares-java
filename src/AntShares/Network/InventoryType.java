@@ -22,11 +22,11 @@ public enum InventoryType
     int value;
     private InventoryType(int v)
     {
-    	value = v;
+        value = v;
     }
     
     public int get() {
-    	return value;
+        return value;
     }
 }
 

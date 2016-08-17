@@ -37,13 +37,13 @@ public enum BlockchainAbility
 
     private byte value;
 
-	BlockchainAbility(int v)
-	{
-		value = (byte)v;
-	}
+    BlockchainAbility(int v)
+    {
+        value = (byte)v;
+    }
 
-	public byte getByte()
-	{
-		return value;
-	}
+    public byte getByte()
+    {
+        return value;
+    }
 }

@@ -22,7 +22,7 @@ public class JObject
 
     public void set(String name, JObject value)
     {
-    	properties.put(name, value);
+        properties.put(name, value);
     }
 
     public boolean AsBoolean()
@@ -86,7 +86,7 @@ public class JObject
     public static JObject Parse(Reader reader) throws IOException
     {
     // TODO
-    	return new JObject();
+        return new JObject();
 //        SkipSpace(reader);
 //        char firstChar = (char)reader.Peek();
 //        if (firstChar == '\"' || firstChar == '\'')
@@ -129,7 +129,7 @@ public class JObject
 
     public static JObject Parse(String value) throws IOException
     {
-    	StringReader reader = new StringReader(value);
+        StringReader reader = new StringReader(value);
         return Parse(reader);
     }
 
