@@ -112,7 +112,7 @@ public class ScriptBuilder // TODO : IDisposable
      */
     public ScriptBuilder Push(UIntBase hash)
     {
-        return Push(hash.ToArray());
+        return Push(hash.toArray());
     }
 
     /**

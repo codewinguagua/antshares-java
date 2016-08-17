@@ -13,6 +13,11 @@ public class BinaryWriter
 	{
 		this.writer = new DataOutputStream(stream);
 	}
+	
+	public void write(byte[] buffer) throws IOException
+	{
+		writer.write(buffer);
+	}
 
 	public void writeBoolean(boolean v) throws IOException
 	{
@@ -52,5 +57,30 @@ public class BinaryWriter
 	{
 		buffer.putShort(0, v);
 		writer.write(array, 0, 2);
+	}
+	
+	public void writeVarInt(long v) throws IOException
+	{
+        if (v < 0)
+            throw new IllegalArgumentException();
+        if (v < 0xFD)
+        {
+            writeByte((byte)v);
+        }
+        else if (v <= 0xFFFF)
+        {
+            writeByte((byte)0xFD);
+            writeShort((short)v);
+        }
+        else if (v <= 0xFFFFFFFF)
+        {
+        	writeByte((byte)0xFE);
+            writeInt((int)v);
+        }
+        else
+        {
+            writeByte((byte)0xFF);
+            writeLong(v);
+        }
 	}
 }

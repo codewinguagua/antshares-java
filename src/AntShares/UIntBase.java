@@ -1,13 +1,13 @@
 package AntShares;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.util.Arrays;
+
+import AntShares.IO.*;
 
 public abstract class UIntBase implements Serializable
 {
-    private static final long serialVersionUID = 5471513971344249980L;
-    
-    byte[] data_bytes;
+    protected byte[] data_bytes;
 
     protected UIntBase(int bytes, byte[] value)
     {
@@ -55,7 +55,7 @@ public abstract class UIntBase implements Serializable
         return v;
     }
 
-    public byte[] ToArray()
+    public byte[] toArray()
     {
         return data_bytes;
     }
@@ -70,18 +70,16 @@ public abstract class UIntBase implements Serializable
 //    {
 //        return data_bytes.Reverse().ToHexString();
 //    }
-
-    public static boolean equals(UIntBase left, UIntBase right)
+    
+    @Override
+    public void serialize(BinaryWriter writer) throws IOException
     {
-        if (left == null || right == null)
-        {
-            return false;
-        }
-        if (left == right)
-        {
-            return true;
-        }
-        return left.equals(right);
+    	writer.write(data_bytes);
     }
-
+    
+    @Override
+    public void deserialize(BinaryReader reader) throws IOException
+    {
+    	reader.read(data_bytes);
+    }
 }

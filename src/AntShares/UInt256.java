@@ -2,9 +2,7 @@ package AntShares;
 
 public class UInt256 extends UIntBase implements Comparable<UInt256>
 {
-    private static final long serialVersionUID = -5460860333759761748L;
-
-    public static final UInt256 Zero = new UInt256();
+    public static final UInt256 ZERO = new UInt256();
 
     public UInt256()
     {
@@ -19,8 +17,8 @@ public class UInt256 extends UIntBase implements Comparable<UInt256>
     @Override
     public int compareTo(UInt256 other)
     {
-        byte[] x = ToArray();
-        byte[] y = other.ToArray();
+        byte[] x = this.data_bytes;
+        byte[] y = other.data_bytes;
         for (int i = x.length - 1; i >= 0; i--)
         {
             if (x[i] > y[i])
@@ -31,7 +29,7 @@ public class UInt256 extends UIntBase implements Comparable<UInt256>
         return 0;
     }
 
-    public static UInt256 Parse(String s)
+    public static UInt256 parse(String s)
     {
         if (s == null)
             throw new NullPointerException();
@@ -43,34 +41,14 @@ public class UInt256 extends UIntBase implements Comparable<UInt256>
         return new UInt256(Helper.reverse(v));
     }
 
-    public static boolean TryParse(String s, UInt256 result)
+    public static boolean tryParse(String s, UInt256 result)
     {
         try {
-            UInt256 v = Parse(s);
+            UInt256 v = parse(s);
             result.data_bytes = v.data_bytes;
             return true;
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public static boolean greaterThan(UInt256 left, UInt256 right)
-    {
-        return left.compareTo(right) > 0;
-    }
-
-    public static boolean greaterOrEqual(UInt256 left, UInt256 right)
-    {
-        return left.compareTo(right) >= 0;
-    }
-
-    public static boolean lessThan(UInt256 left, UInt256 right)
-    {
-        return left.compareTo(right) < 0;
-    }
-
-    public static boolean lessOrEqual(UInt256 left, UInt256 right)
-    {
-        return left.compareTo(right) <= 0;
     }
 }
