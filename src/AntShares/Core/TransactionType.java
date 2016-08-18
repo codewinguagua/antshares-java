@@ -46,9 +46,16 @@ public enum TransactionType
         value = (byte)v;
     }
 
-    public byte getByte()
+    public byte value()
     {
         return value;
     }
 
+    public static TransactionType valueOf(byte v)
+    {
+    	for (TransactionType e : TransactionType.values())
+    		if (e.value == v)
+    			return e;
+    	throw new IllegalArgumentException();
+    }
 }
