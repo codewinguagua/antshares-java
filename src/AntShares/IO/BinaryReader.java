@@ -1,10 +1,10 @@
 package AntShares.IO;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.*;
-import java.util.Vector;
 
-public class BinaryReader
+public class BinaryReader implements AutoCloseable
 {
 	private DataInputStream reader;
 	private byte[] array = new byte[8];
@@ -13,6 +13,12 @@ public class BinaryReader
 	public BinaryReader(InputStream stream)
 	{
 		this.reader = new DataInputStream(stream);
+	}
+
+	@Override
+	public void close() throws IOException
+	{
+		reader.close();
 	}
 
 	public void read(byte[] buffer) throws IOException
@@ -83,14 +89,14 @@ public class BinaryReader
 	
 	public <T extends Serializable> T[] readSerializableArray(Class<T> t) throws InstantiationException, IllegalAccessException, IOException
 	{
-		Vector<T> vector = new Vector<T>((int)readVarInt(0x10000000));
-		for (int i = 0; i < vector.capacity(); i++)
+		@SuppressWarnings("unchecked")
+		T[] array = (T[])Array.newInstance(t, (int)readVarInt(0x10000000));
+		for (int i = 0; i < array.length; i++)
 		{
-			T obj = t.newInstance();
-			obj.deserialize(this);
-			vector.addElement(obj);
+			array[i] = t.newInstance();
+			array[i].deserialize(this);
 		}
-		return vector.toArray(null);
+		return array;
 	}
 	
 	public short readShort() throws IOException

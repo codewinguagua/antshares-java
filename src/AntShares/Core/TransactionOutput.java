@@ -1,29 +1,51 @@
 package AntShares.Core;
 
-import java.io.Serializable;
+import java.io.IOException;
 
-import AntShares.Fixed8;
-import AntShares.UInt160;
-import AntShares.UInt256;
+import AntShares.*;
+import AntShares.IO.*;
 
 /**
  *  交易输出
  */
 public class TransactionOutput implements Serializable
 {
-    private static final long serialVersionUID = -8486024867292581586L;
     /**
      *  资产编号
      */
-    public UInt256 AssetId;
+    public UInt256 assetId;
     /**
      *  金额
      */
-    public Fixed8 Value;
+    public Fixed8 value;
     /**
      *  收款地址
      */
-    public UInt160 ScriptHash;
+    public UInt160 scriptHash;
+    
+	@Override
+	public void serialize(BinaryWriter writer) throws IOException
+	{
+		writer.writeSerializable(assetId);
+		writer.writeSerializable(value);
+		writer.writeSerializable(scriptHash);
+	}
+	
+	@Override
+	public void deserialize(BinaryReader reader) throws IOException
+	{
+		try
+		{
+			assetId = reader.readSerializable(UInt256.class);
+			value = reader.readSerializable(Fixed8.class);
+			if (value.compareTo(Fixed8.ZERO) <= 0)
+				throw new IOException();
+			scriptHash = reader.readSerializable(UInt160.class);
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+		}
+	}
 
 // TODO
 //    /**

@@ -1,7 +1,6 @@
 package AntShares.Core;
 
 import AntShares.UInt160;
-import AntShares.Core.Scripts.Script;
 import AntShares.IO.*;
 
 /**
@@ -9,11 +8,6 @@ import AntShares.IO.*;
  */
 public interface Signable extends Serializable
 {
-    /**
-     *  用于验证该对象的脚本列表
-     */
-    Script[] getScripts();
-
     /**
      *  反序列化未签名的数据
      *  <param name="reader">数据来源</param>
@@ -31,5 +25,4 @@ public interface Signable extends Serializable
      *  <returns>返回需要校验的脚本Hash值</returns>
      */
     UInt160[] getScriptHashesForVerifying();
-
 }

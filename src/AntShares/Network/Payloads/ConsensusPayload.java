@@ -13,17 +13,11 @@ public class ConsensusPayload extends Inventory
     public short MinerIndex;
     public int Timestamp;
     public byte[] Data;
-    public AntShares.Core.Scripts.Script script;
+    public Script script;
 
     @Override
-    public InventoryType getInventoryType() {
+    public InventoryType inventoryType() {
         return InventoryType.Consensus;
-    }
-
-    @Override
-    public Script[] getScripts()
-    {
-        return new Script[] { script }; 
     }
 
     @Override
@@ -82,7 +76,7 @@ public class ConsensusPayload extends Inventory
     }
 
     @Override
-    public boolean Verify()
+    public boolean verify()
     {
         // TODO
 //        if (Blockchain.Default == null) return false;

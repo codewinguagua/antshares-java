@@ -3,7 +3,7 @@ package AntShares.IO;
 import java.io.*;
 import java.nio.*;
 
-public class BinaryWriter
+public class BinaryWriter implements AutoCloseable
 {
 	private DataOutputStream writer;
 	private byte[] array = new byte[8];
@@ -14,11 +14,27 @@ public class BinaryWriter
 		this.writer = new DataOutputStream(stream);
 	}
 	
+	@Override
+	public void close() throws IOException
+	{
+		writer.close();
+	}
+	
+	public void flush() throws IOException
+	{
+		writer.flush();
+	}
+	
 	public void write(byte[] buffer) throws IOException
 	{
 		writer.write(buffer);
 	}
 
+	public void write(byte[] buffer, int index, int length) throws IOException
+	{
+		writer.write(buffer, index, length);
+	}
+	
 	public void writeBoolean(boolean v) throws IOException
 	{
 		writer.writeBoolean(v);
@@ -33,6 +49,20 @@ public class BinaryWriter
 	{
 		buffer.putDouble(0, v);
 		writer.write(array, 0, 8);
+	}
+	
+	public void writeFixedString(String v, int length) throws IOException
+	{
+		if (v == null)
+			throw new IllegalArgumentException();
+		if (v.length() > length)
+			throw new IllegalArgumentException();
+		byte[] bytes = v.getBytes("UTF-8");
+		if (bytes.length > length)
+			throw new IllegalArgumentException();
+		writer.write(bytes);
+		if (bytes.length < length)
+			writer.write(new byte[length - bytes.length]);
 	}
 	
 	public void writeFloat(float v) throws IOException
@@ -53,10 +83,28 @@ public class BinaryWriter
 		writer.write(array, 0, 8);
 	}
 	
+	public void writeSerializable(Serializable v) throws IOException
+	{
+		v.serialize(this);
+	}
+	
+	public void writeSerializableArray(Serializable[] v) throws IOException
+	{
+		writeVarInt(v.length);
+		for (int i = 0; i < v.length; i++)
+			v[i].serialize(this);
+	}
+	
 	public void writeShort(short v) throws IOException
 	{
 		buffer.putShort(0, v);
 		writer.write(array, 0, 2);
+	}
+	
+	public void writeVarBytes(byte[] v) throws IOException
+	{
+		writeVarInt(v.length);
+		writer.write(v);
 	}
 	
 	public void writeVarInt(long v) throws IOException
@@ -82,5 +130,10 @@ public class BinaryWriter
             writeByte((byte)0xFF);
             writeLong(v);
         }
+	}
+	
+	public void writeVarString(String v) throws IOException
+	{
+		writeVarBytes(v.getBytes("UTF-8"));
 	}
 }

@@ -44,12 +44,6 @@ public class Order implements Signable
     public Script[] scripts;
 
     @Override
-    public Script[] getScripts()
-    {
-        return scripts;
-    }
-
-    @Override
     public void deserialize(BinaryReader reader)
     {
         //deserializeUnsigned(reader);

@@ -1,36 +1,52 @@
 package AntShares.Network;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import AntShares.UInt256;
 import AntShares.Core.Signable;
+import AntShares.IO.BinaryWriter;
 
 public abstract class Inventory implements Signable
 {
     //[NonSerialized]
     private UInt256 _hash = null;
-    public UInt256 get()
+    public UInt256 hash()
     {
         if (_hash == null)
         {
-            // TODO
-            //_hash = new UInt256(GetHashData().Sha256().Sha256());
-            _hash = new UInt256();
+        	try
+        	{
+				MessageDigest md = MessageDigest.getInstance("SHA-256");
+				_hash = new UInt256(md.digest(md.digest(getHashData())));
+			}
+        	catch (NoSuchAlgorithmException e)
+        	{
+			}
         }
         return _hash;
     }
 
-    public abstract InventoryType getInventoryType();
+    public abstract InventoryType inventoryType();
 
-    // TODO
-//    protected virtual byte[] GetHashData()
-//    {
-//        using (MemoryStream ms = new MemoryStream())
-//        using (BinaryWriter writer = new BinaryWriter(ms))
-//        {
-//            SerializeUnsigned(writer);
-//            writer.Flush();
-//            return ms.ToArray();
-//        }
-//    }
+    protected byte[] getHashData()
+    {
+    	try (ByteArrayOutputStream ms = new ByteArrayOutputStream())
+    	{
+	    	try (BinaryWriter writer = new BinaryWriter(ms))
+	        {
+	            serializeUnsigned(writer);
+	            writer.flush();
+	            return ms.toByteArray();
+	        }
+    	}
+    	catch (IOException ex)
+    	{
+    		throw new UnsupportedOperationException(ex);
+    	}
+    }
 
-    public abstract boolean Verify();
+    public abstract boolean verify();
 }

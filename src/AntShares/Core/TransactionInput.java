@@ -1,23 +1,23 @@
 package AntShares.Core;
 
-import java.io.Serializable;
+import java.io.IOException;
 
 import AntShares.UInt256;
+import AntShares.IO.*;
 
 /**
  *  交易输入
  */
 public class TransactionInput implements Serializable
 {
-    private static final long serialVersionUID = -1788728962124438893L;
     /**
      *  引用交易的散列值
      */
-    public UInt256 PrevHash;
+    public UInt256 prevHash;
     /**
      *  引用交易输出的索引
      */
-    public short PrevIndex; // TODO ushort -> short ?
+    public short prevIndex; // unsigned short
 
     /**
      *  比较当前对象与指定对象是否相等
@@ -31,7 +31,7 @@ public class TransactionInput implements Serializable
         if (null == obj) return false;
         if (!(obj instanceof TransactionInput)) return false;
         TransactionInput other = (TransactionInput) obj;
-        return PrevHash.equals(other.PrevHash) && PrevIndex == other.PrevIndex;
+        return prevHash.equals(other.prevHash) && prevIndex == other.prevIndex;
     }
 
     /**
@@ -41,8 +41,28 @@ public class TransactionInput implements Serializable
     @Override
     public int hashCode()
     {
-        return PrevHash.hashCode() + PrevIndex;
+        return prevHash.hashCode() + prevIndex;
     }
+
+	@Override
+	public void serialize(BinaryWriter writer) throws IOException
+	{
+		writer.writeSerializable(prevHash);
+		writer.writeShort(prevIndex);
+	}
+
+	@Override
+	public void deserialize(BinaryReader reader) throws IOException
+	{
+		try
+		{
+			prevHash = reader.readSerializable(UInt256.class);
+			prevIndex = reader.readShort();
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+		}
+	}
 
     /**
      *  将交易输入转变为json对象
