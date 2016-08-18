@@ -1,5 +1,8 @@
 package AntShares.Core;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 import AntShares.*;
 import AntShares.Core.Scripts.Script;
 import AntShares.IO.*;
@@ -12,76 +15,103 @@ public class Order implements Signable
     /**
      *  资产编号
      */
-    public UInt256 AssetId;
+    public UInt256 assetId;
     /**
      *  货币编号
      */
-    public UInt256 ValueAssetId;
+    public UInt256 valueAssetId;
     /**
      *  代理人的合约散列
      */
-    public UInt160 Agent;
+    public UInt160 agent;
     /**
      *  买入或卖出的数量，正数表示买入，负数表示卖出
      */
-    public Fixed8 Amount;
+    public Fixed8 amount;
     /**
      *  价格
      */
-    public Fixed8 Price;
+    public Fixed8 price;
     /**
      *  委托人的合约散列
      */
-    public UInt160 Client;
+    public UInt160 client;
     /**
      *  输入列表
      */
-// TODO
-//    public TransactionInput[] Inputs;
-//    /**
-//     *  用于验证该订单的脚本列表
-//     */
+    public TransactionInput[] inputs;
+    /**
+     *  用于验证该订单的脚本列表
+     */
     public Script[] scripts;
 
     @Override
-    public void deserialize(BinaryReader reader)
+    public void deserialize(BinaryReader reader) throws IOException
     {
-        //deserializeUnsigned(reader);
-        //Scripts = reader.ReadSerializableArray<Script>();
+        deserializeUnsigned(reader);
+        try
+        {
+			scripts = reader.readSerializableArray(Script.class);
+		}
+        catch (InstantiationException | IllegalAccessException ex)
+        {
+        	throw new IOException(ex);
+		}
     }
 
-//    internal void DeserializeInTransaction(BinaryReader reader, AgencyTransaction tx)
-//    {
-//        DeserializeUnsignedInternal(reader, tx.AssetId, tx.ValueAssetId, tx.Agent);
-//        Scripts = reader.ReadSerializableArray<Script>();
-//    }
+    void deserializeInTransaction(BinaryReader reader, AgencyTransaction tx) throws IOException
+    {
+        deserializeUnsignedInternal(reader, tx.assetId, tx.valueAssetId, tx.agent);
+        try
+        {
+			scripts = reader.readSerializableArray(Script.class);
+		}
+        catch (InstantiationException | IllegalAccessException ex)
+        {
+			throw new IOException(ex);
+		}
+    }
 
     @Override
-    public void deserializeUnsigned(BinaryReader reader)
+    public void deserializeUnsigned(BinaryReader reader) throws IOException
     {
-//        UInt256 asset_id = reader.ReadSerializable<UInt256>();
-//        UInt256 value_asset_id = reader.ReadSerializable<UInt256>();
-//        if (asset_id == value_asset_id) throw new FormatException();
-//        UInt160 agent = reader.ReadSerializable<UInt160>();
-//        DeserializeUnsignedInternal(reader, asset_id, value_asset_id, agent);
+    	try
+    	{
+	        UInt256 asset_id = reader.readSerializable(UInt256.class);
+	        UInt256 value_asset_id = reader.readSerializable(UInt256.class);
+	        if (asset_id.equals(value_asset_id)) throw new IOException();
+	        UInt160 agent = reader.readSerializable(UInt160.class);
+	        deserializeUnsignedInternal(reader, asset_id, value_asset_id, agent);
+    	}
+    	catch (InstantiationException | IllegalAccessException ex)
+    	{
+    		throw new IOException(ex);
+    	}
     }
 
-//    private void DeserializeUnsignedInternal(BinaryReader reader, UInt256 asset_id, UInt256 value_asset_id, UInt160 agent)
-//    {
-//        AssetId = asset_id;
-//        ValueAssetId = value_asset_id;
-//        Agent = agent;
-//        Amount = reader.ReadSerializable<Fixed8>();
-//        if (Amount == Fixed8.Zero) throw new FormatException();
-//        if (Amount.GetData() % 10000 != 0) throw new FormatException();
-//        Price = reader.ReadSerializable<Fixed8>();
-//        if (Price <= Fixed8.Zero) throw new FormatException();
-//        if (Price.GetData() % 10000 != 0) throw new FormatException();
-//        Client = reader.ReadSerializable<UInt160>();
-//        Inputs = reader.ReadSerializableArray<TransactionInput>();
-//        if (Inputs.Distinct().Count() != Inputs.Length)
-//            throw new FormatException();
-//    }
+    private void deserializeUnsignedInternal(BinaryReader reader, UInt256 asset_id, UInt256 value_asset_id, UInt160 agent) throws IOException
+    {
+    	try
+    	{
+	    	this.assetId = asset_id;
+	        this.valueAssetId = value_asset_id;
+	        this.agent = agent;
+	        this.amount = reader.readSerializable(Fixed8.class);
+	        if (amount.equals(Fixed8.ZERO)) throw new IOException();
+	        if (amount.getData() % 10000 != 0) throw new IOException();
+	        this.price = reader.readSerializable(Fixed8.class);
+	        if (price.compareTo(Fixed8.ZERO) <= 0) throw new IOException();
+	        if (price.getData() % 10000 != 0) throw new IOException();
+	        this.client = reader.readSerializable(UInt160.class);
+	        this.inputs = reader.readSerializableArray(TransactionInput.class);
+	        if (Arrays.stream(inputs).distinct().count() != inputs.length)
+	            throw new IOException();
+    	}
+    	catch (InstantiationException | IllegalAccessException ex)
+    	{
+    		throw new IOException(ex);
+    	}
+    }
 
     @Override
     public UInt160[] getScriptHashesForVerifying()
@@ -100,34 +130,34 @@ public class Order implements Signable
 //            hashes.UnionWith(group.Select(p => tx.Outputs[p.PrevIndex].ScriptHash));
 //        }
 //        return hashes.OrderBy(p => p).ToArray();
-        return null;
+        return new UInt160[0];
     }
 
     @Override
-    public void serialize(BinaryWriter writer)
+    public void serialize(BinaryWriter writer) throws IOException
     {
-//        ((ISignable)this).SerializeUnsigned(writer);
-//        writer.Write(Scripts);
+        serializeUnsigned(writer);
+        writer.writeSerializableArray(scripts);
     }
 
-//    internal void SerializeInTransaction(BinaryWriter writer)
-//    {
-//        writer.Write(Amount);
-//        writer.Write(Price);
-//        writer.Write(Client);
-//        writer.Write(Inputs);
-//        writer.Write(Scripts);
-//    }
-//
-    @Override
-    public void serializeUnsigned(BinaryWriter writer)
+    void serializeInTransaction(BinaryWriter writer) throws IOException
     {
-//        writer.Write(AssetId);
-//        writer.Write(ValueAssetId);
-//        writer.Write(Agent);
-//        writer.Write(Amount);
-//        writer.Write(Price);
-//        writer.Write(Client);
-//        writer.Write(Inputs);
+        writer.writeSerializable(amount);
+        writer.writeSerializable(price);
+        writer.writeSerializable(client);
+        writer.writeSerializableArray(inputs);
+        writer.writeSerializableArray(scripts);
+    }
+
+    @Override
+    public void serializeUnsigned(BinaryWriter writer) throws IOException
+    {
+        writer.writeSerializable(assetId);
+        writer.writeSerializable(valueAssetId);
+        writer.writeSerializable(agent);
+        writer.writeSerializable(amount);
+        writer.writeSerializable(price);
+        writer.writeSerializable(client);
+        writer.writeSerializableArray(inputs);
     }
 }

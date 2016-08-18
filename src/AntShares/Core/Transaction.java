@@ -35,7 +35,7 @@ public abstract class Transaction extends Inventory
 		}
 	}
 	
-	protected void deserializeExclusiveData(BinaryReader reader)
+	protected void deserializeExclusiveData(BinaryReader reader) throws IOException
 	{
 	}
 	
@@ -163,7 +163,7 @@ public abstract class Transaction extends Inventory
         writer.writeSerializableArray(scripts);
 	}
 	
-	protected void serializeExclusiveData(BinaryWriter writer)
+	protected void serializeExclusiveData(BinaryWriter writer) throws IOException
 	{
 	}
 	
