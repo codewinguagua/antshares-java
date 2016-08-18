@@ -3,7 +3,7 @@ package AntShares.IO.Caching;
 import AntShares.UInt256;
 import AntShares.Network.Inventory;
 
-abstract class RelayCache extends FIFOCache<UInt256, Inventory>
+public class RelayCache extends FIFOCache<UInt256, Inventory>
 {
     public RelayCache(int max_capacity)
     {
