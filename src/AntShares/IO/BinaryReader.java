@@ -4,8 +4,9 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.*;
 
-import org.bouncycastle.asn1.x9.ECNamedCurveTable;
 import org.bouncycastle.math.ec.ECPoint;
+
+import AntShares.Cryptography.ECC;
 
 public class BinaryReader implements AutoCloseable
 {
@@ -80,7 +81,7 @@ public class BinaryReader implements AutoCloseable
 		default:
 			throw new IOException();
 		}
-		return ECNamedCurveTable.getByName("secp256r1").getCurve().decodePoint(encoded);
+		return ECC.secp256r1.getCurve().decodePoint(encoded);
 	}
 	
 	public String readFixedString(int length) throws IOException

@@ -1,10 +1,15 @@
 package AntShares.Core;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import AntShares.*;
 import AntShares.Core.Scripts.*;
+import AntShares.Cryptography.MerkleTree;
 import AntShares.IO.*;
+import AntShares.IO.Serializable;
 import AntShares.IO.Json.JObject;
 import AntShares.Network.*;
 
@@ -16,39 +21,39 @@ public class Block extends Inventory
     /**
      *  区块版本
      */
-    public int Version;
+    public int version; // unsigned int
     /**
      *  前一个区块的散列值
      */
-    public UInt256 PrevBlock;
+    public UInt256 prevBlock;
     /**
      *  该区块中所有交易的Merkle树的根
      */
-    public UInt256 MerkleRoot;
+    public UInt256 merkleRoot;
     /**
      *  时间戳
      */
-    public int Timestamp;
+    public int timestamp; // unsigned int
     /**
      *  区块高度
      */
-    public int Height;
+    public int height; // unsigned int
     /**
      *  随机数
      */
-    public long Nonce;
+    public long nonce; // unsigned long
     /**
      *  下一个区块的记账合约的散列值
      */
-    public UInt160 NextMiner;
+    public UInt160 nextMiner;
     /**
      *  用于验证该区块的脚本
      */
-    public Script Script;
+    public Script script;
     /**
      *  交易列表，当列表中交易的数量为0时，该Block对象表示一个区块头
      */
-    public Transaction[] Transactions;
+    public Transaction[] transactions;
 
 // TODO
 //    [NonSerialized]
@@ -56,20 +61,20 @@ public class Block extends Inventory
     /**
      *  该区块的区块头
      */
-    public Block getHeader()
+    public Block header()
     {
-        if (IsHeader()) return this;
+        if (isHeader()) return this;
         if (_header == null)
         {
             _header = new Block();
-            _header.PrevBlock = PrevBlock;
-            _header.MerkleRoot = this.MerkleRoot;
-            _header.Timestamp = this.Timestamp;
-            _header.Height = this.Height;
-            _header.Nonce = this.Nonce;
-            _header.NextMiner = this.NextMiner;
-            _header.Script = this.Script;
-            _header.Transactions = new Transaction[0];
+            _header.prevBlock = prevBlock;
+            _header.merkleRoot = this.merkleRoot;
+            _header.timestamp = this.timestamp;
+            _header.height = this.height;
+            _header.nonce = this.nonce;
+            _header.nextMiner = this.nextMiner;
+            _header.script = this.script;
+            _header.transactions = new Transaction[0];
         }
         return _header;
     }
@@ -79,26 +84,14 @@ public class Block extends Inventory
      */
     @Override public InventoryType getInventoryType() { return InventoryType.Block; }
 
-    //@Override 
-    public Script[] getScripts()
-    {
-        return new Script[] { Script };
-    }
-    
-    //@Override
-    public void setScripts(Script[] value)
-    {
-        if (value.length != 1) throw new IllegalArgumentException();
-        Script = value[0];
-    }
-
     /**
      *  返回当前Block对象是否为区块头
      */
-    public boolean IsHeader() { return Transactions.length == 0; }
+    public boolean isHeader() { return transactions.length == 0; }
 
-    public static Fixed8 CalculateNetFee(Iterable<Transaction> transactions)
+    public static Fixed8 calculateNetFee(Stream<Transaction> transactions)
     {
+    	//TODO
 //        Transaction[] ts = transactions.Where(p => p.Type != TransactionType.MinerTransaction && p.Type != TransactionType.ClaimTransaction).ToArray();
 //        Fixed8 amount_in = ts.SelectMany(p => p.References.Values.Where(o => o.AssetId == Blockchain.AntCoin.Hash)).Sum(p => p.Value);
 //        Fixed8 amount_out = ts.SelectMany(p => p.Outputs.Where(o => o.AssetId == Blockchain.AntCoin.Hash)).Sum(p => p.Value);
@@ -116,37 +109,47 @@ public class Block extends Inventory
      */
     @Override public void deserialize(BinaryReader reader) throws IOException
     {
-        ((Signable)this).deserializeUnsigned(reader);
-        if (reader.readByte() != 1) throw new FormatException();
-        // TODO
-        //Script = reader.readSerializable(Script.getClass());
-        Transactions = new Transaction[(int) reader.readVarInt(0x10000000)];
-        for (int i = 0; i < Transactions.length; i++)
+        deserializeUnsigned(reader);
+        if (reader.readByte() != 1) throw new IOException();
+        try
         {
-            Transactions[i] = Transaction.deserializeFrom(reader);
+			script = reader.readSerializable(Script.class);
+		}
+        catch (InstantiationException | IllegalAccessException ex)
+        {
+        	throw new IOException(ex);
+		}
+        transactions = new Transaction[(int) reader.readVarInt(0x10000000)];
+        for (int i = 0; i < transactions.length; i++)
+        {
+            transactions[i] = Transaction.deserializeFrom(reader);
         }
-        if (Transactions.length > 0)
+        if (transactions.length > 0)
         {
-            // TODO
-//            if (Transactions[0].type != TransactionType.MinerTransaction || Transactions.Skip(1).Any(p => p.Type == TransactionType.MinerTransaction))
-//                throw new FormatException();
-//            if (MerkleTree.ComputeRoot(Transactions.Select(p => p.Hash).ToArray()) != MerkleRoot)
-//                throw new FormatException();
+            if (transactions[0].type != TransactionType.MinerTransaction || Arrays.stream(transactions).skip(1).anyMatch(p -> p.type == TransactionType.MinerTransaction))
+                throw new IOException();
+            if (!merkleRoot.equals(MerkleTree.ComputeRoot((UInt256[]) Arrays.stream(transactions).map(p -> p.hash()).toArray())))
+                throw new IOException();
         }
     }
 
     @Override public void deserializeUnsigned(BinaryReader reader) throws IOException
     {
-        Version = reader.readInt();
-        // TODO
-//        PrevBlock = reader.readSerializable(UInt256.class);
-//        MerkleRoot = reader.readSerializable(UInt256.class);
-        Timestamp = reader.readInt();
-        Height = reader.readInt();
-        Nonce = reader.readInt();
-        // TODO
-//        NextMiner = reader.readSerializable(UInt160.class);
-        Transactions = new Transaction[0];
+        try
+        {
+            version = reader.readInt();
+            prevBlock = reader.readSerializable(UInt256.class);
+            merkleRoot = reader.readSerializable(UInt256.class);
+            timestamp = reader.readInt();
+            height = reader.readInt();
+            nonce = reader.readInt();
+			nextMiner = reader.readSerializable(UInt160.class);
+	        transactions = new Transaction[0];
+		}
+        catch (InstantiationException | IllegalAccessException ex)
+        {
+        	throw new IOException(ex);
+		}
     }
 
     /**
@@ -160,29 +163,39 @@ public class Block extends Inventory
         if (!(obj instanceof Block)) return false;
         return this.hash().equals(((Block) obj).hash());
     }
+    
+    public static Block fromTrimmedData(byte[] data, int index) throws IOException
+    {
+    	return fromTrimmedData(data, index, null);
+    }
 
-    // TODO
-    public static Block FromTrimmedData(byte[] data, int index /*, Func<UInt256, Transaction> txSelector = null*/)
+    public static Block fromTrimmedData(byte[] data, int index, Function<UInt256, Transaction> txSelector) throws IOException
     {
         Block block = new Block();
-//        using (MemoryStream ms = new MemoryStream(data, index, data.Length - index, false))
-//        using (BinaryReader reader = new BinaryReader(ms))
-//        {
-//            ((ISignable)block).DeserializeUnsigned(reader);
-//            reader.ReadByte(); block.Script = reader.ReadSerializable<Script>();
-//            if (txSelector == null)
-//            {
-//                block.Transactions = new Transaction[0];
-//            }
-//            else
-//            {
-//                block.Transactions = new Transaction[reader.ReadVarInt(0x10000000)];
-//                for (int i = 0; i < block.Transactions.Length; i++)
-//                {
-//                    block.Transactions[i] = txSelector(reader.ReadSerializable<UInt256>());
-//                }
-//            }
-//        }
+        try (ByteArrayInputStream ms = new ByteArrayInputStream(data, index, data.length - index))
+        {
+	        try (BinaryReader reader = new BinaryReader(ms))
+	        {
+	        	block.deserializeUnsigned(reader);
+	        	reader.readByte(); block.script = reader.readSerializable(Script.class);
+	        	if (txSelector == null)
+	        	{
+	        		block.transactions = new Transaction[0];
+	        	}
+	        	else
+	        	{
+		        	block.transactions = new Transaction[(int)reader.readVarInt(0x10000000)];
+		        	for (int i = 0; i < block.transactions.length; i++)
+		        	{
+		        		block.transactions[i] = txSelector.apply(reader.readSerializable(UInt256.class));
+		        	}
+	        	}
+	        }
+	        catch (InstantiationException | IllegalAccessException ex)
+	        {
+				throw new IOException(ex);
+			}
+        }
         return block;
     }
 
@@ -197,21 +210,21 @@ public class Block extends Inventory
 
     @Override public UInt160[] getScriptHashesForVerifying()
     {
-        // TODO
-//        if (PrevBlock == UInt256.ZERO)
-//            return new UInt160[] { Script.RedeemScript.ToScriptHash() };
+        if (prevBlock.equals(UInt256.ZERO))
+            return new UInt160[] { Script.toScriptHash(script.RedeemScript) };
+        //TODO
 //        Block prev_header = Blockchain.Default.GetHeader(PrevBlock);
 //        if (prev_header == null) throw new UnsupportedOperationException();
 //        return new UInt160[] { prev_header.NextMiner };
-        return null;
+        return new UInt160[0];
     }
 
     /**
      *  根据区块中所有交易的Hash生成MerkleRoot
      */
-    public void RebuildMerkleRoot()
+    public void rebuildMerkleRoot()
     {
-        //MerkleRoot = MerkleTree.ComputeRoot(Transactions.Select(p => p.Hash).ToArray());
+        merkleRoot = MerkleTree.ComputeRoot((UInt256[]) Arrays.stream(transactions).map(p -> p.hash()).toArray());
     }
 
     /**
@@ -221,20 +234,20 @@ public class Block extends Inventory
      */
     @Override public void serialize(BinaryWriter writer) throws IOException
     {
-        ((Signable)this).serializeUnsigned(writer);
-        writer.writeByte((byte)1); writer.writeSerializable(Script);
-        writer.writeSerializableArray(Transactions);
+        serializeUnsigned(writer);
+        writer.writeByte((byte)1); writer.writeSerializable(script);
+        writer.writeSerializableArray(transactions);
     }
 
     @Override public void serializeUnsigned(BinaryWriter writer) throws IOException
     {
-        writer.writeInt(Version);
-        writer.writeSerializable(PrevBlock);
-        writer.writeSerializable(MerkleRoot);
-        writer.writeInt(Timestamp);
-        writer.writeInt(Height);
-        writer.writeLong(Nonce);
-        writer.writeSerializable(NextMiner);
+        writer.writeInt(version);
+        writer.writeSerializable(prevBlock);
+        writer.writeSerializable(merkleRoot);
+        writer.writeInt(timestamp);
+        writer.writeInt(height);
+        writer.writeLong(nonce);
+        writer.writeSerializable(nextMiner);
     }
 
     /**
@@ -243,6 +256,7 @@ public class Block extends Inventory
      */
     public JObject ToJson()
     {
+    	//TODO
         JObject json = new JObject();
 //        json["hash"] = Hash.ToString();
 //        json["version"] = Version;
@@ -261,18 +275,23 @@ public class Block extends Inventory
      *  把区块对象变为只包含区块头和交易Hash的字节数组，去除交易数据
      *  <returns>返回只包含区块头和交易Hash的字节数组</returns>
      */
-    public byte[] Trim()
+    public byte[] trim()
     {
-//        using (MemoryStream ms = new MemoryStream())
-//        using (BinaryWriter writer = new BinaryWriter(ms))
-//        {
-//            ((ISignable)this).SerializeUnsigned(writer);
-//            writer.Write((byte)1); writer.Write(Script);
-//            writer.Write(Transactions.Select(p => p.Hash).ToArray());
-//            writer.Flush();
-//            return ms.ToArray();
-//        }
-        return null;
+        try (ByteArrayOutputStream ms = new ByteArrayOutputStream())
+        {
+	        try (BinaryWriter writer = new BinaryWriter(ms))
+	        {
+	            serializeUnsigned(writer);
+	            writer.writeByte((byte)1); writer.writeSerializable(script);
+	            writer.writeSerializableArray((Serializable[]) Arrays.stream(transactions).map(p -> p.hash()).toArray());
+	            writer.flush();
+	            return ms.toByteArray();
+	        }
+        }
+        catch (IOException ex)
+        {
+        	throw new UnsupportedOperationException(ex);
+		}
     }
 
     /**
@@ -281,7 +300,7 @@ public class Block extends Inventory
      */
     @Override public boolean verify()
     {
-        return Verify(false);
+        return verify(false);
     }
 
     /**
@@ -289,8 +308,9 @@ public class Block extends Inventory
      *  <param name="completely">是否同时验证区块中的每一笔交易</param>
      *  <returns>返回该区块头的合法性，返回true即为合法，否则，非法。</returns>
      */
-    public boolean Verify(boolean completely)
+    public boolean verify(boolean completely)
     {
+    	//TODO
 //        if (Hash == Blockchain.GenesisBlock.Hash) return true;
 //        if (Blockchain.Default.ContainsBlock(Hash)) return true;
 //        if (completely && IsHeader) return false;
@@ -310,6 +330,6 @@ public class Block extends Inventory
 //            Transaction tx_gen = Transactions.FirstOrDefault(p => p.Type == TransactionType.MinerTransaction);
 //            if (tx_gen?.Outputs.Sum(p => p.Value) != CalculateNetFee(Transactions)) return false;
 //        }
-        return true;
+        return false;
     }
 }

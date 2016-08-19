@@ -2,6 +2,7 @@ package AntShares.Core.Scripts;
 
 import java.io.IOException;
 
+import AntShares.UInt160;
 import AntShares.IO.*;
 
 /**
@@ -38,4 +39,9 @@ public class Script implements Serializable
 //        return json;
 //    }
 
+    public static UInt160 toScriptHash(byte[] script)
+    {
+    	//TODO
+    	return new UInt160();
+    }
 }

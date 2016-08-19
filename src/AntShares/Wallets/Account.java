@@ -3,11 +3,10 @@ package AntShares.Wallets;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import org.bouncycastle.asn1.x9.ECNamedCurveTable;
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.UInt160;
-import AntShares.Cryptography.Base58;
+import AntShares.Cryptography.*;
 
 public class Account
 {
@@ -23,14 +22,14 @@ public class Account
         System.arraycopy(privateKey, privateKey.length - 32, PrivateKey, 0, 32);
         if (privateKey.length == 32)
         {
-            this.PublicKey = ECNamedCurveTable.getByName("secp256r1").getG().multiply(new BigInteger(1, privateKey));
+            this.PublicKey = ECC.secp256r1.getG().multiply(new BigInteger(1, privateKey));
         }
         else
         {
         	byte[] encoded = new byte[65];
         	encoded[0] = 0x04;
         	System.arraycopy(privateKey, 0, encoded, 1, 64);
-            this.PublicKey = ECNamedCurveTable.getByName("secp256r1").getCurve().decodePoint(encoded);
+            this.PublicKey = ECC.secp256r1.getCurve().decodePoint(encoded);
         }
         // TODO
         this.PublicKeyHash = new UInt160();

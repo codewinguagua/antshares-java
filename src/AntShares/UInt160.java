@@ -36,7 +36,7 @@ public class UInt160 extends UIntBase implements Comparable<UInt160>
         if (value.startsWith("0x"))
             value = value.substring(2);
         if (value.length() != 40)
-            throw new FormatException();
+            throw new IllegalArgumentException();
         byte[] v = Helper.HexToBytes(value);
         return new UInt160(Helper.reverse(v));
     }

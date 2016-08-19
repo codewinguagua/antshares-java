@@ -1,12 +1,7 @@
 package AntShares.IO.Json;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-
-import AntShares.FormatException;
+import java.io.*;
+import java.util.*;
 
 public class JObject
 {
@@ -146,7 +141,7 @@ public class JObject
                 return null;
             }
         }
-        throw new FormatException();
+        throw new IllegalArgumentException();
     }
 
     // TODO

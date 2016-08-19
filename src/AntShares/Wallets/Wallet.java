@@ -459,7 +459,7 @@ public abstract class Wallet // TODO : IDisposable
         if (wif == null) throw new NullPointerException();
         byte[] data = Base58.Decode(wif);
         if (data.length != 38 || data[0] != 0x80 || data[33] != 0x01)
-            throw new FormatException();
+            throw new IllegalArgumentException();
         // TODO
         //byte[] checksum = data.Sha256(0, data.length - 4).Sha256();
 //        if (!data.Skip(data.length - 4).SequenceEqual(checksum.Take(4)))
@@ -751,9 +751,9 @@ public abstract class Wallet // TODO : IDisposable
     {
         byte[] data = Base58.Decode(address);
         if (data.length != 25)
-            throw new FormatException();
+            throw new IllegalArgumentException();
         if (data[0] != CoinVersion)
-            throw new FormatException();
+            throw new IllegalArgumentException();
 //        if (!data.Take(21).Sha256().Sha256().Take(4).SequenceEqual(data.Skip(21)))
 //            throw new FormatException();
 //        return new UInt160(data.Skip(1).Take(20).ToArray());

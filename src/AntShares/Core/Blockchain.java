@@ -1,16 +1,16 @@
 package AntShares.Core;
 
+import java.time.Duration;
 import java.util.*;
 
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.*;
-import AntShares.Network.TimeSpan;
 
 /**
  *  实现区块链功能的基类
  */
-public abstract class Blockchain // TODO : IDisposable
+public abstract class Blockchain implements AutoCloseable
 {
     /**
      *  当区块被写入到硬盘后触发
@@ -32,7 +32,7 @@ public abstract class Blockchain // TODO : IDisposable
     /**
      *  产生每个区块的时间间隔
      */
-    public static final TimeSpan TimePerBlock = TimeSpan.FromSeconds(SecondsPerBlock);
+    public static final Duration TimePerBlock = Duration.ofSeconds(SecondsPerBlock);
     /**
      *  后备记账人列表
      */
@@ -188,6 +188,9 @@ public abstract class Blockchain // TODO : IDisposable
      *  <param name="headers">要添加的区块头列表</param>
      */
     protected abstract void AddHeaders(Iterable<Block> headers);
+    
+    @Override
+    public abstract void close();
 
     /**
      *  判断区块链中是否包含指定的资产
@@ -231,8 +234,6 @@ public abstract class Blockchain // TODO : IDisposable
     }
 
     public abstract boolean ContainsUnspent(UInt256 hash, short index);
-
-    public abstract void Dispose();
 
     public abstract Iterable<RegisterTransaction> GetAssets();
 
@@ -294,7 +295,7 @@ public abstract class Blockchain // TODO : IDisposable
     public Block GetHeader(UInt256 hash)
     {
         Block b = GetBlock(hash);
-        return b == null ? null : b.getHeader();
+        return b == null ? null : b.header();
     }
 
     public abstract UInt256[] GetLeafHeaderHashes();
@@ -476,7 +477,7 @@ public abstract class Blockchain // TODO : IDisposable
     public static Blockchain RegisterBlockchain(Blockchain blockchain)
     {
         if (blockchain == null) throw new NullPointerException();
-        if (getDefault() != null) getDefault().Dispose();
+        if (getDefault() != null) getDefault().close();
         _default = blockchain;
         return blockchain;
     }

@@ -2,7 +2,6 @@ package AntShares.Cryptography;
 
 import java.math.BigInteger;
 
-import AntShares.FormatException;
 import AntShares.Helper;
 
 public class Base58
@@ -24,7 +23,7 @@ public class Base58
         {
             int index = Alphabet.indexOf(input.charAt(i));
             if (index == -1)
-                throw new FormatException();
+                throw new IllegalArgumentException();
             // TODO
             //bi += index * BigInteger.Pow(58, input.Length - 1 - i);
         }

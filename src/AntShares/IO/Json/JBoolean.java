@@ -1,9 +1,6 @@
 package AntShares.IO.Json;
 
-import java.io.IOException;
-import java.io.Reader;
-
-import AntShares.FormatException;
+import java.io.*;
 
 public class JBoolean extends JObject
 {
@@ -64,7 +61,7 @@ public class JBoolean extends JObject
                 return new JBoolean(false);
             }
         }
-        throw new FormatException();
+        throw new IllegalArgumentException();
     }
 
     @Override

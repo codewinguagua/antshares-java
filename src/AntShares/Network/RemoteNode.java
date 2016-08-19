@@ -1,16 +1,11 @@
 package AntShares.Network;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.time.Duration;
+import java.util.*;
 
 import AntShares.UInt256;
 import AntShares.IO.Serializable;
-import AntShares.Network.Payloads.AddrPayload;
-import AntShares.Network.Payloads.GetBlocksPayload;
-import AntShares.Network.Payloads.HeadersPayload;
-import AntShares.Network.Payloads.InvPayload;
-import AntShares.Network.Payloads.VersionPayload;
+import AntShares.Network.Payloads.*;
 
 public class RemoteNode // TODO : IDisposable
 {
@@ -19,7 +14,7 @@ public class RemoteNode // TODO : IDisposable
     //event EventHandler<Inventory> InventoryReceived;
     //event EventHandler<IPEndPoint[]> PeersReceived;
 
-    private static final TimeSpan OneMinute = TimeSpan.FromMinutes(1);
+    private static final Duration OneMinute = Duration.ofMinutes(1);
 
     private Queue<Message> message_queue = new LinkedList<Message>();
     private static HashSet<UInt256> missions_global = new HashSet<UInt256>();
@@ -320,7 +315,7 @@ public class RemoteNode // TODO : IDisposable
         }
     }
 
-    private Message ReceiveMessage(TimeSpan timeout)
+    private Message ReceiveMessage(Duration timeout)
     {
 //        if (timeout == Timeout.InfiniteTimeSpan) timeout = TimeSpan.Zero;
 //        BinaryReader reader = null;

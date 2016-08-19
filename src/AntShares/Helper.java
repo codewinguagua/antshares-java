@@ -48,7 +48,7 @@ public class Helper
         if (value == null || value.length() == 0)
             return new byte[0];
         if (value.length() % 2 == 1)
-            throw new FormatException();
+            throw new IllegalArgumentException();
         byte[] result = new byte[value.length() / 2];
         for (int i = 0; i < result.length; i++)
             result[i] = (byte) Integer.parseInt(value.substring(i * 2, 2), 16);

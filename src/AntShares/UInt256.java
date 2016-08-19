@@ -36,7 +36,7 @@ public class UInt256 extends UIntBase implements Comparable<UInt256>
         if (s.startsWith("0x"))
             s = s.substring(2);
         if (s.length() != 64)
-            throw new FormatException(String.format("字符串\"{0}\"无法识别为正确的UInt256。", s));
+            throw new IllegalArgumentException(String.format("字符串\"{0}\"无法识别为正确的UInt256。", s));
         byte[] v = Helper.HexToBytes(s);
         return new UInt256(Helper.reverse(v));
     }
