@@ -147,7 +147,7 @@ public abstract class Transaction extends Inventory
 	}
 
 	@Override
-	public final InventoryType inventoryType()
+	public final InventoryType getInventoryType()
 	{
 		return InventoryType.TX;
 	}

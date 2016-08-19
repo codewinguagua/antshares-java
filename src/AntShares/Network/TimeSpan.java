@@ -7,4 +7,9 @@ public class TimeSpan {
         return null;
     }
 
+    public static TimeSpan FromSeconds(int secondsperblock) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

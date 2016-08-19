@@ -29,7 +29,7 @@ public abstract class Inventory implements Signable
         return _hash;
     }
 
-    public abstract InventoryType inventoryType();
+    public abstract InventoryType getInventoryType();
 
     protected byte[] getHashData()
     {

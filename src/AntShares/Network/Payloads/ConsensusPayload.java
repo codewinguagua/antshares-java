@@ -16,7 +16,7 @@ public class ConsensusPayload extends Inventory
     public Script script;
 
     @Override
-    public InventoryType inventoryType() {
+    public InventoryType getInventoryType() {
         return InventoryType.Consensus;
     }
 
