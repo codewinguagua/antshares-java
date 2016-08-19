@@ -1,7 +1,10 @@
 package AntShares.Wallets;
 
+import java.io.IOException;
+
+import org.bouncycastle.math.ec.ECPoint;
+
 import AntShares.Core.Scripts.*;
-import AntShares.Cryptography.ECC.ECPoint;
 import AntShares.IO.*;
 
 /**
@@ -45,7 +48,7 @@ public class SignatureContract extends Contract
     public static byte[] CreateSignatureRedeemScript(ECPoint publicKey)
     {
         ScriptBuilder sb = new ScriptBuilder();
-        sb.Push(publicKey.EncodePoint(true));
+        sb.Push(publicKey.getEncoded(true));
         sb.Add(ScriptOp.OP_CHECKSIG);
         return sb.ToArray();
     }
@@ -65,11 +68,10 @@ public class SignatureContract extends Contract
     /**
      *  序列化
      *  <param name="writer">存放序列化后的结果</param>
+     * @throws IOException 
      */
-    @Override public void serialize(BinaryWriter writer)
+    @Override public void serialize(BinaryWriter writer) throws IOException
     {
-        // TODO
-        //writer.Write(publicKey);
-        publicKey.serialize(writer);
+    	writer.writeECPoint(publicKey);
     }
 }

@@ -1,20 +1,12 @@
 package AntShares.Wallets;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
-import AntShares.Fixed8;
-import AntShares.FormatException;
-import AntShares.UInt160;
-import AntShares.UInt256;
-import AntShares.Core.Block;
-import AntShares.Core.SignatureContext;
-import AntShares.Core.Transaction;
-import AntShares.Core.TransactionInput;
+import org.bouncycastle.math.ec.ECPoint;
+
+import AntShares.*;
+import AntShares.Core.*;
 import AntShares.Cryptography.Base58;
-import AntShares.Cryptography.ECC.ECPoint;
 import AntShares.IO.Caching.TrackableCollection;
 
 public abstract class Wallet // TODO : IDisposable

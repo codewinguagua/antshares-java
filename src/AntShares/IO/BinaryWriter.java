@@ -3,6 +3,8 @@ package AntShares.IO;
 import java.io.*;
 import java.nio.*;
 
+import org.bouncycastle.math.ec.ECPoint;
+
 public class BinaryWriter implements AutoCloseable
 {
 	private DataOutputStream writer;
@@ -49,6 +51,11 @@ public class BinaryWriter implements AutoCloseable
 	{
 		buffer.putDouble(0, v);
 		writer.write(array, 0, 8);
+	}
+	
+	public void writeECPoint(ECPoint v) throws IOException
+	{
+		writer.write(v.getEncoded(true));
 	}
 	
 	public void writeFixedString(String v, int length) throws IOException

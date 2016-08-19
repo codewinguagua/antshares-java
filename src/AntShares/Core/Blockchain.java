@@ -1,15 +1,10 @@
 package AntShares.Core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import AntShares.Fixed8;
-import AntShares.Out;
-import AntShares.UInt160;
-import AntShares.UInt256;
-import AntShares.Cryptography.ECC.ECPoint;
+import org.bouncycastle.math.ec.ECPoint;
+
+import AntShares.*;
 import AntShares.Network.TimeSpan;
 
 /**

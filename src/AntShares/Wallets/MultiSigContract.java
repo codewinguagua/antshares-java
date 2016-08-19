@@ -3,9 +3,10 @@ package AntShares.Wallets;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+import org.bouncycastle.math.ec.ECPoint;
+
 import AntShares.UInt160;
 import AntShares.Core.Scripts.ScriptBuilder;
-import AntShares.Cryptography.ECC.ECPoint;
 import AntShares.IO.*;
 
 /**
@@ -59,7 +60,7 @@ public class MultiSigContract extends Contract
         sb.Push(BigInteger.valueOf(m));
         for (ECPoint publicKey : Arrays.stream(publicKeys).sorted().toArray(ECPoint[]::new))
         {
-            sb.Push(publicKey.EncodePoint(true));
+            sb.Push(publicKey.getEncoded(true));
         }
         sb.Push(BigInteger.valueOf(publicKeys.length));
         // TODO
