@@ -52,6 +52,13 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
     {
         return new Fixed8(val.multiply(new BigDecimal(D)).longValueExact());
     }
+    
+    public static Fixed8 fromLong(long val)
+    {
+    	if (val < 0 || val > Long.MAX_VALUE / D)
+    		throw new IllegalArgumentException();
+    	return new Fixed8(val * D);
+    }
 
     public long getData() { return value; }
 
@@ -163,9 +170,9 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
         return new Fixed8(x.value - y.value);
     }
 
-    public static Fixed8 minus(Fixed8 value)
+    public Fixed8 minus()
     {
-        return new Fixed8(-value.value);
+        return new Fixed8(-value);
     }
 
 	@Override

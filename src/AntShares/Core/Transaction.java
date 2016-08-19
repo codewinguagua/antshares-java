@@ -152,7 +152,7 @@ public abstract class Transaction extends Inventory
 		return InventoryType.TX;
 	}
 	
-	protected void onDeserialized()
+	protected void onDeserialized() throws IOException
 	{
 	}
 	

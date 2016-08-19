@@ -4,6 +4,9 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.*;
 
+import org.bouncycastle.asn1.x9.ECNamedCurveTable;
+import org.bouncycastle.math.ec.ECPoint;
+
 public class BinaryReader implements AutoCloseable
 {
 	private DataInputStream reader;
@@ -52,6 +55,32 @@ public class BinaryReader implements AutoCloseable
 	{
 		reader.readFully(array, 0, 8);
 		return buffer.getDouble(0);
+	}
+	
+	public ECPoint readECPoint() throws IOException
+	{
+		byte[] encoded;
+		byte fb = reader.readByte();
+		switch (fb)
+		{
+		case 0x00:
+			encoded = new byte[1];
+			break;
+		case 0x02:
+		case 0x03:
+			encoded = new byte[33];
+			encoded[0] = fb;
+			reader.readFully(encoded, 1, 32);
+			break;
+		case 0x04:
+			encoded = new byte[65];
+			encoded[0] = fb;
+			reader.readFully(encoded, 1, 64);
+			break;
+		default:
+			throw new IOException();
+		}
+		return ECNamedCurveTable.getByName("secp256r1").getCurve().decodePoint(encoded);
 	}
 	
 	public String readFixedString(int length) throws IOException

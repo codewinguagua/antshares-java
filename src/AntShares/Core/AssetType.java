@@ -26,11 +26,11 @@ public enum AssetType
     /**
      * π…»®
      */
-    Share(DutyFlag.getByte() | 0x10),
+    Share(DutyFlag.value() | 0x10),
 
-    Invoice(DutyFlag.getByte() | 0x18),
+    Invoice(DutyFlag.value() | 0x18),
 
-    Token(CreditFlag.getByte() | 0x20);
+    Token(CreditFlag.value() | 0x20);
 
     private byte value;
 
@@ -39,8 +39,16 @@ public enum AssetType
         value = (byte)v;
     }
 
-    public byte getByte()
+    public byte value()
     {
         return value;
+    }
+    
+    public static AssetType valueOf(byte v)
+    {
+    	for (AssetType e : AssetType.values())
+    		if (e.value == v)
+    			return e;
+    	throw new IllegalArgumentException();
     }
 }
