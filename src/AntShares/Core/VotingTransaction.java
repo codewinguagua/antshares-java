@@ -36,7 +36,7 @@ public class VotingTransaction extends Transaction
 	protected void onDeserialized() throws IOException
 	{
         super.onDeserialized();
-        if (Arrays.stream(outputs).allMatch(p -> !p.assetId.equals(Blockchain.AntShare.hash())))
+        if (Arrays.stream(outputs).allMatch(p -> !p.assetId.equals(Blockchain.ANTSHARE.hash())))
             throw new IOException();
 	}
 	

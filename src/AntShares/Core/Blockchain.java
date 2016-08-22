@@ -2,10 +2,15 @@ package AntShares.Core;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.stream.Stream;
 
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.*;
+import AntShares.Core.Scripts.Script;
+import AntShares.Cryptography.ECC;
+import AntShares.IO.Serializable;
+import AntShares.Wallets.MultiSigContract;
 
 /**
  *  实现区块链功能的基类
@@ -20,174 +25,105 @@ public abstract class Blockchain implements AutoCloseable
     /**
      *  产生每个区块的时间间隔，已秒为单位
      */
-    public static final int SecondsPerBlock = 15;
+    public static final int SECONDS_PER_BLOCK = 15;
     /**
      *  小蚁币产量递减的时间间隔，以区块数量为单位
      */
-    public static final int DecrementInterval = 2000000;
+    public static final int DECREMENT_INTERVAL = 2000000;
     /**
      *  每个区块产生的小蚁币的数量
      */
-    public static final int[] MintingAmount = { 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+    public static final int[] MINTING_AMOUNT = { 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
     /**
      *  产生每个区块的时间间隔
      */
-    public static final Duration TimePerBlock = Duration.ofSeconds(SecondsPerBlock);
+    public static final Duration TIME_PER_BLOCK = Duration.ofSeconds(SECONDS_PER_BLOCK);
     /**
      *  后备记账人列表
      */
-    public static final ECPoint[] StandbyMiners =
+    public static final ECPoint[] STANDBY_MINERS =
     {
-//        ECPoint.DecodePoint("0327da12b5c40200e9f65569476bbff2218da4f32548ff43b6387ec1416a231ee8".HexToBytes(), ECCurve.Secp256r1),
-//        ECPoint.DecodePoint("026ce35b29147ad09e4afe4ec4a7319095f08198fa8babbe3c56e970b143528d22".HexToBytes(), ECCurve.Secp256r1),
-//        ECPoint.DecodePoint("0209e7fd41dfb5c2f8dc72eb30358ac100ea8c72da18847befe06eade68cebfcb9".HexToBytes(), ECCurve.Secp256r1),
-//        ECPoint.DecodePoint("039dafd8571a641058ccc832c5e2111ea39b09c0bde36050914384f7a48bce9bf9".HexToBytes(), ECCurve.Secp256r1),
-//        ECPoint.DecodePoint("038dddc06ce687677a53d54f096d2591ba2302068cf123c1f2d75c2dddc5425579".HexToBytes(), ECCurve.Secp256r1),
-//        ECPoint.DecodePoint("02d02b1873a0863cd042cc717da31cea0d7cf9db32b74d4c72c01b0011503e2e22".HexToBytes(), ECCurve.Secp256r1),
-//        ECPoint.DecodePoint("034ff5ceeac41acf22cd5ed2da17a6df4dd8358fcb2bfb1a43208ad0feaab2746b".HexToBytes(), ECCurve.Secp256r1),
+        ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes("0327da12b5c40200e9f65569476bbff2218da4f32548ff43b6387ec1416a231ee8")),
+        ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes("026ce35b29147ad09e4afe4ec4a7319095f08198fa8babbe3c56e970b143528d22")),
+        ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes("0209e7fd41dfb5c2f8dc72eb30358ac100ea8c72da18847befe06eade68cebfcb9")),
+        ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes("039dafd8571a641058ccc832c5e2111ea39b09c0bde36050914384f7a48bce9bf9")),
+        ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes("038dddc06ce687677a53d54f096d2591ba2302068cf123c1f2d75c2dddc5425579")),
+        ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes("02d02b1873a0863cd042cc717da31cea0d7cf9db32b74d4c72c01b0011503e2e22")),
+        ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes("034ff5ceeac41acf22cd5ed2da17a6df4dd8358fcb2bfb1a43208ad0feaab2746b")),
     };
 
     /**
      *  小蚁股
      */
-    public static final RegisterTransaction AntShare = new RegisterTransaction()
-    {
-//        AssetType = AssetType.AntShare,
-////#if TESTNET
-//        Name = "[{'lang':'zh-CN','name':'小蚁股(测试)'},{'lang':'en','name':'AntShare(TestNet)'}]",
-////#else
-////        Name = "[{'lang':'zh-CN','name':'小蚁股'},{'lang':'en','name':'AntShare'}]",
-////#endif
-//        Amount = Fixed8.FromDecimal(100000000),
-//        Issuer = ECPoint.DecodePoint((new[] { (byte)0x02 }).Concat(ECCurve.Secp256r1.G.EncodePoint(false).Skip(1).Sha256().Sha256()).ToArray(), ECCurve.Secp256r1),
-//        Admin = (new[] { (byte)ScriptOp.OP_TRUE }).ToScriptHash(),
-//        Attributes = new TransactionAttribute[0],
-//        Inputs = new TransactionInput[0],
-//        Outputs = new TransactionOutput[0],
-//        Scripts = new Script[0]
-    };
+    public static final RegisterTransaction ANTSHARE;
 
     /**
      *  小蚁币
      */
-    public static final RegisterTransaction AntCoin = new RegisterTransaction()
-    {
-//        AssetType = AssetType.AntCoin,
-//#if TESTNET
-//        Name = "[{'lang':'zh-CN','name':'小蚁币(测试)'},{'lang':'en','name':'AntCoin(TestNet)'}]",
-//#else
-//        Name = "[{'lang':'zh-CN','name':'小蚁币'},{'lang':'en','name':'AntCoin'}]",
-//#endif
-//        Amount = Fixed8.FromDecimal(MintingAmount.Sum(p => p * DecrementInterval)),
-//        Issuer = ECPoint.DecodePoint((new[] { (byte)0x02 }).Concat(ECCurve.Secp256r1.G.EncodePoint(false).Skip(1).Sha256().Sha256()).ToArray(), ECCurve.Secp256r1),
-//        Admin = (new[] { (byte)ScriptOp.OP_FALSE }).ToScriptHash(),
-//        Attributes = new TransactionAttribute[0],
-//        Inputs = new TransactionInput[0],
-//        Outputs = new TransactionOutput[0],
-//        Scripts = new Script[0]
-    };
-
+    public static final RegisterTransaction ANTCOIN;
+    
+    //TODO: mainnet
     /**
      *  创世区块
      */
-    public static final Block GenesisBlock = new Block()
-    {
-//        PrevBlock = UInt256.Zero,
-//        Timestamp = (new DateTime(2016, 7, 15, 15, 8, 21, DateTimeKind.Utc)).ToTimestamp(),
-//        Height = 0,
-//        Nonce = 2083236893, //向比特币致敬
-//        NextMiner = GetMinerAddress(StandbyMiners),
-//        Script = new Script
-//        {
-//            StackScript = new byte[0],
-//            RedeemScript = new[] { (byte)ScriptOp.OP_TRUE }
-//        },
-//        Transactions = new Transaction[]
-//        {
-//            new MinerTransaction
-//            {
-//                Nonce = 2083236893,
-//                Attributes = new TransactionAttribute[0],
-//                Inputs = new TransactionInput[0],
-//                Outputs = new TransactionOutput[0],
-//                Scripts = new Script[0]
-//            },
-//            AntShare,
-//            AntCoin,
-//            new IssueTransaction
-//            {
-//                Nonce = 2083236893,
-//                Attributes = new TransactionAttribute[0],
-//                Inputs = new TransactionInput[0],
-//                Outputs = new[]
-//                {
-//                    new TransactionOutput
-//                    {
-//                        AssetId = AntShare.Hash,
-//                        Value = AntShare.Amount,
-//                        ScriptHash = MultiSigContract.CreateMultiSigRedeemScript(StandbyMiners.Length / 2 + 1, StandbyMiners).ToScriptHash()
-//                    }
-//                },
-//                Scripts = new[]
-//                {
-//                    new Script
-//                    {
-//                        StackScript = new byte[0],
-//                        RedeemScript = new[] { (byte)ScriptOp.OP_TRUE }
-//                    }
-//                }
-//            }
-//        }
-    };
+    public static final Block GENESIS_BLOCK;
 
     /**
      *  区块链所提供的功能
      */
-    public abstract BlockchainAbility getAbility();// { get; }
+    public abstract BlockchainAbility ability();
     /**
      *  当前最新区块散列值
      */
-    public abstract UInt256 getCurrentBlockHash();// { get; }
+    public abstract UInt256 currentBlockHash();
     /**
      *  当前最新区块头的散列值
      */
-    public UInt256 getCurrentHeaderHash(){ return getCurrentBlockHash(); }
+    public UInt256 currentHeaderHash(){ return currentBlockHash(); }
     /**
      *  默认的区块链实例
      */
     private static Blockchain _default = null;
-    public static Blockchain getDefault() { return _default; }
+    public static Blockchain current() { return _default; }
     /**
      *  区块头高度
      */
-    public int getHeaderHeight() { return getHeight(); }
+    public int headerHeight() { return height(); }
     /**
      *  区块高度
      */
-    public abstract int getHeight();
+    public abstract int height();
     /**
      *  表示当前的区块链实现是否为只读的
      */
-    public abstract boolean IsReadOnly();
+    public abstract boolean isReadOnly();
 
-    // TODO
-//    static Blockchain()
-//    {
-//        GenesisBlock.RebuildMerkleRoot();
-//    }
+    static //Blockchain()
+    {
+        try
+        {
+			GENESIS_BLOCK = Serializable.from(Helper.hexToBytes("000000000000000000000000000000000000000000000000000000000000000000000000854f0d1fc6b4ebdd594132e399ac842976d7f5b2fc8a4dc68385766760e7714165fc8857000000001dac2b7c00000000f3812db982f3b0089a21a278988efeec6a027b250100015104001dac2b7c000000004000565b7b276c616e67273a277a682d434e272c276e616d65273a27e5b08fe89a81e882a128e6b58be8af9529277d2c7b276c616e67273a27656e272c276e616d65273a27416e74536861726528546573744e657429277d5d0000c16ff286230002a2d6adf934fe7f7e860ed48117e7590fd19db1ad018d15d5425fc5b3d6f11e74da1745e9b549bd0bfa1a569971c77eba30cd5a4b000000004001555b7b276c616e67273a277a682d434e272c276e616d65273a27e5b08fe89a81e5b88128e6b58be8af9529277d2c7b276c616e67273a27656e272c276e616d65273a27416e74436f696e28546573744e657429277d5d0000c16ff286230002a2d6adf934fe7f7e860ed48117e7590fd19db1ad018d15d5425fc5b3d6f11e749f7fd096d37ed2c0e3f7f0cfc924beef4ffceb6800000000011dac2b7c000001c9b4afd3375aa51e02531d5b2b5d9d1e0dad11b6f958ed6c86a4132da19d3ddc0000c16ff2862300197ff6783d512a740d42f4cc4f5572955fa44c9501000151"), Block.class);
+		}
+        catch (InstantiationException | IllegalAccessException ex)
+        {
+        	throw new UnsupportedOperationException(ex);
+		}
+        ANTSHARE = Arrays.stream(GENESIS_BLOCK.transactions).filter(p -> p.type == TransactionType.RegisterTransaction).map(p -> (RegisterTransaction)p).filter(p -> p.assetType == AssetType.AntShare).findFirst().get();
+        ANTCOIN = Arrays.stream(GENESIS_BLOCK.transactions).filter(p -> p.type == TransactionType.RegisterTransaction).map(p -> (RegisterTransaction)p).filter(p -> p.assetType == AssetType.AntCoin).findFirst().get();
+    }
 
     /**
      *  将指定的区块添加到区块链中
      *  <param name="block">要添加的区块</param>
      *  <returns>返回是否添加成功</returns>
      */
-    protected abstract boolean AddBlock(Block block);
+    protected abstract boolean addBlock(Block block);
 
     /**
      *  将指定的区块头添加到区块头链中
      *  <param name="headers">要添加的区块头列表</param>
      */
-    protected abstract void AddHeaders(Iterable<Block> headers);
+    protected abstract void addHeaders(Iterable<Block> headers);
     
     @Override
     public abstract void close();
@@ -197,11 +133,9 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">资产编号</param>
      *  <returns>如果包含指定资产则返回true</returns>
      */
-    public boolean ContainsAsset(UInt256 hash)
+    public boolean containsAsset(UInt256 hash)
     {
-        // TODO;
-        //return hash == AntShare.Hash || hash == AntCoin.Hash;
-        return false;
+        return hash.equals(ANTSHARE.hash()) || hash.equals(ANTCOIN.hash());
     }
 
     /**
@@ -209,11 +143,9 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">区块编号</param>
      *  <returns>如果包含指定区块则返回true</returns>
      */
-    public boolean ContainsBlock(UInt256 hash)
+    public boolean containsBlock(UInt256 hash)
     {
-        // TODO
-        //return hash == GenesisBlock.Hash;
-        return false;
+        return hash.equals(GENESIS_BLOCK.hash());
     }
 
     /**
@@ -221,30 +153,28 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">交易编号</param>
      *  <returns>如果包含指定交易则返回true</returns>
      */
-    public boolean ContainsTransaction(UInt256 hash)
+    public boolean containsTransaction(UInt256 hash)
     {
-        // TODO
-        //return GenesisBlock.Transactions.Any(p => p.Hash == hash);
-        return false;
+        return Arrays.stream(GENESIS_BLOCK.transactions).anyMatch(p -> p.hash().equals(hash));
     }
 
-    public boolean ContainsUnspent(TransactionInput input)
+    public boolean containsUnspent(TransactionInput input)
     {
-        return ContainsUnspent(input.prevHash, input.prevIndex);
+        return containsUnspent(input.prevHash, input.prevIndex);
     }
 
-    public abstract boolean ContainsUnspent(UInt256 hash, short index);
+    public abstract boolean containsUnspent(UInt256 hash, short index);
 
-    public abstract Iterable<RegisterTransaction> GetAssets();
+    public abstract Stream<RegisterTransaction> getAssets();
 
     /**
      *  根据指定的高度，返回对应的区块信息
      *  <param name="height">区块高度</param>
      *  <returns>返回对应的区块信息</returns>
      */
-    public Block GetBlock(int height)
+    public Block getBlock(int height)
     {
-        return GetBlock(GetBlockHash(height));
+        return getBlock(getBlockHash(height));
     }
 
     /**
@@ -252,10 +182,10 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">散列值</param>
      *  <returns>返回对应的区块信息</returns>
      */
-    public Block GetBlock(UInt256 hash)
+    public Block getBlock(UInt256 hash)
     {
-//        if (hash == GenesisBlock.Hash)
-//            return GenesisBlock;
+        if (hash.equals(GENESIS_BLOCK.hash()))
+            return GENESIS_BLOCK;
         return null;
     }
 
@@ -264,27 +194,27 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="height">区块高度</param>
      *  <returns>返回对应区块的散列值</returns>
      */
-    public UInt256 GetBlockHash(int height)
+    public UInt256 getBlockHash(int height)
     {
-//        if (height == 0) return GenesisBlock.Hash;
+        if (height == 0) return GENESIS_BLOCK.hash();
         return null;
     }
 
-    public Iterable<EnrollmentTransaction> GetEnrollments()
+    public Stream<EnrollmentTransaction> getEnrollments()
     {
-        return GetEnrollments(Collections.emptyList());
+        return getEnrollments(Stream.empty());
     }
 
-    public abstract Iterable<EnrollmentTransaction> GetEnrollments(Iterable<Transaction> others);
+    public abstract Stream<EnrollmentTransaction> getEnrollments(Stream<Transaction> others);
 
     /**
      *  根据指定的高度，返回对应的区块头信息
      *  <param name="height">区块高度</param>
      *  <returns>返回对应的区块头信息</returns>
      */
-    public Block GetHeader(int height)
+    public Block getHeader(int height)
     {
-        return GetHeader(GetBlockHash(height));
+        return getHeader(getBlockHash(height));
     }
 
     /**
@@ -292,31 +222,30 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">散列值</param>
      *  <returns>返回对应的区块头信息</returns>
      */
-    public Block GetHeader(UInt256 hash)
+    public Block getHeader(UInt256 hash)
     {
-        Block b = GetBlock(hash);
+        Block b = getBlock(hash);
         return b == null ? null : b.header();
     }
 
-    public abstract UInt256[] GetLeafHeaderHashes();
+    public abstract UInt256[] getLeafHeaderHashes();
 
     /**
      *  获取记账人的合约地址
      *  <param name="miners">记账人的公钥列表</param>
      *  <returns>返回记账人的合约地址</returns>
      */
-    public static UInt160 GetMinerAddress(ECPoint[] miners)
+    public static UInt160 getMinerAddress(ECPoint[] miners)
     {
-//        return MultiSigContract.CreateMultiSigRedeemScript(miners.Length - (miners.Length - 1) / 3, miners).ToScriptHash();
-        return new UInt160();
+        return Script.toScriptHash(MultiSigContract.CreateMultiSigRedeemScript(miners.length - (miners.length - 1) / 3, miners));
     }
 
-    private List<ECPoint> _miners = new ArrayList<ECPoint>();
+    private ArrayList<ECPoint> _miners = new ArrayList<ECPoint>();
     /**
      *  获取下一个区块的记账人列表
      *  <returns>返回一组公钥，表示下一个区块的记账人列表</returns>
      */
-    public ECPoint[] GetMiners()
+    public ECPoint[] getMiners()
     {
         synchronized (_miners)
         {
@@ -329,8 +258,9 @@ public abstract class Blockchain implements AutoCloseable
         }
     }
 
-    public Iterable<ECPoint> GetMiners(Iterable<Transaction> others)
+    public Stream<ECPoint> getMiners(Stream<Transaction> others)
     {
+    	//TODO
 //        if (!Ability.HasFlag(BlockchainAbility.TransactionIndexes) || !Ability.HasFlag(BlockchainAbility.UnspentIndexes))
 //            throw new NotSupportedException();
 //        //TODO: 此处排序可能将耗费大量内存，考虑是否采用其它机制
@@ -357,7 +287,7 @@ public abstract class Blockchain implements AutoCloseable
 //            }
 //        }
 //        return miners.OrderByDescending(p => p.Value).ThenBy(p => p.Key).Select(p => p.Key).Concat(StandbyMiners).Take(miner_count);
-        return null;
+        return Stream.empty();
     }
 
     /**
@@ -365,30 +295,30 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">散列值</param>
      *  <returns>返回下一个区块的信息>
      */
-    public abstract Block GetNextBlock(UInt256 hash);
+    public abstract Block getNextBlock(UInt256 hash);
 
     /**
      *  根据指定的散列值，返回下一个区块的散列值
      *  <param name="hash">散列值</param>
      *  <returns>返回下一个区块的散列值</returns>
      */
-    public abstract UInt256 GetNextBlockHash(UInt256 hash);
+    public abstract UInt256 getNextBlockHash(UInt256 hash);
 
     /**
      *  根据指定的资产编号，返回对应资产的发行量
      *  <param name="asset_id">资产编号</param>
      *  <returns>返回对应资产的当前已经发行的数量</returns>
      */
-    public abstract Fixed8 GetQuantityIssued(UInt256 asset_id);
+    public abstract Fixed8 getQuantityIssued(UInt256 asset_id);
 
     /**
      *  根据指定的区块高度，返回对应区块及之前所有区块中包含的系统费用的总量
      *  <param name="height">区块高度</param>
      *  <returns>返回对应的系统费用的总量</returns>
      */
-    public long GetSysFeeAmount(int height)
+    public long getSysFeeAmount(int height)
     {
-        return GetSysFeeAmount(GetBlockHash(height));
+        return getSysFeeAmount(getBlockHash(height));
     }
 
     /**
@@ -396,17 +326,17 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">散列值</param>
      *  <returns>返回系统费用的总量</returns>
      */
-    public abstract long GetSysFeeAmount(UInt256 hash);
+    public abstract long getSysFeeAmount(UInt256 hash);
 
     /**
      *  根据指定的散列值，返回对应的交易信息
      *  <param name="hash">散列值</param>
      *  <returns>返回对应的交易信息</returns>
      */
-    public Transaction GetTransaction(UInt256 hash)
+    public Transaction getTransaction(UInt256 hash)
     {
         Out<Integer> height = new Out<Integer>();
-        return GetTransaction(hash, height);
+        return getTransaction(hash, height);
     }
 
     /**
@@ -415,19 +345,19 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="height">返回该交易所在区块的高度</param>
      *  <returns>返回对应的交易信息</returns>
      */
-    public Transaction GetTransaction(UInt256 hash, Out<Integer> height)
+    public Transaction getTransaction(UInt256 hash, Out<Integer> height)
     {
-//        Transaction tx = GenesisBlock.Transactions.FirstOrDefault(p => p.Hash == hash);
-//        if (tx != null)
-//        {
-//            height = 0;
-//            return tx;
-//        }
+        Optional<Transaction> tx = Arrays.stream(GENESIS_BLOCK.transactions).filter(p -> p.hash().equals(hash)).findFirst();
+        if (tx.isPresent())
+        {
+            height.set(0);
+            return tx.get();
+        }
         height.set(-1);
         return null;
     }
 
-    public abstract Map<Short, Claimable> GetUnclaimed(UInt256 hash);
+    public abstract Map<Short, Claimable> getUnclaimed(UInt256 hash);
 
     /**
      *  根据指定的散列值和索引，获取对应的未花费的资产
@@ -435,31 +365,31 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="index">输出的索引</param>
      *  <returns>返回一个交易输出，表示一个未花费的资产</returns>
      */
-    public abstract TransactionOutput GetUnspent(UInt256 hash, short index);
+    public abstract TransactionOutput getUnspent(UInt256 hash, short index);
 
     /**
      *  获取选票信息
      *  <returns>返回一个选票列表，包含当前区块链中所有有效的选票</returns>
      */
-    public Iterable<Vote> GetVotes()
+    public Stream<Vote> getVotes()
     {
-        return GetVotes(Collections.emptyList());
+        return getVotes(Stream.empty());
     }
 
-    public abstract Iterable<Vote> GetVotes(Iterable<Transaction> others);
+    public abstract Stream<Vote> getVotes(Stream<Transaction> others);
 
     /**
      *  判断交易是否双花
      *  <param name="tx">交易</param>
      *  <returns>返回交易是否双花</returns>
      */
-    public abstract boolean IsDoubleSpend(Transaction tx);
+    public abstract boolean isDoubleSpend(Transaction tx);
 
     /**
      *  当区块被写入到硬盘后调用
      *  <param name="block">区块</param>
      */
-    protected void OnPersistCompleted(Block block)
+    protected void onPersistCompleted(Block block)
     {
         synchronized (_miners)
         {
@@ -474,10 +404,10 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="blockchain">区块链实例</param>
      *  <returns>返回注册后的区块链实例</returns>
      */
-    public static Blockchain RegisterBlockchain(Blockchain blockchain)
+    public static Blockchain register(Blockchain blockchain)
     {
         if (blockchain == null) throw new NullPointerException();
-        if (getDefault() != null) getDefault().close();
+        if (_default != null) _default.close();
         _default = blockchain;
         return blockchain;
     }

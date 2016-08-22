@@ -44,7 +44,7 @@ public class EnrollmentTransaction extends Transaction
 	protected void onDeserialized() throws IOException
 	{
         super.onDeserialized();
-        if (outputs.length == 0 || outputs[0].assetId != Blockchain.AntCoin.hash() || outputs[0].scriptHash != miner())
+        if (outputs.length == 0 || outputs[0].assetId != Blockchain.ANTCOIN.hash() || outputs[0].scriptHash != miner())
             throw new IOException();
 	}
 	

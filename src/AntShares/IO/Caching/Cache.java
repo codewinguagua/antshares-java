@@ -2,8 +2,6 @@ package AntShares.IO.Caching;
 
 import java.util.*;
 
-import AntShares.KeyNotFoundException;
-
 abstract class Cache<TKey, TValue> implements Collection<TValue> // TODO, IDisposable
 {
     protected class CacheItem
@@ -28,7 +26,7 @@ abstract class Cache<TKey, TValue> implements Collection<TValue> // TODO, IDispo
     {
         synchronized (SyncRoot)
         {
-            if (!InnerDictionary.containsKey(key)) throw new KeyNotFoundException();
+            if (!InnerDictionary.containsKey(key)) return null;
             CacheItem item = InnerDictionary.get(key);
             OnAccess(item);
             return item.Value;

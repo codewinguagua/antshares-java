@@ -26,7 +26,7 @@ public class MinerTransaction extends Transaction
         super.onDeserialized();
         if (inputs.length != 0)
             throw new IOException();
-        if (Arrays.stream(outputs).anyMatch(p -> p.assetId.equals(Blockchain.AntCoin.hash())))
+        if (Arrays.stream(outputs).anyMatch(p -> p.assetId.equals(Blockchain.ANTCOIN.hash())))
             throw new IOException();
 	}
 	

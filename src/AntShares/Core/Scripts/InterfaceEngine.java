@@ -118,7 +118,7 @@ public class InterfaceEngine
 
     private boolean ChainHeight()
     {
-        if (Blockchain.getDefault() == null)
+        if (Blockchain.current() == null)
         {
             //stack.push(0);
         }
@@ -141,19 +141,19 @@ public class InterfaceEngine
             {
                 case 4://sizeof(int):
                     int height = 0;// TODO BitConverter.ToUInt32(d, 0);
-                    if (Blockchain.getDefault() != null)
-                        r.add(Blockchain.getDefault().GetHeader(height));
+                    if (Blockchain.current() != null)
+                        r.add(Blockchain.current().getHeader(height));
                     else if (height == 0)
-                        r.add(Blockchain.GenesisBlock.header());
+                        r.add(Blockchain.GENESIS_BLOCK.header());
                     else
                         r.add(null);
                     break;
                 case 32:
                     UInt256 hash = new UInt256(d);
-                    if (Blockchain.getDefault() != null)
-                        r.add(Blockchain.getDefault().GetHeader(hash));
-                    else if (hash == Blockchain.GenesisBlock.hash())
-                        r.add(Blockchain.GenesisBlock.header());
+                    if (Blockchain.current() != null)
+                        r.add(Blockchain.current().getHeader(hash));
+                    else if (hash == Blockchain.GENESIS_BLOCK.hash())
+                        r.add(Blockchain.GENESIS_BLOCK.header());
                     else
                         r.add(null);
                     break;
@@ -180,19 +180,19 @@ public class InterfaceEngine
             {
                 case 4://sizeof(int):
                     int height = 0;// TODO BitConverter.ToUInt32(d, 0);
-                    if (Blockchain.getDefault() != null)
-                        r.add(Blockchain.getDefault().GetBlock(height));
+                    if (Blockchain.current() != null)
+                        r.add(Blockchain.current().getBlock(height));
                     else if (height == 0)
-                        r.add(Blockchain.GenesisBlock);
+                        r.add(Blockchain.GENESIS_BLOCK);
                     else
                         r.add(null);
                     break;
                 case 32:
                     UInt256 hash = new UInt256(d);
-                    if (Blockchain.getDefault() != null)
-                        r.add(Blockchain.getDefault().GetBlock(hash));
-                    else if (hash == Blockchain.GenesisBlock.hash())
-                        r.add(Blockchain.GenesisBlock);
+                    if (Blockchain.current() != null)
+                        r.add(Blockchain.current().getBlock(hash));
+                    else if (hash == Blockchain.GENESIS_BLOCK.hash())
+                        r.add(Blockchain.GENESIS_BLOCK);
                     else
                         r.add(null);
                     break;

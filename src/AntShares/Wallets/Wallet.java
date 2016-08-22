@@ -9,12 +9,12 @@ import AntShares.Core.*;
 import AntShares.Cryptography.Base58;
 import AntShares.IO.Caching.TrackableCollection;
 
-public abstract class Wallet // TODO : IDisposable
+public abstract class Wallet implements AutoCloseable
 {
     // TODO
     //public event EventHandler BalanceChanged;
 
-    public static final byte CoinVersion = 0x17;
+    public static final byte COIN_VERSION = 0x17;
 
     private final String path;
     private byte[] iv;
@@ -27,13 +27,10 @@ public abstract class Wallet // TODO : IDisposable
     private Thread thread;
     private boolean isrunning = true;
 
-    protected String getDbPath() { return path; }
-    private Object syncRoot;
-    protected Object getSyncRoot() {
-        if (syncRoot == null) syncRoot = new Object();
-        return syncRoot;
-    }
-    protected int getWalletHeight() {
+    protected String dbPath() { return path; }
+    protected final Object syncroot = new Object();
+
+    protected int walletHeight() {
         return current_height;
     }
 
@@ -188,6 +185,13 @@ public abstract class Wallet // TODO : IDisposable
         return true;
     }
 
+    public void close()
+    {
+        isrunning = false;
+        // TODO
+        //if (!thread.ThreadState.HasFlag(ThreadState.Unstarted)) thread.Join();
+    }
+    
     public boolean ContainsAccount(ECPoint publicKey)
     {
         // TODO
@@ -278,13 +282,6 @@ public abstract class Wallet // TODO : IDisposable
                 return contracts.remove(scriptHash) != null;
             }
         }
-    }
-
-    public void Dispose()
-    {
-        isrunning = false;
-        // TODO
-        //if (!thread.ThreadState.HasFlag(ThreadState.Unstarted)) thread.Join();
     }
 
     protected byte[] EncryptPrivateKey(byte[] decryptedPrivateKey)
@@ -671,7 +668,7 @@ public abstract class Wallet // TODO : IDisposable
 
     public void Rebuild()
     {
-        synchronized (getSyncRoot())
+        synchronized (syncroot)
         {
             synchronized (coins)
             {
@@ -752,7 +749,7 @@ public abstract class Wallet // TODO : IDisposable
         byte[] data = Base58.Decode(address);
         if (data.length != 25)
             throw new IllegalArgumentException();
-        if (data[0] != CoinVersion)
+        if (data[0] != COIN_VERSION)
             throw new IllegalArgumentException();
 //        if (!data.Take(21).Sha256().Sha256().Take(4).SequenceEqual(data.Skip(21)))
 //            throw new FormatException();

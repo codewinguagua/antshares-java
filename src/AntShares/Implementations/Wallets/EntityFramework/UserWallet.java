@@ -354,7 +354,7 @@ public class UserWallet extends Wallet
 
     @Override public void Rebuild()
     {
-        synchronized (getSyncRoot())
+        synchronized (syncroot)
         {
             super.Rebuild();
 //            using (WalletDataContext ctx = new WalletDataContext(DbPath))
