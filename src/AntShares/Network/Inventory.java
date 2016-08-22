@@ -1,12 +1,10 @@
 package AntShares.Network;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.*;
 
 import AntShares.UInt256;
 import AntShares.Core.Signable;
+import AntShares.Cryptography.Digest;
 import AntShares.IO.BinaryWriter;
 
 public abstract class Inventory implements Signable
@@ -17,14 +15,7 @@ public abstract class Inventory implements Signable
     {
         if (_hash == null)
         {
-        	try
-        	{
-				MessageDigest md = MessageDigest.getInstance("SHA-256");
-				_hash = new UInt256(md.digest(md.digest(getHashData())));
-			}
-        	catch (NoSuchAlgorithmException e)
-        	{
-			}
+			_hash = new UInt256(Digest.hash256(getHashData()));
         }
         return _hash;
     }

@@ -1,5 +1,8 @@
 package AntShares.Implementations.Wallets.EntityFramework;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+
 import AntShares.Fixed8;
 import AntShares.UInt160;
 import AntShares.UInt256;
@@ -14,7 +17,7 @@ public class UserWallet extends Wallet
     // TODO
     String DbPath = "DbPath";
 
-    protected UserWallet(String path, String password, boolean create)
+    protected UserWallet(String path, String password, boolean create) throws BadPaddingException, IllegalBlockSizeException
     {
         super(path, password, create);
     }
@@ -57,7 +60,15 @@ public class UserWallet extends Wallet
 
     public static UserWallet Create(String path, String password)
     {
-        UserWallet wallet = new UserWallet(path, password, true);
+        UserWallet wallet;
+		try
+		{
+			wallet = new UserWallet(path, password, true);
+		}
+		catch (BadPaddingException | IllegalBlockSizeException ex)
+		{
+			throw new RuntimeException(ex);
+		}
         wallet.CreateAccount();
         return wallet;
     }
@@ -146,7 +157,7 @@ public class UserWallet extends Wallet
     	return new Version();
     }
 
-    @Override protected Iterable<AntShares.Wallets.Account> LoadAccounts()
+    @Override protected AntShares.Wallets.Account[] LoadAccounts()
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {
@@ -161,7 +172,7 @@ public class UserWallet extends Wallet
     	return null;
     }
 
-    @Override protected Iterable<AntShares.Wallets.Coin> LoadCoins()
+    @Override protected AntShares.Wallets.Coin[] LoadCoins()
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {
@@ -184,7 +195,7 @@ public class UserWallet extends Wallet
     	return null;
     }
 
-    @Override protected Iterable<AntShares.Wallets.Contract> LoadContracts()
+    @Override protected AntShares.Wallets.Contract[] LoadContracts()
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {
@@ -341,7 +352,7 @@ public class UserWallet extends Wallet
 //        TransactionsChanged?.Invoke(this, GetTransactionInfo(new[] { tx_changed }));
     }
 
-    public static UserWallet Open(String path, String password)
+    public static UserWallet Open(String path, String password) throws BadPaddingException, IllegalBlockSizeException
     {
         return new UserWallet(path, password, false);
     }

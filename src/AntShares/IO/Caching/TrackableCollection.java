@@ -5,7 +5,7 @@ public class TrackableCollection<TKey, TItem>
 {
     public TrackableCollection() { }
 
-    public TrackableCollection(Iterable<TItem> items)
+    public TrackableCollection(TItem[] items)
     {
 // TODO
 //        for (TItem item : items)

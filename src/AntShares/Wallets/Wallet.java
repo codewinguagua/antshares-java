@@ -1,12 +1,19 @@
 package AntShares.Wallets;
 
+import java.nio.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.*;
 import AntShares.Core.*;
+import AntShares.Cryptography.AES;
 import AntShares.Cryptography.Base58;
+import AntShares.Cryptography.Digest;
 import AntShares.IO.Caching.TrackableCollection;
 
 public abstract class Wallet implements AutoCloseable
@@ -34,54 +41,45 @@ public abstract class Wallet implements AutoCloseable
         return current_height;
     }
 
-    private Wallet(String path, byte[] passwordKey, boolean create)
+    private Wallet(String path, byte[] passwordKey, boolean create) throws BadPaddingException, IllegalBlockSizeException
     {
         this.path = path;
         if (create)
         {
-            this.iv = new byte[16];
-            this.masterKey = new byte[32];
+            this.iv = AES.generateIV();
+            this.masterKey = AES.generateKey();
             this.accounts = new HashMap<UInt160, Account>();
             this.contracts = new HashMap<UInt160, Contract>();
             this.coins = new TrackableCollection<TransactionInput, Coin>();
-            // TODO
-//            this.current_height = Blockchain.Default != null ? Blockchain.Default.HeaderHeight + 1 : 0;
-//            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-//            {
-//                rng.GetNonZeroBytes(iv);
-//                rng.GetNonZeroBytes(masterKey);
-//            }
-//            Version current_version = Assembly.GetExecutingAssembly().GetName().Version;
-//            BuildDatabase();
-//            SaveStoredData("PasswordHash", passwordKey.Sha256());
-//            SaveStoredData("IV", iv);
-//            SaveStoredData("MasterKey", masterKey.AesEncrypt(passwordKey, iv));
-//            SaveStoredData("Version", new[] { current_version.Major, current_version.Minor, current_version.Build, current_version.Revision }.Select(p => BitConverter.GetBytes(p)).SelectMany(p => p).ToArray());
-//            SaveStoredData("Height", BitConverter.GetBytes(current_height));
-//            ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
+            this.current_height = Blockchain.current() != null ? Blockchain.current().headerHeight() + 1 : 0;
+            BuildDatabase();
+            SaveStoredData("PasswordHash", Digest.sha256(passwordKey));
+            SaveStoredData("IV", iv);
+            SaveStoredData("MasterKey", AES.encrypt(masterKey, passwordKey, iv));
+            SaveStoredData("Version", new byte[] { 0, 7, 0, 0 });
+            SaveStoredData("Height", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(current_height).array());
         }
         else
         {
-            // TODO
-//            byte[] passwordHash = LoadStoredData("PasswordHash");
-//            if (passwordHash != null && !passwordHash.SequenceEqual(passwordKey.Sha256()))
-//                throw new CryptographicException();
-//            this.iv = LoadStoredData("IV");
-//            this.masterKey = LoadStoredData("MasterKey").AesDecrypt(passwordKey, iv);
-//            ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
-//            this.accounts = LoadAccounts().ToDictionary(p => p.PublicKeyHash);
-//            this.contracts = LoadContracts().ToDictionary(p => p.ScriptHash);
-//            this.coins = new TrackableCollection<TransactionInput, Coin>(LoadCoins());
-//            this.current_height = BitConverter.ToUInt32(LoadStoredData("Height"), 0);
+            byte[] passwordHash = LoadStoredData("PasswordHash");
+            if (passwordHash != null && !Arrays.equals(passwordHash, Digest.sha256(passwordKey)))
+                throw new BadPaddingException();
+            this.iv = LoadStoredData("IV");
+			this.masterKey = AES.decrypt(LoadStoredData("MasterKey"), passwordKey, iv);
+            this.accounts = Arrays.stream(LoadAccounts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
+            this.contracts = Arrays.stream(LoadContracts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
+            this.coins = new TrackableCollection<TransactionInput, Coin>(LoadCoins());
+            this.current_height = ByteBuffer.wrap(LoadStoredData("Height")).order(ByteOrder.LITTLE_ENDIAN).getInt();
         }
+        //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
         Arrays.fill(passwordKey, (byte) 0);
-        this.thread = new Thread(()->ProcessBlocks());
-        this.thread.setDaemon(true);// TODO IsBackground = true;
+        this.thread = new Thread(this::ProcessBlocks);
+        this.thread.setDaemon(true);
         this.thread.setName("Wallet.ProcessBlocks");
         this.thread.start();
     }
 
-    protected Wallet(String path, String password, boolean create)
+    protected Wallet(String path, String password, boolean create) throws BadPaddingException, IllegalBlockSizeException
     {
         // TODO
         //this(path, password.ToAesKey(), create)
@@ -499,11 +497,11 @@ public abstract class Wallet implements AutoCloseable
         return account;
     }
 
-    protected abstract Iterable<Account> LoadAccounts();
+    protected abstract Account[] LoadAccounts();
 
-    protected abstract Iterable<Coin> LoadCoins();
+    protected abstract Coin[] LoadCoins();
 
-    protected abstract Iterable<Contract> LoadContracts();
+    protected abstract Contract[] LoadContracts();
 
     protected abstract byte[] LoadStoredData(String name);
 
