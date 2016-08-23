@@ -169,4 +169,12 @@ public enum ScriptOp
         return value;
     }
 
+    public static ScriptOp valueOf(int v) {
+        for (ScriptOp op : ScriptOp.values()) {
+            if (op.value == (byte)v) {
+                 return op;
+            }
+        }
+        return null;
+    }
 }
