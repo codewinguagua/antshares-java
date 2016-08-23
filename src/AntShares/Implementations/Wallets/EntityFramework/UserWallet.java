@@ -28,9 +28,9 @@ public class UserWallet extends Wallet
 //        super(path, password, create);
 //    }
 
-    @Override public void AddContract(AntShares.Wallets.Contract contract)
+    @Override public void addContract(AntShares.Wallets.Contract contract)
     {
-        super.AddContract(contract);
+        super.addContract(contract);
         WalletDataContext ctx = new WalletDataContext(DbPath);
 //        Contract db_contract = ctx.Contracts.FirstOrDefault(p => p.ScriptHash.SequenceEqual(contract.ScriptHash.ToArray()));
 //        if (db_contract == null)
@@ -51,7 +51,7 @@ public class UserWallet extends Wallet
     }
 
     @Override
-    protected void BuildDatabase()
+    protected void buildDatabase()
     {
         WalletDataContext ctx = new WalletDataContext(DbPath);
 //        ctx.Database.EnsureDeleted();
@@ -69,7 +69,7 @@ public class UserWallet extends Wallet
 		{
 			throw new RuntimeException(ex);
 		}
-        wallet.CreateAccount();
+        wallet.createAccount();
         return wallet;
     }
 
@@ -81,17 +81,17 @@ public class UserWallet extends Wallet
 //        return wallet;
 //    }
 
-    @Override public AntShares.Wallets.Account CreateAccount(byte[] privateKey)
+    @Override public AntShares.Wallets.Account createAccount(byte[] privateKey)
     {
-        AntShares.Wallets.Account account = super.CreateAccount(privateKey);
+        AntShares.Wallets.Account account = super.createAccount(privateKey);
         OnCreateAccount(account);
-        AddContract(SignatureContract.Create(account.PublicKey));
+        addContract(SignatureContract.Create(account.PublicKey));
         return account;
     }
 
-    @Override public boolean DeleteAccount(UInt160 publicKeyHash)
+    @Override public boolean deleteAccount(UInt160 publicKeyHash)
     {
-        boolean flag = super.DeleteAccount(publicKeyHash);
+        boolean flag = super.deleteAccount(publicKeyHash);
         if (flag)
         {
             WalletDataContext ctx = new WalletDataContext(DbPath);
@@ -106,9 +106,9 @@ public class UserWallet extends Wallet
         return flag;
     }
 
-    @Override public boolean DeleteContract(UInt160 scriptHash)
+    @Override public boolean deleteContract(UInt160 scriptHash)
     {
-        boolean flag = super.DeleteContract(scriptHash);
+        boolean flag = super.deleteContract(scriptHash);
         if (flag)
         {
             WalletDataContext ctx = new WalletDataContext(DbPath);

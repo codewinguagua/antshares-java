@@ -1,7 +1,9 @@
 package AntShares.Cryptography;
 
+import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.Arrays;
 
 import javax.crypto.*;
 import javax.crypto.spec.*;
@@ -91,6 +93,28 @@ public class AES
 				{
 				}
 			}
+		}
+	}
+	
+	public static byte[] generateKey(String password)
+	{
+		byte[] passwordBytes = null, passwordHash = null;
+		try
+		{
+			passwordBytes = password.getBytes("UTF-8");
+			passwordHash = Digest.sha256(passwordBytes);
+			return Digest.sha256(passwordHash);
+		}
+		catch (UnsupportedEncodingException ex)
+		{
+			throw new RuntimeException(ex);
+		}
+		finally
+		{
+			if (passwordBytes != null)
+				Arrays.fill(passwordBytes, (byte)0);
+			if (passwordHash != null)
+				Arrays.fill(passwordHash, (byte)0);
 		}
 	}
 }

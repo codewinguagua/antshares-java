@@ -1,5 +1,6 @@
 package AntShares.Wallets;
 
+import java.lang.Thread.State;
 import java.nio.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,9 +12,8 @@ import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.*;
 import AntShares.Core.*;
-import AntShares.Cryptography.AES;
-import AntShares.Cryptography.Base58;
-import AntShares.Cryptography.Digest;
+import AntShares.Core.Scripts.Script;
+import AntShares.Cryptography.*;
 import AntShares.IO.Caching.TrackableCollection;
 
 public abstract class Wallet implements AutoCloseable
@@ -52,12 +52,13 @@ public abstract class Wallet implements AutoCloseable
             this.contracts = new HashMap<UInt160, Contract>();
             this.coins = new TrackableCollection<TransactionInput, Coin>();
             this.current_height = Blockchain.current() != null ? Blockchain.current().headerHeight() + 1 : 0;
-            BuildDatabase();
+            buildDatabase();
             SaveStoredData("PasswordHash", Digest.sha256(passwordKey));
             SaveStoredData("IV", iv);
             SaveStoredData("MasterKey", AES.encrypt(masterKey, passwordKey, iv));
             SaveStoredData("Version", new byte[] { 0, 7, 0, 0 });
             SaveStoredData("Height", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(current_height).array());
+            //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
         }
         else
         {
@@ -66,12 +67,12 @@ public abstract class Wallet implements AutoCloseable
                 throw new BadPaddingException();
             this.iv = LoadStoredData("IV");
 			this.masterKey = AES.decrypt(LoadStoredData("MasterKey"), passwordKey, iv);
+	        //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
             this.accounts = Arrays.stream(LoadAccounts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
             this.contracts = Arrays.stream(LoadContracts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
             this.coins = new TrackableCollection<TransactionInput, Coin>(LoadCoins());
             this.current_height = ByteBuffer.wrap(LoadStoredData("Height")).order(ByteOrder.LITTLE_ENDIAN).getInt();
         }
-        //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
         Arrays.fill(passwordKey, (byte) 0);
         this.thread = new Thread(this::ProcessBlocks);
         this.thread.setDaemon(true);
@@ -81,9 +82,7 @@ public abstract class Wallet implements AutoCloseable
 
     protected Wallet(String path, String password, boolean create) throws BadPaddingException, IllegalBlockSizeException
     {
-        // TODO
-        //this(path, password.ToAesKey(), create)
-        this(path, password.getBytes(), create);
+        this(path, AES.generateKey(password), create);
     }
 
     // TODO
@@ -92,7 +91,7 @@ public abstract class Wallet implements AutoCloseable
         //this(path, password.ToAesKey(), create)
     //}
 
-    public void AddContract(Contract contract)
+    public void addContract(Contract contract)
     {
         synchronized (accounts)
         {
@@ -105,7 +104,7 @@ public abstract class Wallet implements AutoCloseable
         }
     }
 
-    protected void BuildDatabase()
+    protected void buildDatabase()
     {
     }
 
@@ -161,43 +160,47 @@ public abstract class Wallet implements AutoCloseable
         return amount_claimed;
     }
 
-    public boolean ChangePassword(String password_old, String password_new)
+    public boolean changePassword(String password_old, String password_new)
     {
-//        byte[] passwordHash = LoadStoredData("PasswordHash");
-//        if (!passwordHash.SequenceEqual(password_old.ToAesKey().Sha256()))
-//            return false;
-//        byte[] passwordKey = password_new.ToAesKey();
-//        using (new ProtectedMemoryContext(masterKey, MemoryProtectionScope.SameProcess))
-//        {
-//            try
-//            {
-//                SaveStoredData("MasterKey", masterKey.AesEncrypt(passwordKey, iv));
-//                return true;
-//            }
-//            finally
-//            {
-//                Array.Clear(passwordKey, 0, passwordKey.length);
-//            }
-//        }
-        // TODO
-        return true;
+        byte[] passwordHash = LoadStoredData("PasswordHash");
+        if (!Arrays.equals(passwordHash, Digest.sha256(AES.generateKey(password_old))))
+            return false;
+        byte[] passwordKey = AES.generateKey(password_new);
+        //using (new ProtectedMemoryContext(masterKey, MemoryProtectionScope.SameProcess))
+        {
+            try
+            {
+                SaveStoredData("MasterKey", AES.encrypt(masterKey, passwordKey, iv));
+                return true;
+            }
+            finally
+            {
+                Arrays.fill(passwordKey, (byte)0);
+            }
+        }
     }
 
     public void close()
     {
         isrunning = false;
-        // TODO
-        //if (!thread.ThreadState.HasFlag(ThreadState.Unstarted)) thread.Join();
+        if (thread.getState() != State.NEW)
+        {
+			try
+			{
+				thread.join();
+			}
+			catch (InterruptedException ex)
+			{
+			}
+        }
     }
     
-    public boolean ContainsAccount(ECPoint publicKey)
+    public boolean containsAccount(ECPoint publicKey)
     {
-        // TODO
-        //return ContainsAccount(publicKey.EncodePoint(true).ToScriptHash());
-        return true;
+        return containsAccount(Script.toScriptHash(publicKey.getEncoded(true)));
     }
 
-    public boolean ContainsAccount(UInt160 publicKeyHash)
+    public boolean containsAccount(UInt160 publicKeyHash)
     {
         synchronized (accounts)
         {
@@ -205,7 +208,7 @@ public abstract class Wallet implements AutoCloseable
         }
     }
 
-    public boolean ContainsAddress(UInt160 scriptHash)
+    public boolean containsAddress(UInt160 scriptHash)
     {
         synchronized (contracts)
         {
@@ -213,20 +216,15 @@ public abstract class Wallet implements AutoCloseable
         }
     }
 
-    public Account CreateAccount()
+    public Account createAccount()
     {
-        byte[] privateKey = new byte[1];
-        // TODO
-//        using (CngKey key = CngKey.Create(CngAlgorithm.ECDsaP256, null, new CngKeyCreationParameters { ExportPolicy = CngExportPolicies.AllowPlaintextArchiving }))
-//        {
-//            privateKey = key.Export(CngKeyBlobFormat.EccPrivateBlob);
-//        }
-        Account account = CreateAccount(privateKey);
+        byte[] privateKey = ECC.generateKey();
+        Account account = createAccount(privateKey);
         Arrays.fill(privateKey, (byte) 0);
         return account;
     }
 
-    public Account CreateAccount(byte[] privateKey)
+    public Account createAccount(byte[] privateKey)
     {
         Account account = new Account(privateKey);
         synchronized (accounts)
@@ -236,36 +234,32 @@ public abstract class Wallet implements AutoCloseable
         return account;
     }
 
-    protected byte[] DecryptPrivateKey(byte[] encryptedPrivateKey)
+    protected byte[] decryptPrivateKey(byte[] encryptedPrivateKey) throws IllegalBlockSizeException, BadPaddingException
     {
         if (encryptedPrivateKey == null) throw new NullPointerException("encryptedPrivateKey");
-        if (encryptedPrivateKey.length != 96) throw new IllegalArgumentException();
-        // TODO
-//        using (new ProtectedMemoryContext(masterKey, MemoryProtectionScope.SameProcess))
-//        {
-//            return encryptedPrivateKey.AesDecrypt(masterKey, iv);
-//        }
-        // TODO
-        return new byte[1];
+        if (encryptedPrivateKey.length != 112) throw new IllegalArgumentException();
+        //using (new ProtectedMemoryContext(masterKey, MemoryProtectionScope.SameProcess))
+        {
+            return AES.decrypt(encryptedPrivateKey, masterKey, iv);
+        }
     }
 
-    public boolean DeleteAccount(UInt160 publicKeyHash)
+    public boolean deleteAccount(UInt160 publicKeyHash)
     {
         synchronized (accounts)
         {
             synchronized (contracts)
             {
-                // TODO
-//                for (Contract contract : contracts.Values.Where(p => p.PublicKeyHash == publicKeyHash).ToArray())
-//                {
-//                    DeleteContract(contract.ScriptHash);
-//                }
+                for (Contract contract : (Contract[])contracts.values().stream().filter(p -> p.PublicKeyHash == publicKeyHash).toArray())
+                {
+                    deleteContract(contract.getScriptHash());
+                }
             }
             return accounts.remove(publicKeyHash) != null;
         }
     }
 
-    public boolean DeleteContract(UInt160 scriptHash)
+    public boolean deleteContract(UInt160 scriptHash)
     {
         synchronized (contracts)
         {
@@ -484,7 +478,7 @@ public abstract class Wallet implements AutoCloseable
 //        {
 //            privateKey = ecdsa.Key.Export(CngKeyBlobFormat.EccPrivateBlob);
 //        }
-        Account account = CreateAccount(privateKey);
+        Account account = createAccount(privateKey);
         Arrays.fill(privateKey, (byte) 0);
         return account;
     }
@@ -492,7 +486,7 @@ public abstract class Wallet implements AutoCloseable
     public Account Import(String wif)
     {
         byte[] privateKey = GetPrivateKeyFromWIF(wif);
-        Account account = CreateAccount(privateKey);
+        Account account = createAccount(privateKey);
         Arrays.fill(privateKey, (byte) 0);
         return account;
     }
