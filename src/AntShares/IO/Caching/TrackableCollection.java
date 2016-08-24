@@ -1,58 +1,84 @@
 package AntShares.IO.Caching;
 
-public class TrackableCollection<TKey, TItem> 
-    // TODO extends KeyedCollection<TKey, ? extends ITrackable<TKey>>
+import java.util.*;
+import java.util.function.IntFunction;
+
+public class TrackableCollection<TKey, TItem extends ITrackable<TKey>> extends AbstractCollection<TItem>
 {
+	private HashMap<TKey, TItem> map = new HashMap<TKey, TItem>();
+	
     public TrackableCollection() { }
 
     public TrackableCollection(TItem[] items)
     {
-// TODO
-//        for (TItem item : items)
-//        {
-//            base.InsertItem(Count, item);
-//            item.TrackState = TrackState.None;
-//        }
+        for (TItem item : items)
+        {
+        	this.add(item);
+            item.setTrackState(TrackState.None);
+        }
     }
-
-    //@Override
-    protected void ClearItems()
+    
+    @Override
+    public boolean add(TItem e)
     {
-        // TODO
-//        for (int i = Count - 1; i >= 0; i--)
-//            RemoveItem(i);
+    	e.setTrackState(TrackState.Added);
+    	return map.put(e.getKey(), e) == null;
     }
 
-    public void Commit()
+    @Override
+	public void clear()
     {
-//        for (int i = Count - 1; i >= 0; i--)
-//            if (Items[i].TrackState == TrackState.Deleted)
-//                base.RemoveItem(i);
-//            else
-//                Items[i].TrackState = TrackState.None;
+    	map.clear();
     }
 
-//    public TItem[] GetChangeSet()
-//    {
-//        return Items.Where(p => p.TrackState != TrackState.None).ToArray();
-//    }
-//
-//    protected override TKey GetKeyForItem(TItem item)
-//    {
-//        return item.Key;
-//    }
-//
-//    protected override void InsertItem(int index, TItem item)
-//    {
-//        base.InsertItem(index, item);
-//        item.TrackState = TrackState.Added;
-//    }
-//
-//    protected override void RemoveItem(int index)
-//    {
-//        if (Items[index].TrackState == TrackState.Added)
-//            base.RemoveItem(index);
-//        else
-//            Items[index].TrackState = TrackState.Deleted;
-//    }
+    public void commit()
+    {
+    	Iterator<TItem> iterator = map.values().iterator();
+    	while (iterator.hasNext())
+    	{
+    		TItem item = iterator.next();
+            if (item.getTrackState() == TrackState.Deleted)
+            	iterator.remove();
+            else
+            	item.setTrackState(TrackState.None);
+    	}
+    }
+    
+    public boolean containsKey(TKey key)
+    {
+    	return map.containsKey(key);
+    }
+    
+    public boolean containsValue(TItem item)
+    {
+    	return containsKey(item.getKey());
+    }
+    
+	public TItem[] getChangeSet(IntFunction<TItem[]> generator)
+    {
+    	return map.values().stream().filter(p -> p.getTrackState() != TrackState.None).toArray(generator);
+    }
+    
+    @Override
+    public Iterator<TItem> iterator()
+    {
+    	return map.values().iterator();
+    }
+
+    public boolean remove(TItem key)
+    {
+    	TItem item = map.get(key);
+    	if (item == null) return false;
+        if (item.getTrackState() == TrackState.Added)
+            map.remove(key);
+        else
+        	item.setTrackState(TrackState.Deleted);
+        return true;
+    }
+    
+    @Override
+    public int size()
+    {
+    	return map.size();
+    }
 }

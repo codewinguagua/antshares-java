@@ -64,7 +64,7 @@ public class Account
             //byte[] checksum = data.Sha256(0, data.length - 4).Sha256();
             byte[] checksum = new byte[1];
             System.arraycopy(checksum, 0, data, data.length - 4, 4);
-            String wif = Base58.Encode(data);
+            String wif = Base58.encode(data);
             Arrays.fill(data, (byte) 0);
             return wif;
 //        }

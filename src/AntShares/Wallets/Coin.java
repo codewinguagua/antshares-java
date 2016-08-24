@@ -9,15 +9,15 @@ import AntShares.IO.Caching.TrackState;
 
 public class Coin implements ITrackable<TransactionInput>
 {
-    public TransactionInput Input;
-    public UInt256 AssetId;
-    public Fixed8 Value;
-    public UInt160 ScriptHash;
+    public TransactionInput input;
+    public UInt256 assetId;
+    public Fixed8 value;
+    public UInt160 scriptHash;
 
     // TODO [NonSerialized]
     private String _address = null;
 
-    public String getAddress()
+    public String address()
     {
         if (_address == null)
         {
@@ -49,13 +49,13 @@ public class Coin implements ITrackable<TransactionInput>
     {
         if (this == obj) return true;
         if (!(obj instanceof Coin)) return false;
-        return Input.equals(((Coin) obj).Input);
+        return input.equals(((Coin) obj).input);
     }
 
     @Override
     public int hashCode()
     {
-        return Input.hashCode();
+        return input.hashCode();
     }
 
     // TODO

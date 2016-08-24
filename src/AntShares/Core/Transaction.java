@@ -89,7 +89,7 @@ public abstract class Transaction extends Inventory
 	        if (Arrays.stream(attributes).map(p -> p.usage).distinct().count() != attributes.length)
 	            throw new IOException();
 	        inputs = reader.readSerializableArray(TransactionInput.class);
-	        TransactionInput[] inputs_all = (TransactionInput[])getAllInputs().toArray();
+	        TransactionInput[] inputs_all = getAllInputs().toArray(TransactionInput[]::new);
 	        for (int i = 1; i < inputs_all.length; i++)
 	            for (int j = 0; j < i; j++)
 	                if (inputs_all[i].prevHash == inputs_all[j].prevHash && inputs_all[i].prevIndex == inputs_all[j].prevIndex)

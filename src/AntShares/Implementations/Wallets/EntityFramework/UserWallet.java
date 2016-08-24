@@ -122,7 +122,7 @@ public class UserWallet extends Wallet
         return flag;
     }
 
-    @Override public AntShares.Wallets.Coin[] FindUnspentCoins(UInt256 asset_id, Fixed8 amount)
+    @Override public AntShares.Wallets.Coin[] findUnspentCoins(UInt256 asset_id, Fixed8 amount)
     {
         //return FindUnspentCoins(FindUnspentCoins().Where(p => GetContract(p.ScriptHash) is SignatureContract), asset_id, amount) ?? base.FindUnspentCoins(asset_id, amount);
     	// TODO
@@ -157,7 +157,7 @@ public class UserWallet extends Wallet
     	return new Version();
     }
 
-    @Override protected AntShares.Wallets.Account[] LoadAccounts()
+    @Override protected AntShares.Wallets.Account[] loadAccounts()
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {
@@ -172,7 +172,7 @@ public class UserWallet extends Wallet
     	return null;
     }
 
-    @Override protected AntShares.Wallets.Coin[] LoadCoins()
+    @Override protected AntShares.Wallets.Coin[] loadCoins()
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {
@@ -195,7 +195,7 @@ public class UserWallet extends Wallet
     	return null;
     }
 
-    @Override protected AntShares.Wallets.Contract[] LoadContracts()
+    @Override protected AntShares.Wallets.Contract[] loadContracts()
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {
@@ -209,7 +209,7 @@ public class UserWallet extends Wallet
     	return null;
     }
 
-    @Override protected byte[] LoadStoredData(String name)
+    @Override protected byte[] loadStoredData(String name)
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {
@@ -297,7 +297,7 @@ public class UserWallet extends Wallet
 //        }
     }
 
-    @Override protected void OnProcessNewBlock(Block block, Iterable<AntShares.Core.Transaction> transactions, Iterable<AntShares.Wallets.Coin> added, Iterable<AntShares.Wallets.Coin> changed, Iterable<AntShares.Wallets.Coin> deleted)
+    @Override protected void onProcessNewBlock(Block block, AntShares.Core.Transaction[] transactions, AntShares.Wallets.Coin[] added, AntShares.Wallets.Coin[] changed, AntShares.Wallets.Coin[] deleted)
     {
         Transaction[] tx_changed;
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
@@ -333,7 +333,7 @@ public class UserWallet extends Wallet
 //            TransactionsChanged?.Invoke(this, GetTransactionInfo(tx_changed));
     }
 
-    @Override protected void OnSendTransaction(AntShares.Core.Transaction tx, Iterable<AntShares.Wallets.Coin> added, Iterable<AntShares.Wallets.Coin> changed)
+    @Override protected void onSendTransaction(AntShares.Core.Transaction tx, AntShares.Wallets.Coin[] added, AntShares.Wallets.Coin[] changed)
     {
 //        Transaction tx_changed;
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))

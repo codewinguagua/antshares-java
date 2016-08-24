@@ -3,10 +3,10 @@ package AntShares.Wallets;
 import java.lang.Thread.State;
 import java.nio.*;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Map.Entry;
+import java.util.stream.*;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.*;
 
 import org.bouncycastle.math.ec.ECPoint;
 
@@ -62,19 +62,19 @@ public abstract class Wallet implements AutoCloseable
         }
         else
         {
-            byte[] passwordHash = LoadStoredData("PasswordHash");
+            byte[] passwordHash = loadStoredData("PasswordHash");
             if (passwordHash != null && !Arrays.equals(passwordHash, Digest.sha256(passwordKey)))
                 throw new BadPaddingException();
-            this.iv = LoadStoredData("IV");
-			this.masterKey = AES.decrypt(LoadStoredData("MasterKey"), passwordKey, iv);
+            this.iv = loadStoredData("IV");
+			this.masterKey = AES.decrypt(loadStoredData("MasterKey"), passwordKey, iv);
 	        //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
-            this.accounts = Arrays.stream(LoadAccounts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
-            this.contracts = Arrays.stream(LoadContracts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
-            this.coins = new TrackableCollection<TransactionInput, Coin>(LoadCoins());
-            this.current_height = ByteBuffer.wrap(LoadStoredData("Height")).order(ByteOrder.LITTLE_ENDIAN).getInt();
+            this.accounts = Arrays.stream(loadAccounts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
+            this.contracts = Arrays.stream(loadContracts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
+            this.coins = new TrackableCollection<TransactionInput, Coin>(loadCoins());
+            this.current_height = ByteBuffer.wrap(loadStoredData("Height")).order(ByteOrder.LITTLE_ENDIAN).getInt();
         }
         Arrays.fill(passwordKey, (byte) 0);
-        this.thread = new Thread(this::ProcessBlocks);
+        this.thread = new Thread(this::processBlocks);
         this.thread.setDaemon(true);
         this.thread.setName("Wallet.ProcessBlocks");
         this.thread.start();
@@ -162,7 +162,7 @@ public abstract class Wallet implements AutoCloseable
 
     public boolean changePassword(String password_old, String password_new)
     {
-        byte[] passwordHash = LoadStoredData("PasswordHash");
+        byte[] passwordHash = loadStoredData("PasswordHash");
         if (!Arrays.equals(passwordHash, Digest.sha256(AES.generateKey(password_old))))
             return false;
         byte[] passwordKey = AES.generateKey(password_new);
@@ -250,7 +250,7 @@ public abstract class Wallet implements AutoCloseable
         {
             synchronized (contracts)
             {
-                for (Contract contract : (Contract[])contracts.values().stream().filter(p -> p.PublicKeyHash == publicKeyHash).toArray())
+                for (Contract contract : contracts.values().stream().filter(p -> p.PublicKeyHash == publicKeyHash).toArray(Contract[]::new))
                 {
                     deleteContract(contract.getScriptHash());
                 }
@@ -265,152 +265,143 @@ public abstract class Wallet implements AutoCloseable
         {
             synchronized (coins)
             {
-                // TODO
-//                for (TransactionInput key : coins.Where(p => p.ScriptHash == scriptHash).Select(p => p.Input).ToArray())
-//                {
-//                    coins.Remove(key);
-//                }
-                coins.Commit();
+            	Iterator<Coin> iterator = coins.iterator();
+            	while (iterator.hasNext())
+            		if (iterator.next().scriptHash.equals(scriptHash))
+            			iterator.remove();
+                coins.commit();
                 return contracts.remove(scriptHash) != null;
             }
         }
     }
 
-    protected byte[] EncryptPrivateKey(byte[] decryptedPrivateKey)
+    protected byte[] encryptPrivateKey(byte[] decryptedPrivateKey)
     {
-//        using (new ProtectedMemoryContext(masterKey, MemoryProtectionScope.SameProcess))
-//        {
-//            return decryptedPrivateKey.AesEncrypt(masterKey, iv);
-//        }
-        // TODO
-        return null;
-    }
-
-    public Iterable<Coin> FindCoins()
-    {
-        synchronized (coins)
+        //using (new ProtectedMemoryContext(masterKey, MemoryProtectionScope.SameProcess))
         {
-            //return coins.Where(p => p.State == CoinState.Unconfirmed || p.State == CoinState.Unspent).ToArray();
-            return null;
+            return AES.encrypt(decryptedPrivateKey, masterKey, iv);
         }
     }
 
-    public Iterable<Coin> FindUnspentCoins()
+    public Coin[] findCoins()
     {
         synchronized (coins)
         {
-            //return coins.Where(p => p.State == CoinState.Unspent).ToArray();
-            return null;
+            return coins.stream().filter(p -> p.getState() == CoinState.Unconfirmed || p.getState() == CoinState.Unspent).toArray(Coin[]::new);
         }
     }
 
-    public Coin[] FindUnspentCoins(UInt256 asset_id, Fixed8 amount)
+    public Coin[] findUnspentCoins()
     {
         synchronized (coins)
         {
-            //return FindUnspentCoins(coins.Where(p => p.State == CoinState.Unspent), asset_id, amount);
-            return null;
+            return coins.stream().filter(p -> p.getState() == CoinState.Unspent).toArray(Coin[]::new);
         }
     }
 
-    protected static Coin[] FindUnspentCoins(Iterable<Coin> unspents, UInt256 asset_id, Fixed8 amount)
+    public Coin[] findUnspentCoins(UInt256 asset_id, Fixed8 amount)
     {
-//        Coin[] unspents_asset = unspents.Where(p => p.AssetId == asset_id).ToArray();
-//        Fixed8 sum = unspents_asset.Sum(p => p.Value);
-//        if (sum < amount) return null;
-//        if (sum == amount) return unspents_asset;
-//        Coin[] unspents_ordered = unspents_asset.OrderByDescending(p => p.Value).ToArray();
-//        int i = 0;
-//        while (unspents_ordered[i].Value <= amount)
-//            amount -= unspents_ordered[i++].Value;
-//        if (amount == Fixed8.Zero)
-//            return unspents_ordered.Take(i).ToArray();
-//        else
-//            return unspents_ordered.Take(i).Concat(new[] { unspents_ordered.Last(p => p.Value >= amount) }).ToArray();
-        return null;
+        synchronized (coins)
+        {
+            return findUnspentCoins(coins.stream().filter(p -> p.getState() == CoinState.Unspent), asset_id, amount);
+        }
     }
 
-    public Account GetAccount(ECPoint publicKey)
+    protected static Coin[] findUnspentCoins(Stream<Coin> unspents, UInt256 asset_id, Fixed8 amount)
     {
-        //return GetAccount(publicKey.EncodePoint(true).ToScriptHash());
-        return null;
+        Coin[] unspents_asset = unspents.filter(p -> p.assetId == asset_id).toArray(Coin[]::new);
+        Fixed8 sum = Fixed8.sum(unspents_asset, p -> p.value);
+        if (sum.compareTo(amount) < 0) return null;
+        if (sum.equals(amount)) return unspents_asset;
+        Arrays.sort(unspents_asset, (a, b) -> -a.value.compareTo(b.value));
+        int i = 0;
+        while (unspents_asset[i].value.compareTo(amount) <= 0)
+            amount = amount.subtract(unspents_asset[i++].value);
+        if (amount.equals(Fixed8.ZERO))
+        {
+            return Arrays.stream(unspents_asset).limit(i).toArray(Coin[]::new);
+        }
+        else
+        {
+        	Coin[] result = new Coin[i + 1];
+        	System.arraycopy(unspents_asset, 0, result, 0, i);
+        	for (int j = unspents_asset.length - 1; j >= 0; j--)
+        		if (unspents_asset[j].value.compareTo(amount) >= 0)
+        		{
+        			result[i] = unspents_asset[j];
+        			break;
+        		}
+        	return result;
+        }
     }
 
-    public Account GetAccount(UInt160 publicKeyHash)
+    public Account getAccount(ECPoint publicKey)
+    {
+        return getAccount(Script.toScriptHash(publicKey.getEncoded(true)));
+    }
+
+    public Account getAccount(UInt160 publicKeyHash)
     {
         synchronized (accounts)
         {
-//            if (!accounts.ContainsKey(publicKeyHash)) return null;
-//            return accounts[publicKeyHash];
-            return null;
+            if (!accounts.containsKey(publicKeyHash)) return null;
+            return accounts.get(publicKeyHash);
         }
     }
 
-    public Account GetAccountByScriptHash(UInt160 scriptHash)
+    public Account getAccountByScriptHash(UInt160 scriptHash)
     {
         synchronized (accounts)
         {
             synchronized (contracts)
             {
-//                if (!contracts.ContainsKey(scriptHash)) return null;
-//                return accounts[contracts[scriptHash].PublicKeyHash];
-                return null;
+                if (!contracts.containsKey(scriptHash)) return null;
+                return accounts.get(contracts.get(scriptHash).PublicKeyHash);
             }
         }
     }
 
-    public Iterable<Account> GetAccounts()
+    public Account[] getAccounts()
     {
-//        synchronized (accounts)
-//        {
-//            for (var pair : accounts)
-//            {
-//                yield return pair.Value;
-//            }
-//        }
-        return null;
+        synchronized (accounts)
+        {
+        	return accounts.values().toArray(new Account[accounts.size()]);
+        }
     }
 
-    public Iterable<UInt160> GetAddresses()
+    public UInt160[] getAddresses()
     {
-//        synchronized (contracts)
-//        {
-//            for (var pair : contracts)
-//            {
-//                yield return pair.Key;
-//            }
-//        }
-        return null;
+        synchronized (contracts)
+        {
+        	return contracts.keySet().toArray(new UInt160[contracts.size()]);
+        }
     }
 
-    public Fixed8 GetAvailable(UInt256 asset_id)
+    public Fixed8 getAvailable(UInt256 asset_id)
     {
-//        synchronized (coins)
-//        {
-//            return coins.Where(p => p.State == CoinState.Unspent && p.AssetId == asset_id).Sum(p => p.Value);
-//        }
-        return null;
+        synchronized (coins)
+        {
+        	return Fixed8.sum(coins.stream().filter(p -> p.getState() == CoinState.Unspent && p.assetId.equals(asset_id)).toArray(Coin[]::new), p -> p.value);
+        }
     }
 
-    public Fixed8 GetBalance(UInt256 asset_id)
+    public Fixed8 getBalance(UInt256 asset_id)
     {
-//        synchronized (coins)
-//        {
-//            return coins.Where(p => (p.State == CoinState.Unconfirmed || p.State == CoinState.Unspent) && p.AssetId == asset_id).Sum(p => p.Value);
-//        }
-        return null;
+        synchronized (coins)
+        {
+        	return Fixed8.sum(coins.stream().filter(p -> (p.getState() == CoinState.Unconfirmed || p.getState() == CoinState.Unspent) && p.assetId.equals(asset_id)).toArray(Coin[]::new), p -> p.value);
+        }
     }
 
-    public UInt160 GetChangeAddress()
+    public UInt160 getChangeAddress()
     {
-//        synchronized (contracts)
-//        {
-//            return contracts.Values.FirstOrDefault(p => p is SignatureContract)?.ScriptHash ?? contracts.Keys.FirstOrDefault();
-//        }
-        return null;
+        synchronized (contracts)
+        {
+        	return contracts.values().stream().filter(p -> p instanceof SignatureContract).findAny().map(p -> p.getScriptHash()).orElse(contracts.keySet().stream().findAny().get());
+        }
     }
 
-    public Contract GetContract(UInt160 scriptHash)
+    public Contract getContract(UInt160 scriptHash)
     {
         synchronized (contracts)
         {
@@ -419,166 +410,135 @@ public abstract class Wallet implements AutoCloseable
         }
     }
 
-    public Iterable<Contract> GetContracts()
+    public Contract[] getContracts()
     {
         synchronized (contracts)
         {
-//            for (var pair : contracts)
-//            {
-//                yield return pair.Value;
-//            }
-            return null;
+        	return contracts.values().toArray(new Contract[contracts.size()]);
         }
     }
 
-    public Iterable<Contract> GetContracts(UInt160 publicKeyHash)
+    public Contract[] getContracts(UInt160 publicKeyHash)
     {
         synchronized (contracts)
         {
-//            for (Contract contract : contracts.Values.Where(p => p.PublicKeyHash.Equals(publicKeyHash)))
-//            {
-//                yield return contract;
-//            }
-            return null;
+        	return contracts.values().stream().filter(p -> p.PublicKeyHash.equals(publicKeyHash)).toArray(Contract[]::new);
         }
     }
 
-    public static byte[] GetPrivateKeyFromWIF(String wif)
+    public static byte[] getPrivateKeyFromWIF(String wif)
     {
         if (wif == null) throw new NullPointerException();
-        byte[] data = Base58.Decode(wif);
+        byte[] data = Base58.decode(wif);
         if (data.length != 38 || data[0] != 0x80 || data[33] != 0x01)
             throw new IllegalArgumentException();
-        // TODO
-        //byte[] checksum = data.Sha256(0, data.length - 4).Sha256();
-//        if (!data.Skip(data.length - 4).SequenceEqual(checksum.Take(4)))
-//            throw new FormatException();
+        byte[] checksum = Digest.sha256(Digest.sha256(data, 0, data.length - 4));
+        for (int i = 0; i < 4; i++)
+        	if (data[data.length - 4 + i] != checksum[i])
+        		throw new IllegalArgumentException();
         byte[] privateKey = new byte[32];
         System.arraycopy(data, 1, privateKey, 0, privateKey.length);
         Arrays.fill(data, (byte) 0);
         return privateKey;
     }
 
-    public Iterable<Coin> GetUnclaimedCoins()
+    public Coin[] getUnclaimedCoins()
     {
         synchronized (coins)
         {
-//            for (var coin : coins.Where(p => p.State == CoinState.Spent && p.AssetId == Blockchain.AntShare.Hash))
-//            {
-//                yield return coin;
-//            }
-            return null;
+            return coins.stream().filter(p -> p.getState() == CoinState.Spent && p.assetId.equals(Blockchain.ANTSHARE.hash())).toArray(Coin[]::new);
         }
     }
 
-    public Account Import(/* X509Certificate2 */ Object cert)
-    {
-        byte[] privateKey = null;
+    //TODO
+//    public Account Import(X509Certificate2 cert)
+//    {
+//        byte[] privateKey = null;
 //        using (ECDsaCng ecdsa = (ECDsaCng)cert.GetECDsaPrivateKey())
 //        {
 //            privateKey = ecdsa.Key.Export(CngKeyBlobFormat.EccPrivateBlob);
 //        }
+//        Account account = createAccount(privateKey);
+//        Arrays.fill(privateKey, (byte) 0);
+//        return account;
+//    }
+
+    public Account importAccount(String wif)
+    {
+        byte[] privateKey = getPrivateKeyFromWIF(wif);
         Account account = createAccount(privateKey);
         Arrays.fill(privateKey, (byte) 0);
         return account;
     }
 
-    public Account Import(String wif)
+    protected abstract Account[] loadAccounts();
+
+    protected abstract Coin[] loadCoins();
+
+    protected abstract Contract[] loadContracts();
+
+    protected abstract byte[] loadStoredData(String name);
+
+    public <T extends Transaction> T MakeTransaction(T tx, Fixed8 fee)
     {
-        byte[] privateKey = GetPrivateKeyFromWIF(wif);
-        Account account = createAccount(privateKey);
-        Arrays.fill(privateKey, (byte) 0);
-        return account;
-    }
-
-    protected abstract Account[] LoadAccounts();
-
-    protected abstract Coin[] LoadCoins();
-
-    protected abstract Contract[] LoadContracts();
-
-    protected abstract byte[] LoadStoredData(String name);
-
-    // TODO
-    public <T> T MakeTransaction(T tx, Fixed8 fee) // TODO where T : Transaction
-    {
+        if (tx.outputs == null) throw new IllegalArgumentException();
+        if (tx.attributes == null) tx.attributes = new TransactionAttribute[0];
+        fee = fee.add(tx.systemFee());
+        Map<UInt256, Fixed8> pay_total = Arrays.stream(tx instanceof IssueTransaction ? new TransactionOutput[0] : tx.outputs).collect(Collectors.groupingBy(p -> p.assetId)).entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> Fixed8.sum(p.getValue().toArray(new TransactionOutput[0]), o -> o.value)));
+        if (fee.compareTo(Fixed8.ZERO) > 0)
+        {
+        	Fixed8 value = pay_total.get(Blockchain.ANTCOIN.hash());
+        	if (value == null) value = Fixed8.ZERO;
+        	value = value.add(fee);
+        	pay_total.put(Blockchain.ANTCOIN.hash(), value);
+        }
+        Map<UInt256, Coin[]> pay_coins = pay_total.entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> findUnspentCoins(p.getKey(), p.getValue())));
+        if (pay_coins.values().stream().anyMatch(p -> p == null)) return null;
+        Map<UInt256, Fixed8> input_sum = pay_coins.entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> Fixed8.sum(p.getValue(), c -> c.value)));
+        UInt160 change_address = getChangeAddress();
+        List<TransactionOutput> outputs_new = new ArrayList<TransactionOutput>(Arrays.asList(tx.outputs));
+        for (Entry<UInt256, Fixed8> entry : input_sum.entrySet())
+        {
+        	Fixed8 pay = pay_total.get(entry.getKey());
+            if (entry.getValue().compareTo(pay) > 0)
+            {
+            	TransactionOutput output = new TransactionOutput();
+            	output.assetId = entry.getKey();
+            	output.value = entry.getValue().subtract(pay);
+            	output.scriptHash = change_address;
+            	outputs_new.add(output);
+            }
+        }
+        tx.inputs = pay_coins.values().stream().flatMap(p -> Arrays.stream(p)).map(p -> p.input).toArray(TransactionInput[]::new);
+        tx.outputs = outputs_new.toArray(new TransactionOutput[outputs_new.size()]);
         return tx;
-//        if (tx.Outputs == null) throw new ArgumentException();
-//        if (tx.Attributes == null) tx.Attributes = new TransactionAttribute[0];
-//        fee += tx.SystemFee;
-//        var pay_total = (typeof(T) == typeof(IssueTransaction) ? new TransactionOutput[0] : tx.Outputs).GroupBy(p => p.AssetId, (k, g) => new
-//        {
-//            AssetId = k,
-//            Value = g.Sum(p => p.Value)
-//        }).ToDictionary(p => p.AssetId);
-//        if (fee > Fixed8.Zero)
-//        {
-//            if (pay_total.ContainsKey(Blockchain.AntCoin.Hash))
-//            {
-//                pay_total[Blockchain.AntCoin.Hash] = new
-//                {
-//                    AssetId = Blockchain.AntCoin.Hash,
-//                    Value = pay_total[Blockchain.AntCoin.Hash].Value + fee
-//                };
-//            }
-//            else
-//            {
-//                pay_total.Add(Blockchain.AntCoin.Hash, new
-//                {
-//                    AssetId = Blockchain.AntCoin.Hash,
-//                    Value = fee
-//                });
-//            }
-//        }
-//        var pay_coins = pay_total.Select(p => new
-//        {
-//            AssetId = p.Key,
-//            Unspents = FindUnspentCoins(p.Key, p.Value.Value)
-//        }).ToDictionary(p => p.AssetId);
-//        if (pay_coins.Any(p => p.Value.Unspents == null)) return null;
-//        var input_sum = pay_coins.Values.ToDictionary(p => p.AssetId, p => new
-//        {
-//            AssetId = p.AssetId,
-//            Value = p.Unspents.Sum(q => q.Value)
-//        });
-//        UInt160 change_address = GetChangeAddress();
-//        List<TransactionOutput> outputs_new = new List<TransactionOutput>(tx.Outputs);
-//        for (UInt256 asset_id : input_sum.Keys)
-//        {
-//            if (input_sum[asset_id].Value > pay_total[asset_id].Value)
-//            {
-//                outputs_new.Add(new TransactionOutput
-//                {
-//                    AssetId = asset_id,
-//                    Value = input_sum[asset_id].Value - pay_total[asset_id].Value,
-//                    ScriptHash = change_address
-//                });
-//            }
-//        }
-//        tx.Inputs = pay_coins.Values.SelectMany(p => p.Unspents).Select(p => p.Input).ToArray();
-//        tx.Outputs = outputs_new.ToArray();
-//        return tx;
     }
 
-    protected abstract void OnProcessNewBlock(Block block, Iterable<Transaction> transactions, Iterable<Coin> added, Iterable<Coin> changed, Iterable<Coin> deleted);
-    protected abstract void OnSendTransaction(Transaction tx, Iterable<Coin> added, Iterable<Coin> changed);
+    protected abstract void onProcessNewBlock(Block block, Transaction[] transactions, Coin[] added, Coin[] changed, Coin[] deleted);
+    protected abstract void onSendTransaction(Transaction tx, Coin[] added, Coin[] changed);
 
-    private void ProcessBlocks()
+    private void processBlocks()
     {
         while (isrunning)
         {
-//            while (current_height <= Blockchain.Default?.Height && isrunning)
-//            {
-//                synchronized (SyncRoot)
-//                {
-//                    Block block = Blockchain.Default.GetBlock(current_height);
-//                    if (block != null) ProcessNewBlock(block);
-//                }
-//            }
-//            for (int i = 0; i < 20 && isrunning; i++)
-//            {
-//                Thread.Sleep(100);
-//            }
+        	Blockchain blockchain = Blockchain.current();
+            while (current_height <= (blockchain == null ? 0 : blockchain.height()) && isrunning)
+            {
+                synchronized (syncroot)
+                {
+                    Block block = blockchain.getBlock(current_height);
+                    if (block != null) ProcessNewBlock(block);
+                }
+            }
+            try
+            {
+	            for (int i = 0; i < 20 && isrunning; i++)
+	                Thread.sleep(100);
+            }
+            catch (InterruptedException ex)
+            {
+            	break;
+            }
         }
     }
 
@@ -666,7 +626,7 @@ public abstract class Wallet implements AutoCloseable
             {
                 // TODO
                 //coins.Clear();
-                coins.Commit();
+                coins.commit();
                 current_height = 0;
             }
         }
@@ -738,7 +698,7 @@ public abstract class Wallet implements AutoCloseable
 
     public static UInt160 ToScriptHash(String address)
     {
-        byte[] data = Base58.Decode(address);
+        byte[] data = Base58.decode(address);
         if (data.length != 25)
             throw new IllegalArgumentException();
         if (data[0] != COIN_VERSION)

@@ -2,6 +2,7 @@ package AntShares;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.function.Function;
 
 import AntShares.IO.*;
 
@@ -92,6 +93,22 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
     {
         return fromDecimal(new BigDecimal(s));
     }
+    
+    public static Fixed8 sum(Fixed8[] values)
+    {
+    	return sum(values, p -> p);
+    }
+    
+    public static <T> Fixed8 sum(T[] values, Function<T, Fixed8> selector)
+    {
+        long sum = 0;
+        // TODO checked
+        for (T item : values)
+        {
+            sum += selector.apply(item).value;
+        }
+        return new Fixed8(sum);
+    }
 
     @Override
     public String toString()
@@ -158,16 +175,16 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
         return new Fixed8(x.value / y);
     }
 
-    public static Fixed8 add(Fixed8 x, Fixed8 y)
+    public Fixed8 add(Fixed8 other)
     {
         // TODO checked(...);
-        return new Fixed8(x.value + y.value);
+        return new Fixed8(this.value + other.value);
     }
 
-    public static Fixed8 subtract(Fixed8 x, Fixed8 y)
+    public Fixed8 subtract(Fixed8 other)
     {
         // TODO checked(...);
-        return new Fixed8(x.value - y.value);
+        return new Fixed8(this.value - other.value);
     }
 
     public Fixed8 minus()

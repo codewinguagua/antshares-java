@@ -128,7 +128,7 @@ public class Block extends Inventory
         {
             if (transactions[0].type != TransactionType.MinerTransaction || Arrays.stream(transactions).skip(1).anyMatch(p -> p.type == TransactionType.MinerTransaction))
                 throw new IOException();
-            if (!merkleRoot.equals(MerkleTree.ComputeRoot((UInt256[]) Arrays.stream(transactions).map(p -> p.hash()).toArray())))
+            if (!merkleRoot.equals(MerkleTree.ComputeRoot(Arrays.stream(transactions).map(p -> p.hash()).toArray(UInt256[]::new))))
                 throw new IOException();
         }
     }
@@ -224,7 +224,7 @@ public class Block extends Inventory
      */
     public void rebuildMerkleRoot()
     {
-        merkleRoot = MerkleTree.ComputeRoot((UInt256[]) Arrays.stream(transactions).map(p -> p.hash()).toArray());
+        merkleRoot = MerkleTree.ComputeRoot(Arrays.stream(transactions).map(p -> p.hash()).toArray(UInt256[]::new));
     }
 
     /**
@@ -283,7 +283,7 @@ public class Block extends Inventory
 	        {
 	            serializeUnsigned(writer);
 	            writer.writeByte((byte)1); writer.writeSerializable(script);
-	            writer.writeSerializableArray((Serializable[]) Arrays.stream(transactions).map(p -> p.hash()).toArray());
+	            writer.writeSerializableArray(Arrays.stream(transactions).map(p -> p.hash()).toArray(Serializable[]::new));
 	            writer.flush();
 	            return ms.toByteArray();
 	        }

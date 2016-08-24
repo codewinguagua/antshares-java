@@ -58,23 +58,6 @@ public class Helper
 //        return new BigInteger(b);
 //    }
     
-    public static Fixed8 Sum(Iterable<Fixed8> source)
-    {
-        long sum = 0;
-        // TODO checked
-        for (Fixed8 item : source)
-        {
-            sum += item.value;
-        }
-        return new Fixed8(sum);
-    }
-    
-// TODO
-//    public static Fixed8 Sum<TSource>(this IEnumerable<TSource> source, Func<TSource, Fixed8> selector)
-//    {
-//        return source.Select(selector).Sum();
-//    }
-    
     /**
      * @param timestamp in seconds
      * @return
