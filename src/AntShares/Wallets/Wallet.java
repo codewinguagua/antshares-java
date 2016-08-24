@@ -14,7 +14,7 @@ import AntShares.*;
 import AntShares.Core.*;
 import AntShares.Core.Scripts.Script;
 import AntShares.Cryptography.*;
-import AntShares.IO.Caching.TrackableCollection;
+import AntShares.IO.Caching.*;
 
 public abstract class Wallet implements AutoCloseable
 {
@@ -527,7 +527,7 @@ public abstract class Wallet implements AutoCloseable
                 synchronized (syncroot)
                 {
                     Block block = blockchain.getBlock(current_height);
-                    if (block != null) ProcessNewBlock(block);
+                    if (block != null) processNewBlock(block);
                 }
             }
             try
@@ -542,7 +542,7 @@ public abstract class Wallet implements AutoCloseable
         }
     }
 
-    private void ProcessNewBlock(Block block)
+    private void processNewBlock(Block block)
     {
         Coin[] changeset;
         synchronized (contracts)
@@ -550,67 +550,70 @@ public abstract class Wallet implements AutoCloseable
             synchronized (coins)
             {
                 HashSet<Transaction> transactions = new HashSet<Transaction>();
-                // TODO
-//                for (Transaction tx : block.Transactions)
-//                {
-//                    for (ushort index = 0; index < tx.Outputs.length; index++)
-//                    {
-//                        TransactionOutput output = tx.Outputs[index];
-//                        if (contracts.ContainsKey(output.ScriptHash))
-//                        {
-//                            TransactionInput key = new TransactionInput
-//                            {
-//                                PrevHash = tx.Hash,
-//                                PrevIndex = index
-//                            };
-//                            if (coins.Contains(key))
-//                                coins[key].State = CoinState.Unspent;
-//                            else
-//                                coins.Add(new Coin
-//                                {
-//                                    Input = key,
-//                                    AssetId = output.AssetId,
-//                                    Value = output.Value,
-//                                    ScriptHash = output.ScriptHash,
-//                                    State = CoinState.Unspent
-//                                });
-//                            transactions.Add(tx);
-//                        }
-//                    }
-//                }
-//                for (Transaction tx : block.Transactions)
-//                {
-//                    for (TransactionInput input : tx.GetAllInputs())
-//                    {
-//                        if (coins.Contains(input))
-//                        {
-//                            if (coins[input].AssetId == Blockchain.AntShare.Hash)
-//                                coins[input].State = CoinState.Spent;
-//                            else
-//                                coins.Remove(input);
-//                            transactions.Add(tx);
-//                        }
-//                    }
-//                }
-//                for (ClaimTransaction tx : block.Transactions.OfType<ClaimTransaction>())
-//                {
-//                    for (TransactionInput claim : tx.Claims)
-//                    {
-//                        if (coins.Contains(claim))
-//                        {
-//                            coins.Remove(claim);
-//                            transactions.Add(tx);
-//                        }
-//                    }
-//                }
+                for (Transaction tx : block.transactions)
+                {
+                    for (/*ushort*/int index = 0; index < tx.outputs.length; index++)
+                    {
+                        TransactionOutput output = tx.outputs[index];
+                        if (contracts.containsKey(output.scriptHash))
+                        {
+                            TransactionInput key = new TransactionInput();
+                            key.prevHash = tx.hash();
+                            key.prevIndex = (short)index;
+                            if (coins.containsKey(key))
+                            {
+                                coins.get(key).setState(CoinState.Unspent);
+                            }
+                            else
+                            {
+                            	Coin coin = new Coin();
+                            	coin.input = key;
+                            	coin.assetId = output.assetId;
+                            	coin.value = output.value;
+                            	coin.scriptHash = output.scriptHash;
+                            	coin.setState(CoinState.Unspent);
+                                coins.add(coin);
+                            }
+                            transactions.add(tx);
+                        }
+                    }
+                }
+                for (Transaction tx : block.transactions)
+                {
+                    for (TransactionInput input : tx.getAllInputs().toArray(TransactionInput[]::new))
+                    {
+                        if (coins.containsKey(input))
+                        {
+                        	Coin coin = coins.get(input);
+                            if (coin.assetId.equals(Blockchain.ANTSHARE.hash()))
+                            	coin.setState(CoinState.Spent);
+                            else
+                                coins.remove(input);
+                            transactions.add(tx);
+                        }
+                    }
+                }
+                for (ClaimTransaction tx : Arrays.stream(block.transactions).filter(p -> p.type == TransactionType.ClaimTransaction).toArray(ClaimTransaction[]::new))
+                {
+                    for (TransactionInput claim : tx.claims)
+                    {
+                        if (coins.containsKey(claim))
+                        {
+                            coins.remove(claim);
+                            transactions.add(tx);
+                        }
+                    }
+                }
                 current_height++;
-                // TODO
-//                changeset = coins.GetChangeSet();
-//                if (block.Height == Blockchain.Default.Height || changeset.length > 0)
-//                {
-//                    OnProcessNewBlock(block, transactions, changeset.Where(p => ((ITrackable<TransactionInput>)p).TrackState == TrackState.Added), changeset.Where(p => ((ITrackable<TransactionInput>)p).TrackState == TrackState.Changed), changeset.Where(p => ((ITrackable<TransactionInput>)p).TrackState == TrackState.Deleted));
-//                    coins.Commit();
-//                }
+                changeset = coins.getChangeSet(Coin[]::new);
+                if (block.height == Blockchain.current().height() || changeset.length > 0)
+                {
+                	Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
+                	Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
+                	Coin[] deleted = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Deleted).toArray(Coin[]::new);
+                    onProcessNewBlock(block, transactions.toArray(new Transaction[transactions.size()]), added, changed, deleted);
+                    coins.commit();
+                }
             }
         }
         // TODO

@@ -54,6 +54,11 @@ public class TrackableCollection<TKey, TItem extends ITrackable<TKey>> extends A
     	return containsKey(item.getKey());
     }
     
+    public TItem get(TKey key)
+    {
+    	return map.get(key);
+    }
+    
 	public TItem[] getChangeSet(IntFunction<TItem[]> generator)
     {
     	return map.values().stream().filter(p -> p.getTrackState() != TrackState.None).toArray(generator);
