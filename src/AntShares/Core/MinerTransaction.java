@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 
 public class MinerTransaction extends Transaction
 {
@@ -19,6 +20,14 @@ public class MinerTransaction extends Transaction
 	{
 		nonce = reader.readInt();
 	}
+	
+	@Override
+    public JObject json()
+    {
+        JObject json = super.json();
+        json.set("nonce", new JNumber(Integer.toUnsignedLong(nonce)));
+        return json;
+    }
 	
 	@Override
 	protected void onDeserialized() throws IOException

@@ -5,10 +5,10 @@ import java.security.*;
 import javax.security.auth.DestroyFailedException;
 
 import org.bouncycastle.asn1.x9.*;
-import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
 import org.bouncycastle.math.ec.ECPoint;
+
+import AntShares.Helper;
 
 public class ECC
 {
@@ -50,5 +50,10 @@ public class ECC
 				}
 			}
 		}
+	}
+	
+	public static String toString(ECPoint p)
+	{
+		return Helper.toHexString(p.getEncoded(true));
 	}
 }

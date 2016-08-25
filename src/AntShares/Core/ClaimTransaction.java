@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import AntShares.UInt160;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 
 public class ClaimTransaction extends Transaction
 {
@@ -36,6 +37,14 @@ public class ClaimTransaction extends Transaction
 	{
 		//TODO
 		return super.getScriptHashesForVerifying();
+	}
+	
+	@Override
+	public JObject json()
+	{
+        JObject json = super.json();
+        json.set("claims", new JArray(Arrays.stream(claims).map(p -> p.json()).toArray(JObject[]::new)));
+        return json;
 	}
 	
 	@Override

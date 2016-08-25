@@ -5,7 +5,9 @@ import java.io.IOException;
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.*;
+import AntShares.Cryptography.ECC;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 import AntShares.Wallets.SignatureContract;
 
 public class EnrollmentTransaction extends Transaction
@@ -29,6 +31,14 @@ public class EnrollmentTransaction extends Transaction
 		//TODO
 		return super.getScriptHashesForVerifying();
 	}
+	
+	@Override
+    public JObject json()
+    {
+        JObject json = super.json();
+        json.set("pubkey", new JString(ECC.toString(publicKey)));
+        return json;
+    }
 	
 	private UInt160 _miner = null;
 	public UInt160 miner()

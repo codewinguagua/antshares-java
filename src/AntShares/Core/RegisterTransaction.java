@@ -5,7 +5,10 @@ import java.io.IOException;
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.*;
+import AntShares.Cryptography.ECC;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
+import AntShares.Wallets.Wallet;
 
 public class RegisterTransaction extends Transaction
 {
@@ -51,6 +54,28 @@ public class RegisterTransaction extends Transaction
 		//TODO
 		return super.getScriptHashesForVerifying();
 	}
+	
+	@Override
+    public JObject json()
+    {
+        JObject json = super.json();
+        json.set("asset", new JObject());
+        json.get("asset").set("type", new JString(assetType.toString()));
+        try
+        {
+        	json.get("asset").set("name", name == "" ? null : JObject.parse(name));
+        }
+        catch (IllegalArgumentException ex)
+        {
+        	json.get("asset").set("name", new JString(name));
+        }
+        json.get("asset").set("amount", new JString(amount.toString()));
+        json.get("asset").set("high", new JNumber(amount.getData() >> 32));
+        json.get("asset").set("low", new JNumber(amount.getData() & 0xffffffff));
+        json.get("asset").set("issuer", new JString(ECC.toString(issuer)));
+        json.get("asset").set("admin", new JString(Wallet.toAddress(admin)));
+        return json;
+    }
 	
 	@Override
 	protected void serializeExclusiveData(BinaryWriter writer) throws IOException

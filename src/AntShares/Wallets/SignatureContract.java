@@ -47,10 +47,12 @@ public class SignatureContract extends Contract
      */
     public static byte[] CreateSignatureRedeemScript(ECPoint publicKey)
     {
-        ScriptBuilder sb = new ScriptBuilder();
-        sb.push(publicKey.getEncoded(true));
-        sb.add(ScriptOp.OP_CHECKSIG);
-        return sb.toArray();
+        try (ScriptBuilder sb = new ScriptBuilder())
+        {
+	        sb.push(publicKey.getEncoded(true));
+	        sb.add(ScriptOp.OP_CHECKSIG);
+	        return sb.toArray();
+        }
     }
 
     /**

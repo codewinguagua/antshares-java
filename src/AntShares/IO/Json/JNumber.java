@@ -1,21 +1,22 @@
 package AntShares.IO.Json;
 
-import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 public class JNumber extends JObject
 {
-    private double value;
-    public double getValue() { return value; }
+    private double _value;
+    public double value() { return _value; }
 
     public JNumber(double val)
     {
-        this.value = val;
+        this._value = val;
     }
 
     @Override
-    public boolean AsBoolean()
+    public boolean asBoolean()
     {
-        if (value == 0)
+        if (_value == 0)
             return false;
         return true;
     }
@@ -46,19 +47,19 @@ public class JNumber extends JObject
 //    }
 
     @Override
-    public double AsNumber()
+    public double asNumber()
     {
-        return value;
+        return _value;
     }
 
     @Override
-    public String AsString()
+    public String asString()
     {
-        return String.valueOf(value);
+        return String.valueOf(_value);
     }
 
     @Override
-    public boolean CanConvertTo(Class<?> type)
+    public boolean canConvertTo(Class<?> type)
     {
         if (type.equals(boolean.class))
             return true;
@@ -72,32 +73,30 @@ public class JNumber extends JObject
         return false;
     }
 
-    public static JNumber Parse(Reader reader)
+    static JNumber parseNumber(BufferedReader reader) throws IOException
     {
-//         TODO
-//        SkipSpace(reader);
-//        StringBuilder sb = new StringBuilder();
-//        while (true)
-//        {
-//            char c = (char)reader.Peek();
-//            if (c >= '0' && c <= '9' || c == '.' || c == '-')
-//            {
-//                sb.Append(c);
-//                reader.Read();
-//            }
-//            else
-//            {
-//                break;
-//            }
-//        }
-//        return new JNumber(double.Parse(sb.ToString()));
-        return new JNumber(0);
+        skipSpace(reader);
+        StringBuilder sb = new StringBuilder();
+        while (true)
+        {
+        	reader.mark(1);
+            int c = reader.read();
+            if (c >= '0' && c <= '9' || c == '.' || c == '-')
+            {
+                sb.append((char)c);
+            }
+            else
+            {
+            	reader.reset();
+                break;
+            }
+        }
+        return new JNumber(Double.parseDouble(sb.toString()));
     }
 
     @Override
     public String toString()
     {
-        return AsString();
+        return asString();
     }
-
 }

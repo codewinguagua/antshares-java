@@ -1,16 +1,13 @@
 package AntShares.IO.Json;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-public class JArray extends JObject // TODO, IList<JObject>
+public class JArray extends JObject implements Iterable<JObject>
 {
     private List<JObject> items = new ArrayList<JObject>();
 
-    public JArray(JObject[] items)
+    public JArray(JObject ...items)
     {
         this.items.addAll(Arrays.asList(items));
     }
@@ -25,12 +22,12 @@ public class JArray extends JObject // TODO, IList<JObject>
         return items.get(index);
     }
     
-    public void set(int index, JObject jobj)
+    public JObject set(int index, JObject jobj)
     {
-        items.set(index, jobj);
+        return items.set(index, jobj);
     }
 
-    public int count()
+    public int size()
     {
         return items.size();
     }
@@ -40,9 +37,9 @@ public class JArray extends JObject // TODO, IList<JObject>
         return false;
     }
 
-    public void add(JObject item)
+    public boolean add(JObject item)
     {
-        items.add(item);
+        return items.add(item);
     }
 
     public void clear()
@@ -55,57 +52,34 @@ public class JArray extends JObject // TODO, IList<JObject>
         return items.contains(item);
     }
 
-    public void copyTo(JObject[] array, int arrayIndex)
+	@Override
+	public Iterator<JObject> iterator()
+	{
+		return items.iterator();
+	}
+
+    static JArray parseArray(BufferedReader reader) throws IOException
     {
-        for (JObject jobj : items) {
-            array[arrayIndex++] = jobj;
-            if (arrayIndex >= array.length) {
-                break;
-            }
+        skipSpace(reader);
+        if (reader.read() != '[') throw new IOException();
+        skipSpace(reader);
+        JArray array = new JArray();
+        while (true)
+        {
+        	reader.mark(1);
+        	int c = reader.read();
+        	if (c == ']') break;
+        	if (c != ',') reader.reset();
+            JObject obj = JObject.parse(reader);
+            array.items.add(obj);
+            skipSpace(reader);
         }
+        return array;
     }
 
-    public Iterator<JObject> GetEnumerator()
-    {
-        return items.iterator();
-    }
-
-    public int IndexOf(JObject item)
-    {
-        return items.indexOf(item);
-    }
-
-    public void Insert(int index, JObject item)
-    {
-        items.add(index, item);
-    }
-
-    // TODO
-//    internal new static JArray Parse(TextReader reader)
-//    {
-//        SkipSpace(reader);
-//        if (reader.Read() != '[') throw new FormatException();
-//        SkipSpace(reader);
-//        JArray array = new JArray();
-//        while (reader.Peek() != ']')
-//        {
-//            if (reader.Peek() == ',') reader.Read();
-//            JObject obj = JObject.Parse(reader);
-//            array.items.Add(obj);
-//            SkipSpace(reader);
-//        }
-//        reader.Read();
-//        return array;
-//    }
-
-    public boolean Remove(JObject item)
+    public boolean remove(JObject item)
     {
         return items.remove(item);
-    }
-
-    public void RemoveAt(int index)
-    {
-        items.remove(index);
     }
 
     @Override

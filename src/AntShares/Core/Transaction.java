@@ -2,11 +2,12 @@ package AntShares.Core;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 import AntShares.*;
 import AntShares.Core.Scripts.Script;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 import AntShares.Network.*;
 
 public abstract class Transaction extends Inventory
@@ -151,6 +152,18 @@ public abstract class Transaction extends Inventory
 	public final InventoryType getInventoryType()
 	{
 		return InventoryType.TX;
+	}
+	
+	public JObject json()
+	{
+        JObject json = new JObject();
+        json.set("txid", new JString(hash().toString()));
+        json.set("type", new JString(type.toString()));
+        json.set("attributes", new JArray(Arrays.stream(attributes).map(p -> p.json()).toArray(JObject[]::new)));
+        json.set("vin", new JArray(Arrays.stream(inputs).map(p -> p.json()).toArray(JObject[]::new)));
+        json.set("vout", new JArray(IntStream.range(0, outputs.length).boxed().map(i -> outputs[i].json(i)).toArray(JObject[]::new)));
+        json.set("scripts", new JArray(Arrays.stream(scripts).map(p -> p.json()).toArray(JObject[]::new)));
+        return json;
 	}
 	
 	protected void onDeserialized() throws IOException

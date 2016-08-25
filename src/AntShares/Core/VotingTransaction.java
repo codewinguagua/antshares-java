@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import AntShares.*;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 
 public class VotingTransaction extends Transaction
 {
@@ -31,6 +32,14 @@ public class VotingTransaction extends Transaction
         if (enrollments.length != Arrays.stream(enrollments).distinct().count())
             throw new IOException();
 	}
+	
+	@Override
+    public JObject json()
+    {
+        JObject json = super.json();
+        json.set("enrollments", new JArray(Arrays.stream(enrollments).map(p -> new JString(p.toString())).toArray(JObject[]::new)));
+        return json;
+    }
 	
 	@Override
 	protected void onDeserialized() throws IOException

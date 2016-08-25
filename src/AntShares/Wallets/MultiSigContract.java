@@ -6,7 +6,7 @@ import java.util.Arrays;
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.UInt160;
-import AntShares.Core.Scripts.ScriptBuilder;
+import AntShares.Core.Scripts.*;
 import AntShares.IO.*;
 
 /**
@@ -56,16 +56,17 @@ public class MultiSigContract extends Contract
     {
         if (!(1 <= m && m <= publicKeys.length && publicKeys.length <= 1024))
             throw new IllegalArgumentException();
-        ScriptBuilder sb = new ScriptBuilder();
-        sb.push(BigInteger.valueOf(m));
-        for (ECPoint publicKey : Arrays.stream(publicKeys).sorted().toArray(ECPoint[]::new))
+        try (ScriptBuilder sb = new ScriptBuilder())
         {
-            sb.push(publicKey.getEncoded(true));
+	        sb.push(BigInteger.valueOf(m));
+	        for (ECPoint publicKey : Arrays.stream(publicKeys).sorted().toArray(ECPoint[]::new))
+	        {
+	            sb.push(publicKey.getEncoded(true));
+	        }
+	        sb.push(BigInteger.valueOf(publicKeys.length));
+	        sb.add(ScriptOp.OP_CHECKMULTISIG);
+	        return sb.toArray();
         }
-        sb.push(BigInteger.valueOf(publicKeys.length));
-        // TODO
-        //sb.Add(ScriptOp.OP_CHECKMULTISIG);
-        return sb.toArray();
     }
 
     /**

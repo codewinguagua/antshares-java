@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import AntShares.*;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 
 public class IssueTransaction extends Transaction
 {
@@ -26,6 +27,14 @@ public class IssueTransaction extends Transaction
 		//TODO
 		return super.getScriptHashesForVerifying();
 	}
+	
+	@Override
+    public JObject json()
+    {
+        JObject json = super.json();
+        json.set("nonce", new JNumber(Integer.toUnsignedLong(nonce)));
+        return json;
+    }
 	
 	@Override
 	protected void serializeExclusiveData(BinaryWriter writer) throws IOException

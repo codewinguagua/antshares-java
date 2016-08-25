@@ -2,8 +2,10 @@ package AntShares.Core.Scripts;
 
 import java.io.IOException;
 
-import AntShares.UInt160;
+import AntShares.*;
+import AntShares.Cryptography.Digest;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 
 /**
  *  脚本
@@ -27,21 +29,20 @@ public class Script implements Serializable
         writer.writeVarBytes(redeemScript);
     }
 
-//    /**
-//     *  变成json对象
-//     *  <returns>返回json对象</returns>
-//     */
-//    public JObject ToJson()
-//    {
-//        JObject json = new JObject();
-//        json["stack"] = StackScript.ToHexString();
-//        json["redeem"] = RedeemScript.ToHexString();
-//        return json;
-//    }
+    /**
+     *  变成json对象
+     *  <returns>返回json对象</returns>
+     */
+    public JObject json()
+    {
+        JObject json = new JObject();
+        json.set("stack", new JString(Helper.toHexString(stackScript)));
+        json.set("redeem", new JString(Helper.toHexString(redeemScript)));
+        return json;
+    }
 
     public static UInt160 toScriptHash(byte[] script)
     {
-    	//TODO
-    	return new UInt160();
+    	return new UInt160(Digest.hash160(script));
     }
 }

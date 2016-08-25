@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import AntShares.UInt256;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 
 /**
  *  交易输入
@@ -68,12 +69,11 @@ public class TransactionInput implements Serializable
      *  将交易输入转变为json对象
      *  <returns>返回json对象</returns>
      */
-// TODO
-//    public JObject ToJson()
-//    {
-//        JObject json = new JObject();
-//        json["txid"] = PrevHash.ToString();
-//        json["vout"] = PrevIndex;
-//        return json;
-//    }
+    public JObject json()
+    {
+        JObject json = new JObject();
+        json.set("txid", new JString(prevHash.toString()));
+        json.set("vout", new JNumber(Short.toUnsignedInt(prevIndex)));
+        return json;
+    }
 }

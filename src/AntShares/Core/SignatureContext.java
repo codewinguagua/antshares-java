@@ -2,13 +2,14 @@ package AntShares.Core;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.bouncycastle.math.ec.ECPoint;
 
-import AntShares.UInt160;
+import AntShares.*;
 import AntShares.Core.Scripts.*;
 import AntShares.Cryptography.ECC;
-import AntShares.IO.Json.JObject;
+import AntShares.IO.Json.*;
 import AntShares.Wallets.*;
 
 /**
@@ -128,14 +129,16 @@ public class SignatureContext
         Script[] scripts = new Script[signatures.length];
         for (int i = 0; i < scripts.length; i++)
         {
-            ScriptBuilder sb = new ScriptBuilder();
-            for (byte[] signature : signatures[i].entrySet().stream().sorted((a, b) -> ECC.compare(a.getKey(), b.getKey())).map(p -> p.getValue()).toArray(byte[][]::new))
+            try (ScriptBuilder sb = new ScriptBuilder())
             {
-                sb.push(signature);
+	            for (byte[] signature : signatures[i].entrySet().stream().sorted((a, b) -> ECC.compare(a.getKey(), b.getKey())).map(p -> p.getValue()).toArray(byte[][]::new))
+	            {
+	                sb.push(signature);
+	            }
+	            scripts[i] = new Script();
+	            scripts[i].stackScript = sb.toArray();
+	            scripts[i].redeemScript = redeemScripts[i];
             }
-            scripts[i] = new Script();
-            scripts[i].stackScript = sb.toArray();
-            scripts[i].redeemScript = redeemScripts[i];
         }
         return scripts;
     }
@@ -151,48 +154,40 @@ public class SignatureContext
      *  把签名上下文转为json对象
      *  <returns>返回json对象</returns>
      */
-    public JObject ToJson()
+    public JObject json()
     {
-    	//TODO
-//        JObject json = new JObject();
-//        json["type"] = Signable.GetType().Name;
-//        using (MemoryStream ms = new MemoryStream())
-//        using (BinaryWriter writer = new BinaryWriter(ms, Encoding.UTF8))
-//        {
-//            Signable.SerializeUnsigned(writer);
-//            writer.Flush();
-//            json["hex"] = ms.ToArray().ToHexString();
-//        }
-//        JArray scripts = new JArray();
-//        for (int i = 0; i < signatures.length; i++)
-//        {
-//            if (signatures[i] == null)
-//            {
-//                scripts.Add(null);
-//            }
-//            else
-//            {
-//                scripts.Add(new JObject());
-//                scripts[i]["redeem_script"] = redeemScripts[i].ToHexString();
-//                JArray sigs = new JArray();
-//                foreach (var pair in signatures[i])
-//                {
-//                    JObject signature = new JObject();
-//                    signature["pubkey"] = pair.Key.EncodePoint(true).ToHexString();
-//                    signature["signature"] = pair.Value.ToHexString();
-//                    sigs.Add(signature);
-//                }
-//                scripts[i]["signatures"] = sigs;
-//                scripts[i]["completed"] = completed[i];
-//            }
-//        }
-//        json["scripts"] = scripts;
-//        return json;
-        return new JObject();
+        JObject json = new JObject();
+        json.set("type", new JString(signable.getClass().getTypeName()));
+        json.set("hex", new JString(Helper.toHexString(signable.getHashData())));
+        JArray scripts = new JArray();
+        for (int i = 0; i < signatures.length; i++)
+        {
+            if (signatures[i] == null)
+            {
+                scripts.add(null);
+            }
+            else
+            {
+                scripts.add(new JObject());
+                scripts.get(i).set("redeem_script", new JString(Helper.toHexString(redeemScripts[i])));
+                JArray sigs = new JArray();
+                for (Entry<ECPoint, byte[]> pair : signatures[i].entrySet())
+                {
+                    JObject signature = new JObject();
+                    signature.set("pubkey", new JString(Helper.toHexString(pair.getKey().getEncoded(true))));
+                    signature.set("signature", new JString(Helper.toHexString(pair.getValue())));
+                    sigs.add(signature);
+                }
+                scripts.get(i).set("signatures", sigs);
+                scripts.get(i).set("completed", new JBoolean(completed[i]));
+            }
+        }
+        json.set("scripts", scripts);
+        return json;
     }
 
     @Override public String toString()
     {
-        return ToJson().toString();
+        return json().toString();
     }
 }

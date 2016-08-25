@@ -10,8 +10,9 @@ import AntShares.Core.Scripts.*;
 import AntShares.Cryptography.MerkleTree;
 import AntShares.IO.*;
 import AntShares.IO.Serializable;
-import AntShares.IO.Json.JObject;
+import AntShares.IO.Json.*;
 import AntShares.Network.*;
+import AntShares.Wallets.Wallet;
 
 /**
  *  区块或区块头
@@ -254,20 +255,19 @@ public class Block extends Inventory
      *  变成json对象
      *  <returns>返回json对象</returns>
      */
-    public JObject ToJson()
+    public JObject json()
     {
-    	//TODO
         JObject json = new JObject();
-//        json["hash"] = Hash.ToString();
-//        json["version"] = Version;
-//        json["previousblockhash"] = PrevBlock.ToString();
-//        json["merkleroot"] = MerkleRoot.ToString();
-//        json["time"] = Timestamp;
-//        json["height"] = Height;
-//        json["nonce"] = Nonce.ToString("x16");
-//        json["nextminer"] = Wallet.ToAddress(NextMiner);
-//        json["script"] = Script.ToJson();
-//        json["tx"] = Transactions.Select(p => p.ToJson()).ToArray();
+        json.set("hash", new JString(hash().toString()));
+        json.set("version", new JNumber(Integer.toUnsignedLong(version)));
+        json.set("previousblockhash", new JString(prevBlock.toString()));
+        json.set("merkleroot", new JString(merkleRoot.toString()));
+        json.set("time", new JNumber(timestamp));
+        json.set("height", new JNumber(Integer.toUnsignedLong(height)));
+        json.set("nonce", new JString(Long.toHexString(nonce)));
+        json.set("nextminer", new JString(Wallet.toAddress(nextMiner)));
+        json.set("script", script.json());
+        json.set("tx", new JArray(Arrays.stream(transactions).map(p -> p.json()).toArray(JObject[]::new)));
         return json;
     }
 

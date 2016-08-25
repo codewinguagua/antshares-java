@@ -1,23 +1,22 @@
 package AntShares.IO.Json;
 
-import java.io.Reader;
-import java.util.Collection;
-import java.util.HashSet;
+import java.io.*;
+import java.util.*;
 
 public class JString extends JObject
 {
-    private String value;
-    public String getValue() { return value; }
+    private String _value;
+    public String value() { return _value; }
 
     public JString(String val)
     {
-        if (value == null)
+        if (_value == null)
             throw new NullPointerException();
-        this.value = val;
+        this._value = val;
     }
 
     @Override
-    public boolean AsBoolean()
+    public boolean asBoolean()
     {
         Collection<String> falseValues = new HashSet<String>();
         falseValues.add("0");
@@ -27,7 +26,7 @@ public class JString extends JObject
         falseValues.add("n");
         falseValues.add("no");
         falseValues.add("off");
-        return ! falseValues.contains(value.toLowerCase());
+        return ! falseValues.contains(_value.toLowerCase());
     }
 
 // TODO
@@ -44,19 +43,19 @@ public class JString extends JObject
 //    }
 //
     @Override
-    public double AsNumber()
+    public double asNumber()
     {
-        return Double.parseDouble(value);
+        return Double.parseDouble(_value);
     }
 
     @Override
-    public String AsString()
+    public String asString()
     {
-        return value;
+        return _value;
     }
 
     @Override
-    public boolean CanConvertTo(Class<?> type)
+    public boolean canConvertTo(Class<?> type)
     {
         if (type.equals(boolean.class))
             return true;
@@ -70,39 +69,35 @@ public class JString extends JObject
         return false;
     }
 
-    public static JString Parse(Reader reader)
+    static JString parseString(BufferedReader reader) throws IOException
     {
-        // TODO
-//        SkipSpace(reader);
-//        char[] buffer = new char[4];
-//        char firstChar = (char)reader.Read();
-//        if (firstChar != '\"' && firstChar != '\'') throw new FormatException();
-//        StringBuilder sb = new StringBuilder();
-//        while (true)
-//        {
-//            char c = (char)reader.Read();
-//            if (c == 65535) throw new FormatException();
-//            if (c == firstChar) break;
-//            if (c == '\\')
-//            {
-//                c = (char)reader.Read();
-//                if (c == 'u')
-//                {
-//                    reader.Read(buffer, 0, 4);
-//                    c = (char)short.Parse(new string(buffer), NumberStyles.HexNumber);
-//                }
-//            }
-//            sb.Append(c);
-//        }
-//        return new JString(sb.ToString());
-        return new JString("");
+        skipSpace(reader);
+        char[] buffer = new char[4];
+        int firstChar = reader.read();
+        if (firstChar != '\"' && firstChar != '\'') throw new IOException();
+        StringBuilder sb = new StringBuilder();
+        while (true)
+        {
+            int c = reader.read();
+            if (c == 65535) throw new IOException();
+            if (c == firstChar) break;
+            if (c == '\\')
+            {
+                c = (char)reader.read();
+                if (c == 'u')
+                {
+                    reader.read(buffer, 0, 4);
+                    c = Integer.valueOf(new String(buffer), 16);
+                }
+            }
+            sb.append((char)c);
+        }
+        return new JString(sb.toString());
     }
 
     @Override
     public String toString()
     {
-        // TODO
-        //return HttpUtility.JavaScriptStringEncode(Value, true);
-        return value;
+    	return "\"" + _value.replaceAll("\"", "\\\"") + "\"";
     }
 }

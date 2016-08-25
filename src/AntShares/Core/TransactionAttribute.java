@@ -2,7 +2,9 @@ package AntShares.Core;
 
 import java.io.IOException;
 
+import AntShares.Helper;
 import AntShares.IO.*;
+import AntShares.IO.Json.*;
 
 public class TransactionAttribute implements Serializable
 {
@@ -55,5 +57,13 @@ public class TransactionAttribute implements Serializable
         {
             throw new IOException();
         }
+	}
+	
+	public JObject json()
+	{
+        JObject json = new JObject();
+        json.set("usage", new JString(usage.toString()));
+        json.set("data", new JString(Helper.toHexString(data)));
+        return json;
 	}
 }

@@ -4,29 +4,29 @@ import java.io.*;
 
 public class JBoolean extends JObject
 {
-    private boolean value;
+    private final boolean _value;
     
-    public boolean getValue() { return value; }
+    public boolean value() { return _value; }
 
     public JBoolean(boolean val)
     {
-        this.value = val;
+        this._value = val;
     }
 
     @Override
-    public boolean AsBoolean()
+    public boolean asBoolean()
     {
-        return value;
+        return _value;
     }
 
     @Override
-    public String AsString()
+    public String asString()
     {
-        return String.valueOf(value).toLowerCase();
+        return String.valueOf(_value).toLowerCase();
     }
 
     @Override
-    public boolean CanConvertTo(Class<?> type)
+    public boolean canConvertTo(Class<?> type)
     {
         if (type.equals(boolean.class))
             return true;
@@ -35,11 +35,10 @@ public class JBoolean extends JObject
         return false;
     }
 
-    public static JBoolean Parse(Reader reader) throws IOException
+    static JBoolean parseBoolean(BufferedReader reader) throws IOException
     {
-        // TODO
-        //SkipSpace(reader);
-        char firstChar = (char)reader.read();
+        skipSpace(reader);
+        int firstChar = reader.read();
         if (firstChar == 't')
         {
             int c2 = reader.read();
@@ -61,12 +60,12 @@ public class JBoolean extends JObject
                 return new JBoolean(false);
             }
         }
-        throw new IllegalArgumentException();
+        throw new IOException();
     }
 
     @Override
     public String toString()
     {
-        return AsString();
+        return asString();
     }
 }

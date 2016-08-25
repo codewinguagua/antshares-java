@@ -2,16 +2,15 @@ package AntShares.IO.Json;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class JObject
 {
-    public static final JObject Null = null;
+    public static final JObject NULL = null;
     private Map<String, JObject> properties = new HashMap<String, JObject>();
 
     public JObject get(String name)
     {
-        if (!properties.containsKey(name))
-            return null;
         return properties.get(name);
     }
 
@@ -20,115 +19,131 @@ public class JObject
         properties.put(name, value);
     }
 
-    public boolean AsBoolean()
+    public boolean asBoolean()
     {
         throw new UnsupportedOperationException();
     }
 
-    public boolean AsBooleanOrDefault(boolean value)
+    public boolean asBooleanOrDefault(boolean value)
     {
-        if (!CanConvertTo(boolean.class))
+        if (!canConvertTo(boolean.class))
             return value;
-        return AsBoolean();
+        return asBoolean();
     }
 
-    public <T> T AsEnum(boolean ignoreCase)
+    @SuppressWarnings("rawtypes")
+	public <T extends Enum> T asEnum(boolean ignoreCase)
     {
         throw new UnsupportedOperationException();
     }
 
-    public <T> T AsEnumOrDefault(T value, boolean ignoreCase)
+    @SuppressWarnings("rawtypes")
+	public <T extends Enum> T asEnumOrDefault(T value, boolean ignoreCase)
     {
-        if (!CanConvertTo(value.getClass()))
+        if (!canConvertTo(value.getClass()))
             return value;
-        return AsEnum(ignoreCase);
+        return asEnum(ignoreCase);
     }
 
-    public double AsNumber()
+    public double asNumber()
     {
         throw new UnsupportedOperationException();
     }
 
-    public double AsNumberOrDefault(double value)
+    public double asNumberOrDefault(double value)
     {
-        if (!CanConvertTo(double.class))
+        if (!canConvertTo(double.class))
             return value;
-        return AsNumber();
+        return asNumber();
     }
 
-    public String AsString()
+    public String asString()
     {
         throw new UnsupportedOperationException();
     }
 
-    public String AsStringOrDefault(String value)
+    public String asStringOrDefault(String value)
     {
-        if (!CanConvertTo(String.class))
+        if (!canConvertTo(String.class))
             return value;
-        return AsString();
+        return asString();
     }
 
-    public boolean CanConvertTo(Class<?> type)
+    public boolean canConvertTo(Class<?> type)
     {
         return false;
     }
 
-    public boolean ContainsProperty(String key)
+    public boolean containsProperty(String key)
     {
         return properties.containsKey(key);
     }
 
-    public static JObject Parse(Reader reader) throws IOException
+    public static JObject parse(Reader reader2) throws IOException
     {
-    // TODO
-        return new JObject();
-//        SkipSpace(reader);
-//        char firstChar = (char)reader.Peek();
-//        if (firstChar == '\"' || firstChar == '\'')
-//        {
-//            return JString.Parse(reader);
-//        }
-//        if (firstChar == '[')
-//        {
-//            return JArray.Parse(reader);
-//        }
-//        if ((firstChar >= '0' && firstChar <= '9') || firstChar == '-')
-//        {
-//            return JNumber.Parse(reader);
-//        }
-//        if (firstChar == 't' || firstChar == 'f')
-//        {
-//            return JBoolean.Parse(reader);
-//        }
-//        if (firstChar == 'n')
-//        {
-//            return ParseNull(reader);
-//        }
-//        if (reader.Read() != '{') throw new FormatException();
-//        SkipSpace(reader);
-//        JObject obj = new JObject();
-//        while (reader.Peek() != '}')
-//        {
-//            if (reader.Peek() == ',') reader.Read();
-//            SkipSpace(reader);
-//            string name = JString.Parse(reader).Value;
-//            SkipSpace(reader);
-//            if (reader.Read() != ':') throw new FormatException();
-//            JObject value = Parse(reader);
-//            obj.properties.Add(name, value);
-//            SkipSpace(reader);
-//        }
-//        reader.Read();
-//        return obj;
+    	BufferedReader r = reader2 instanceof BufferedReader ? (BufferedReader)reader2 : new BufferedReader(reader2);
+        skipSpace(r);
+        r.mark(1);
+        int firstChar = r.read();
+        if (firstChar == '\"' || firstChar == '\'')
+        {
+        	r.reset();
+            return JString.parseString(r);
+        }
+        if (firstChar == '[')
+        {
+        	r.reset();
+            return JArray.parseArray(r);
+        }
+        if ((firstChar >= '0' && firstChar <= '9') || firstChar == '-')
+        {
+        	r.reset();
+            return JNumber.parseNumber(r);
+        }
+        if (firstChar == 't' || firstChar == 'f')
+        {
+        	r.reset();
+            return JBoolean.parseBoolean(r);
+        }
+        if (firstChar == 'n')
+        {
+        	r.reset();
+            return parseNull(r);
+        }
+        if (firstChar != '{') throw new IOException();
+        skipSpace(r);
+        JObject obj = new JObject();
+        while (true)
+        {
+        	r.mark(1);
+        	int c = r.read();
+        	if (c == '}') break;
+            if (c != ',') r.reset();
+            skipSpace(r);
+            String name = JString.parseString(r).value();
+            skipSpace(r);
+            if (r.read() != ':') throw new IOException();
+            JObject value = parse(r);
+            obj.properties.put(name, value);
+            skipSpace(r);
+        }
+        return obj;
     }
 
-    public static JObject Parse(String value) throws IOException
+    public static JObject parse(String value)
     {
         StringReader reader = new StringReader(value);
-        return Parse(reader);
+        try
+        {
+			return parse(reader);
+		}
+        catch (IOException ex)
+        {
+			throw new IllegalArgumentException(ex);
+		}
     }
 
-    static JObject ParseNull(Reader reader) throws IOException
+    static JObject parseNull(Reader reader) throws IOException
     {
         char firstChar = (char)reader.read();
         if (firstChar == 'n')
@@ -144,21 +159,26 @@ public class JObject
         throw new IllegalArgumentException();
     }
 
-    // TODO
-//    protected static void SkipSpace(TextReader reader)
-//    {
-//        while (reader.Peek() == ' ' || reader.Peek() == '\r' || reader.Peek() == '\n')
-//        {
-//            reader.Read();
-//        }
-//    }
+    protected static void skipSpace(BufferedReader reader) throws IOException
+    {
+    	while (true)
+    	{
+    		reader.mark(1);
+    		int c = reader.read();
+    		if (c != ' ' && c != '\r' && c != '\n')
+    		{
+    			reader.reset();
+    			return;
+    		}
+    	}
+    }
 
     @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
         sb.append('{');
-        for (Map.Entry<String, JObject> pair : properties.entrySet())
+        for (Entry<String, JObject> pair : properties.entrySet())
         {
             sb.append('"');
             sb.append(pair.getKey());
