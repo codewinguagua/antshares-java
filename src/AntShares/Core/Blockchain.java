@@ -20,6 +20,7 @@ public abstract class Blockchain implements AutoCloseable
     /**
      *  当区块被写入到硬盘后触发
      */
+	//TODO
     //public static event EventHandler<Block> PersistCompleted;
 
     /**
@@ -71,15 +72,17 @@ public abstract class Blockchain implements AutoCloseable
     /**
      *  区块链所提供的功能
      */
-    public abstract BlockchainAbility ability();
+    public abstract EnumSet<BlockchainAbility> ability();
     /**
      *  当前最新区块散列值
+     * @throws Exception 
      */
-    public abstract UInt256 currentBlockHash();
+    public abstract UInt256 currentBlockHash() throws Exception;
     /**
      *  当前最新区块头的散列值
+     * @throws Exception 
      */
-    public UInt256 currentHeaderHash(){ return currentBlockHash(); }
+    public UInt256 currentHeaderHash() throws Exception{ return currentBlockHash(); }
     /**
      *  默认的区块链实例
      */
@@ -87,12 +90,14 @@ public abstract class Blockchain implements AutoCloseable
     public static Blockchain current() { return _default; }
     /**
      *  区块头高度
+     * @throws Exception 
      */
-    public int headerHeight() { return height(); }
+    public int headerHeight() throws Exception { return height(); }
     /**
      *  区块高度
+     * @throws Exception
      */
-    public abstract int height();
+    public abstract int height() throws Exception;
     /**
      *  表示当前的区块链实现是否为只读的
      */
@@ -158,12 +163,12 @@ public abstract class Blockchain implements AutoCloseable
         return Arrays.stream(GENESIS_BLOCK.transactions).anyMatch(p -> p.hash().equals(hash));
     }
 
-    public boolean containsUnspent(TransactionInput input)
+    public boolean containsUnspent(TransactionInput input) throws Exception
     {
         return containsUnspent(input.prevHash, input.prevIndex);
     }
 
-    public abstract boolean containsUnspent(UInt256 hash, short index);
+    public abstract boolean containsUnspent(UInt256 hash, int index) throws Exception;
 
     public abstract Stream<RegisterTransaction> getAssets();
 
@@ -171,8 +176,9 @@ public abstract class Blockchain implements AutoCloseable
      *  根据指定的高度，返回对应的区块信息
      *  <param name="height">区块高度</param>
      *  <returns>返回对应的区块信息</returns>
+     * @throws Exception 
      */
-    public Block getBlock(int height)
+    public Block getBlock(int height) throws Exception
     {
         return getBlock(getBlockHash(height));
     }
@@ -181,8 +187,9 @@ public abstract class Blockchain implements AutoCloseable
      *  根据指定的散列值，返回对应的区块信息
      *  <param name="hash">散列值</param>
      *  <returns>返回对应的区块信息</returns>
+     * @throws Exception 
      */
-    public Block getBlock(UInt256 hash)
+    public Block getBlock(UInt256 hash) throws Exception
     {
         if (hash.equals(GENESIS_BLOCK.hash()))
             return GENESIS_BLOCK;
@@ -193,8 +200,9 @@ public abstract class Blockchain implements AutoCloseable
      *  根据指定的高度，返回对应区块的散列值
      *  <param name="height">区块高度</param>
      *  <returns>返回对应区块的散列值</returns>
+     * @throws Exception 
      */
-    public UInt256 getBlockHash(int height)
+    public UInt256 getBlockHash(int height) throws Exception
     {
         if (height == 0) return GENESIS_BLOCK.hash();
         return null;
@@ -211,8 +219,9 @@ public abstract class Blockchain implements AutoCloseable
      *  根据指定的高度，返回对应的区块头信息
      *  <param name="height">区块高度</param>
      *  <returns>返回对应的区块头信息</returns>
+     * @throws Exception 
      */
-    public Block getHeader(int height)
+    public Block getHeader(int height) throws Exception
     {
         return getHeader(getBlockHash(height));
     }
@@ -221,8 +230,9 @@ public abstract class Blockchain implements AutoCloseable
      *  根据指定的散列值，返回对应的区块头信息
      *  <param name="hash">散列值</param>
      *  <returns>返回对应的区块头信息</returns>
+     * @throws Exception 
      */
-    public Block getHeader(UInt256 hash)
+    public Block getHeader(UInt256 hash) throws Exception
     {
         Block b = getBlock(hash);
         return b == null ? null : b.header();
@@ -315,8 +325,9 @@ public abstract class Blockchain implements AutoCloseable
      *  根据指定的区块高度，返回对应区块及之前所有区块中包含的系统费用的总量
      *  <param name="height">区块高度</param>
      *  <returns>返回对应的系统费用的总量</returns>
+     * @throws Exception 
      */
-    public long getSysFeeAmount(int height)
+    public long getSysFeeAmount(int height) throws Exception
     {
         return getSysFeeAmount(getBlockHash(height));
     }
@@ -332,8 +343,9 @@ public abstract class Blockchain implements AutoCloseable
      *  根据指定的散列值，返回对应的交易信息
      *  <param name="hash">散列值</param>
      *  <returns>返回对应的交易信息</returns>
+     * @throws Exception 
      */
-    public Transaction getTransaction(UInt256 hash)
+    public Transaction getTransaction(UInt256 hash) throws Exception
     {
         Out<Integer> height = new Out<Integer>();
         return getTransaction(hash, height);
@@ -364,8 +376,9 @@ public abstract class Blockchain implements AutoCloseable
      *  <param name="hash">交易散列值</param>
      *  <param name="index">输出的索引</param>
      *  <returns>返回一个交易输出，表示一个未花费的资产</returns>
+     * @throws Exception 
      */
-    public abstract TransactionOutput getUnspent(UInt256 hash, short index);
+    public abstract TransactionOutput getUnspent(UInt256 hash, int index) throws Exception;
 
     /**
      *  获取选票信息

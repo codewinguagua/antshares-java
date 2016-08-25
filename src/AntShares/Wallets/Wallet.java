@@ -51,7 +51,14 @@ public abstract class Wallet implements AutoCloseable
             this.accounts = new HashMap<UInt160, Account>();
             this.contracts = new HashMap<UInt160, Contract>();
             this.coins = new TrackableCollection<TransactionInput, Coin>();
-            this.current_height = Blockchain.current() != null ? Blockchain.current().headerHeight() + 1 : 0;
+            try
+            {
+				this.current_height = Blockchain.current() != null ? Blockchain.current().headerHeight() + 1 : 0;
+			}
+            catch (Exception ex)
+            {
+            	this.current_height = 0;
+			}
             buildDatabase();
             saveStoredData("PasswordHash", Digest.sha256(passwordKey));
             saveStoredData("IV", iv);
@@ -522,11 +529,30 @@ public abstract class Wallet implements AutoCloseable
         while (isrunning)
         {
         	Blockchain blockchain = Blockchain.current();
-            while (current_height <= (blockchain == null ? 0 : blockchain.height()) && isrunning)
+            while (true)
             {
+            	int height;
+            	try
+            	{
+					height = blockchain == null ? 0 : blockchain.height();
+				}
+            	catch (Exception ex)
+            	{
+					break;
+				}
+            	if (current_height > height || !isrunning)
+            		break;
                 synchronized (syncroot)
                 {
-                    Block block = blockchain.getBlock(current_height);
+                    Block block;
+					try
+					{
+						block = blockchain.getBlock(current_height);
+					}
+					catch (Exception ex)
+					{
+						break;
+					}
                     if (block != null) processNewBlock(block);
                 }
             }
@@ -606,7 +632,16 @@ public abstract class Wallet implements AutoCloseable
                 }
                 current_height++;
                 changeset = coins.getChangeSet(Coin[]::new);
-                if (block.height == Blockchain.current().height() || changeset.length > 0)
+                int chain_height;
+				try
+				{
+					chain_height = Blockchain.current().height();
+				}
+				catch (Exception ex)
+				{
+					chain_height = 0;
+				}
+                if (block.height == chain_height || chain_height == 0 || changeset.length > 0)
                 {
                 	Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
                 	Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);

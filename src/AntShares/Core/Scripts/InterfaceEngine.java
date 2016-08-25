@@ -26,7 +26,7 @@ public class InterfaceEngine
     }
 
     // TODO
-    public boolean ExecuteOp(InterfaceOp code)
+    public boolean ExecuteOp(InterfaceOp code) throws Exception
     {
         switch (code)
         {
@@ -129,7 +129,7 @@ public class InterfaceEngine
         return true;
     }
 
-    private boolean ChainGetHeader()
+    private boolean ChainGetHeader() throws Exception
     {
         if (stack.size() < 1) return false;
         StackItem x = stack.pop();
@@ -168,7 +168,7 @@ public class InterfaceEngine
         return true;
     }
 
-    private boolean ChainGetBlock()
+    private boolean ChainGetBlock() throws Exception
     {
         if (stack.size() < 1) return false;
         StackItem x = stack.pop();

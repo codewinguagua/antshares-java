@@ -1,15 +1,12 @@
 package AntShares.Core;
 
+import java.util.EnumSet;
+
 /**
  * 表示特定区块链实现所提供的功能
  */
 public enum BlockchainAbility
 {
-    /**
-     *  无
-     */
-    None(0),
-
     /**
      *  必须实现的虚函数：GetBlockAndHeight, GetBlockHeight, GetNextBlock, GetNextBlockHash, GetSysFeeAmount
      */
@@ -28,13 +25,10 @@ public enum BlockchainAbility
     /**
      *  必须实现的虚函数：GetQuantityIssued
      */
-    Statistics(0x08),
+    Statistics(0x08);
 
-    /**
-     *  所有的功能
-     */
-    All(0xff);
-
+	public static final EnumSet<BlockchainAbility> None = EnumSet.noneOf(BlockchainAbility.class);
+	public static final EnumSet<BlockchainAbility> All = EnumSet.allOf(BlockchainAbility.class);
     private byte value;
 
     BlockchainAbility(int v)
