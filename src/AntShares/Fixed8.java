@@ -165,29 +165,27 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
 //        return x;
 //    }
 
-    public static Fixed8 multiply(Fixed8 x, long y)
+    public Fixed8 multiply(long other)
     {
-        return new Fixed8(x.value * y);
+        return new Fixed8(value * other);
     }
 
-    public static Fixed8 divide(Fixed8 x, long y)
+    public Fixed8 divide(long other)
     {
-        return new Fixed8(x.value / y);
+        return new Fixed8(value / other);
     }
 
     public Fixed8 add(Fixed8 other)
     {
-        // TODO checked(...);
-        return new Fixed8(this.value + other.value);
+    	return new Fixed8(Math.addExact(this.value, other.value));
     }
 
     public Fixed8 subtract(Fixed8 other)
     {
-        // TODO checked(...);
-        return new Fixed8(this.value - other.value);
+    	return new Fixed8(Math.subtractExact(this.value, other.value));
     }
 
-    public Fixed8 minus()
+    public Fixed8 negate()
     {
         return new Fixed8(-value);
     }
@@ -201,7 +199,6 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
 	@Override
 	public void deserialize(BinaryReader reader) throws IOException
 	{
-		// TODO Auto-generated method stub
 		value = reader.readLong();
 	}
 }

@@ -363,11 +363,11 @@ public class UserWallet extends Wallet
 //        return new UserWallet(path, password, false);
 //    }
 
-    @Override public void Rebuild()
+    @Override public void rebuild()
     {
         synchronized (syncroot)
         {
-            super.Rebuild();
+            super.rebuild();
 //            using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //            {
 //                ctx.Keys.First(p => p.Name == "Height").Value = BitConverter.GetBytes(0);
@@ -378,7 +378,7 @@ public class UserWallet extends Wallet
         }
     }
 
-    @Override protected void SaveStoredData(String name, byte[] value)
+    @Override protected void saveStoredData(String name, byte[] value)
     {
 //        using (WalletDataContext ctx = new WalletDataContext(DbPath))
 //        {

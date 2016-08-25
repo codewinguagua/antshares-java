@@ -1,19 +1,15 @@
 package AntShares.Core;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.UInt160;
-import AntShares.Core.Scripts.Script;
+import AntShares.Core.Scripts.*;
+import AntShares.Cryptography.ECC;
 import AntShares.IO.Json.JObject;
-import AntShares.Wallets.Contract;
-import AntShares.Wallets.ContractParameterType;
+import AntShares.Wallets.*;
 
 /**
  *  签名上下文
@@ -29,7 +25,7 @@ public class SignatureContext
      */
     public final UInt160[] scriptHashes;
     private final byte[][] redeemScripts;
-    private final List<Map<ECPoint, byte[]> > signatures;
+    private final Map<ECPoint, byte[]>[] signatures;
     private final boolean[] completed;
 
     /**
@@ -37,24 +33,23 @@ public class SignatureContext
      */
     public boolean isCompleted()
     {
-        //return completed.All(p => p);
-        return false;
+        for (boolean b : completed)
+        	if (!b)
+        		return false;
+        return true;
     }
 
     /**
      *  对指定的数据构造签名上下文
      *  <param name="signable">要签名的数据</param>
      */
-    public SignatureContext(Signable signable)
+    @SuppressWarnings("unchecked")
+	public SignatureContext(Signable signable)
     {
         this.signable = signable;
         this.scriptHashes = signable.getScriptHashesForVerifying();
         this.redeemScripts = new byte[scriptHashes.length][];
-        //this.signatures = new Map<ECPoint, byte[]>[scriptHashes.length];
-        this.signatures = new ArrayList<Map<ECPoint, byte[]> >();
-        for (int i = 0; i < scriptHashes.length; i++) {
-            this.signatures.add(new HashMap<ECPoint, byte[]>());
-        }
+        this.signatures = (Map<ECPoint, byte[]>[]) Array.newInstance(Map.class, scriptHashes.length);
         this.completed = new boolean[scriptHashes.length];
     }
 
@@ -65,17 +60,19 @@ public class SignatureContext
      *  <param name="signature">签名</param>
      *  <returns>返回签名是否已成功添加</returns>
      */
-    public boolean Add(Contract contract, ECPoint pubkey, byte[] signature)
+    public boolean add(Contract contract, ECPoint pubkey, byte[] signature)
     {
         for (int i = 0; i < scriptHashes.length; i++)
         {
-            if (scriptHashes[i] == contract.getScriptHash())
+            if (scriptHashes[i].equals(contract.getScriptHash()))
             {
                 if (redeemScripts[i] == null)
                     redeemScripts[i] = contract.RedeemScript;
-                signatures.get(i).put(pubkey, signature);
+                if (signatures[i] == null)
+                	signatures[i] = new HashMap<ECPoint, byte[]>();
+                signatures[i].put(pubkey, signature);
                 completed[i] |= 
-                        contract.getParameterList().length == signatures.get(i).size()
+                        contract.getParameterList().length == signatures[i].size()
                         && Arrays.stream(contract.getParameterList()).allMatch(
                                 p -> p == ContractParameterType.Signature);
                 return true;
@@ -91,6 +88,7 @@ public class SignatureContext
      */
     public static SignatureContext FromJson(JObject json)
     {
+    	//TODO
 //        String typename = String.Format("{0}.{1}", typeof(SignatureContext).Namespace, json["type"].AsString());
 //        Signable signable = Assembly.GetExecutingAssembly().CreateInstance(typename) as Signable;
 //        using (MemoryStream ms = new MemoryStream(json["hex"].AsString().HexToBytes(), false))
@@ -124,29 +122,29 @@ public class SignatureContext
      *  从签名上下文中获得完整签名的合约脚本
      *  <returns>返回合约脚本</returns>
      */
-    public Script[] GetScripts()
+    public Script[] getScripts()
     {
         if (!isCompleted()) throw new IllegalStateException();
-        Script[] scripts = new Script[signatures.size()];
+        Script[] scripts = new Script[signatures.length];
         for (int i = 0; i < scripts.length; i++)
         {
-//            ScriptBuilder sb = new ScriptBuilder();
-//            foreach (byte[] signature in signatures[i].OrderBy(p => p.Key).Select(p => p.Value))
-//            {
-//                sb.Push(signature);
-//            }
-//            scripts[i] = new Script
-//            {
-//                StackScript = sb.ToArray(),
-//                RedeemScript = redeemScripts[i]
-//            };
+            ScriptBuilder sb = new ScriptBuilder();
+            for (byte[] signature : signatures[i].entrySet().stream().sorted((a, b) -> ECC.compare(a.getKey(), b.getKey())).map(p -> p.getValue()).toArray(byte[][]::new))
+            {
+                sb.push(signature);
+            }
+            scripts[i] = new Script();
+            scripts[i].stackScript = sb.toArray();
+            scripts[i].redeemScript = redeemScripts[i];
         }
         return scripts;
     }
 
-    public static SignatureContext Parse(String value) throws IOException
+    public static SignatureContext parse(String value)
     {
-        return FromJson(JObject.Parse(value));
+        //return FromJson(JObject.Parse(value));
+    	//TODO
+    	return null;
     }
 
     /**
@@ -155,6 +153,7 @@ public class SignatureContext
      */
     public JObject ToJson()
     {
+    	//TODO
 //        JObject json = new JObject();
 //        json["type"] = Signable.GetType().Name;
 //        using (MemoryStream ms = new MemoryStream())

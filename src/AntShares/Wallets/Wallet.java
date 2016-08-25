@@ -53,11 +53,11 @@ public abstract class Wallet implements AutoCloseable
             this.coins = new TrackableCollection<TransactionInput, Coin>();
             this.current_height = Blockchain.current() != null ? Blockchain.current().headerHeight() + 1 : 0;
             buildDatabase();
-            SaveStoredData("PasswordHash", Digest.sha256(passwordKey));
-            SaveStoredData("IV", iv);
-            SaveStoredData("MasterKey", AES.encrypt(masterKey, passwordKey, iv));
-            SaveStoredData("Version", new byte[] { 0, 7, 0, 0 });
-            SaveStoredData("Height", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(current_height).array());
+            saveStoredData("PasswordHash", Digest.sha256(passwordKey));
+            saveStoredData("IV", iv);
+            saveStoredData("MasterKey", AES.encrypt(masterKey, passwordKey, iv));
+            saveStoredData("Version", new byte[] { 0, 7, 0, 0 });
+            saveStoredData("Height", ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(current_height).array());
             //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
         }
         else
@@ -170,7 +170,7 @@ public abstract class Wallet implements AutoCloseable
         {
             try
             {
-                SaveStoredData("MasterKey", AES.encrypt(masterKey, passwordKey, iv));
+                saveStoredData("MasterKey", AES.encrypt(masterKey, passwordKey, iv));
                 return true;
             }
             finally
@@ -621,55 +621,55 @@ public abstract class Wallet implements AutoCloseable
 //            BalanceChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void Rebuild()
+    public void rebuild()
     {
         synchronized (syncroot)
         {
             synchronized (coins)
             {
-                // TODO
-                //coins.Clear();
+                coins.clear();
                 coins.commit();
                 current_height = 0;
             }
         }
     }
 
-    protected abstract void SaveStoredData(String name, byte[] value);
+    protected abstract void saveStoredData(String name, byte[] value);
 
-    public boolean SendTransaction(Transaction tx)
+    public boolean sendTransaction(Transaction tx)
     {
-        //Coin[] changeset;
+        Coin[] changeset;
         synchronized (contracts)
         {
             synchronized (coins)
             {
-//                if (tx.GetAllInputs().Any(p => !coins.Contains(p) || coins[p].State != CoinState.Unspent))
-//                    return false;
-//                for (TransactionInput input : tx.GetAllInputs())
-//                    coins[input].State = CoinState.Spending;
-//                for (ushort i = 0; i < tx.Outputs.length; i++)
-//                {
-//                    if (contracts.ContainsKey(tx.Outputs[i].ScriptHash))
-//                        coins.Add(new Coin
-//                        {
-//                            Input = new TransactionInput
-//                            {
-//                                PrevHash = tx.Hash,
-//                                PrevIndex = i
-//                            },
-//                            AssetId = tx.Outputs[i].AssetId,
-//                            Value = tx.Outputs[i].Value,
-//                            ScriptHash = tx.Outputs[i].ScriptHash,
-//                            State = CoinState.Unconfirmed
-//                        });
-//                }
-//                changeset = coins.GetChangeSet();
-//                if (changeset.length > 0)
-//                {
-//                    OnSendTransaction(tx, changeset.Where(p => ((ITrackable<TransactionInput>)p).TrackState == TrackState.Added), changeset.Where(p => ((ITrackable<TransactionInput>)p).TrackState == TrackState.Changed));
-//                    coins.Commit();
-//                }
+                if (tx.getAllInputs().anyMatch(p -> !coins.containsKey(p) || coins.get(p).getState() != CoinState.Unspent))
+                    return false;
+                for (TransactionInput input : tx.getAllInputs().toArray(TransactionInput[]::new))
+                    coins.get(input).setState(CoinState.Spending);
+                for (/*ushort*/int i = 0; i < tx.outputs.length; i++)
+                {
+                    if (contracts.containsKey(tx.outputs[i].scriptHash))
+                    {
+                    	Coin coin = new Coin();
+                    	coin.input = new TransactionInput();
+                    	coin.input.prevHash = tx.hash();
+                    	coin.input.prevIndex = (short)i;
+                    	coin.assetId = tx.outputs[i].assetId;
+                    	coin.value = tx.outputs[i].value;
+                    	coin.scriptHash = tx.outputs[i].scriptHash;
+                    	coin.setState(CoinState.Unconfirmed);
+                    	coins.add(coin);
+                    }
+                }
+                changeset = coins.getChangeSet(Coin[]::new);
+                if (changeset.length > 0)
+                {
+                	Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
+                	Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
+                    onSendTransaction(tx, added, changed);
+                    coins.commit();
+                }
             }
         }
 //        if (changeset.length > 0)
@@ -677,39 +677,44 @@ public abstract class Wallet implements AutoCloseable
         return true;
     }
 
-    public boolean Sign(SignatureContext context)
+    public boolean sign(SignatureContext context)
     {
         boolean fSuccess = false;
-//        for (UInt160 scriptHash : context.ScriptHashes)
-//        {
-//            Contract contract = GetContract(scriptHash);
-//            if (contract == null) continue;
-//            Account account = GetAccountByScriptHash(scriptHash);
-//            if (account == null) continue;
-//            byte[] signature = context.Signable.Sign(account);
-//            fSuccess |= context.Add(contract, account.PublicKey, signature);
-//        }
+        for (UInt160 scriptHash : context.scriptHashes)
+        {
+            Contract contract = getContract(scriptHash);
+            if (contract == null) continue;
+            Account account = getAccountByScriptHash(scriptHash);
+            if (account == null) continue;
+            byte[] signature = context.signable.sign(account);
+            fSuccess |= context.add(contract, account.PublicKey, signature);
+        }
         return fSuccess;
     }
 
-    public static String ToAddress(UInt160 scriptHash)
+    public static String toAddress(UInt160 scriptHash)
     {
-//        byte[] data = new byte[] { CoinVersion }.Concat(scriptHash.ToArray()).ToArray();
-//        return Base58.Encode(data.Concat(data.Sha256().Sha256().Take(4)).ToArray());
-        return "";
+    	byte[] data = new byte[25];
+    	data[0] = COIN_VERSION;
+    	System.arraycopy(scriptHash.toArray(), 0, data, 1, 20);
+    	byte[] checksum = Digest.sha256(Digest.sha256(data, 0, 21));
+    	System.arraycopy(checksum, 0, data, 21, 4);
+        return Base58.encode(data);
     }
 
-    public static UInt160 ToScriptHash(String address)
+    public static UInt160 toScriptHash(String address)
     {
         byte[] data = Base58.decode(address);
         if (data.length != 25)
             throw new IllegalArgumentException();
         if (data[0] != COIN_VERSION)
             throw new IllegalArgumentException();
-//        if (!data.Take(21).Sha256().Sha256().Take(4).SequenceEqual(data.Skip(21)))
-//            throw new FormatException();
-//        return new UInt160(data.Skip(1).Take(20).ToArray());
-        // TODO
-        return new UInt160();
+        byte[] checksum = Digest.sha256(Digest.sha256(data, 0, 21));
+        for (int i = 0; i < 4; i++)
+        	if (data[data.length - 4 + i] != checksum[i])
+        		throw new IllegalArgumentException();
+        byte[] buffer = new byte[20];
+        System.arraycopy(data, 1, buffer, 0, 20);
+        return new UInt160(buffer);
     }
 }

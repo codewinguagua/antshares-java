@@ -211,7 +211,7 @@ public class Block extends Inventory
     @Override public UInt160[] getScriptHashesForVerifying()
     {
         if (prevBlock.equals(UInt256.ZERO))
-            return new UInt160[] { Script.toScriptHash(script.RedeemScript) };
+            return new UInt160[] { Script.toScriptHash(script.redeemScript) };
         //TODO
 //        Block prev_header = Blockchain.Default.GetHeader(PrevBlock);
 //        if (prev_header == null) throw new UnsupportedOperationException();

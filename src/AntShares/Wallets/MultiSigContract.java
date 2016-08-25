@@ -57,15 +57,15 @@ public class MultiSigContract extends Contract
         if (!(1 <= m && m <= publicKeys.length && publicKeys.length <= 1024))
             throw new IllegalArgumentException();
         ScriptBuilder sb = new ScriptBuilder();
-        sb.Push(BigInteger.valueOf(m));
+        sb.push(BigInteger.valueOf(m));
         for (ECPoint publicKey : Arrays.stream(publicKeys).sorted().toArray(ECPoint[]::new))
         {
-            sb.Push(publicKey.getEncoded(true));
+            sb.push(publicKey.getEncoded(true));
         }
-        sb.Push(BigInteger.valueOf(publicKeys.length));
+        sb.push(BigInteger.valueOf(publicKeys.length));
         // TODO
         //sb.Add(ScriptOp.OP_CHECKMULTISIG);
-        return sb.ToArray();
+        return sb.toArray();
     }
 
     /**

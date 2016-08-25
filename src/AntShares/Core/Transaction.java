@@ -30,8 +30,9 @@ public abstract class Transaction extends Inventory
 		{
 			scripts = reader.readSerializableArray(Script.class);
 		}
-		catch (InstantiationException | IllegalAccessException e)
+		catch (InstantiationException | IllegalAccessException ex)
 		{
+			throw new RuntimeException(ex);
 		}
 	}
 	
@@ -96,10 +97,10 @@ public abstract class Transaction extends Inventory
 	                    throw new IOException();
 	        outputs = reader.readSerializableArray(TransactionOutput.class);
 	        if (outputs.length > 65536) throw new IOException();
-//	        if (Blockchain.AntShare != null)
-//	            for (TransactionOutput output : Outputs.Where(p -> p.AssetId == Blockchain.AntShare.Hash))
-//	                if (output.Value.GetData() % 100000000 != 0)
-//	                    throw new FormatException();
+	        if (Blockchain.ANTSHARE != null)
+	            for (TransactionOutput output : Arrays.stream(outputs).filter(p -> p.assetId.equals(Blockchain.ANTSHARE.hash())).toArray(TransactionOutput[]::new))
+	                if (output.value.getData() % 100000000 != 0)
+	                    throw new IOException();
 		}
         catch (InstantiationException | IllegalAccessException ex)
         {

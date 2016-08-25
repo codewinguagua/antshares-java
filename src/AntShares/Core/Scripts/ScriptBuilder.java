@@ -1,14 +1,15 @@
 package AntShares.Core.Scripts;
 
-import java.io.ByteArrayOutputStream;
+import java.io.*;
 import java.math.BigInteger;
+import java.nio.*;
 
 import AntShares.UIntBase;
 
 /**
  *  脚本生成器
  */
-public class ScriptBuilder // TODO : IDisposable
+public class ScriptBuilder implements AutoCloseable
 {
     private ByteArrayOutputStream ms = new ByteArrayOutputStream();
 
@@ -17,13 +18,12 @@ public class ScriptBuilder // TODO : IDisposable
      *  <param name="op">操作符</param>
      *  <returns>返回添加操作符之后的脚本生成器</returns>
      */
-    public ScriptBuilder Add(ScriptOp op)
+    public ScriptBuilder add(ScriptOp op)
     {
-        ms.write(op.getByte());
-        return this;
+        return add(op.getByte());
     }
 
-    public ScriptBuilder Add(byte op)
+    private ScriptBuilder add(byte op)
     {
         ms.write(op);
         return this;
@@ -34,15 +34,23 @@ public class ScriptBuilder // TODO : IDisposable
      *  <param name="script">脚本</param>
      *  <returns>返回添加脚本之后的脚本生成器</returns>
      */
-    public ScriptBuilder Add(byte[] script)
+    public ScriptBuilder add(byte[] script)
     {
         ms.write(script, 0, script.length);
         return this;
     }
 
-    public void Dispose()
+    @Override
+    public void close()
     {
-        //ms.Dispose();
+        try
+        {
+			ms.close();
+		}
+        catch (IOException ex)
+        {
+			throw new RuntimeException(ex);
+		}
     }
 
     /**
@@ -50,18 +58,15 @@ public class ScriptBuilder // TODO : IDisposable
      *  <param name="number">要压入栈中的整数</param>
      *  <returns>返回添加脚本之后的脚本生成器</returns>
      */
-    public ScriptBuilder Push(BigInteger number)
+    public ScriptBuilder push(BigInteger number)
     {
-        int n = 0;
-        try {
-            n = number.intValueExact();
-            if (n == -1) return Add(ScriptOp.OP_1NEGATE);
-            if (n == 0) return Add(ScriptOp.OP_0);
-            if (n > 0 && n <= 16) return Add((byte)(ScriptOp.OP_1.getByte() - 1 + n));
-        } catch (ArithmeticException ae) {
-            // do nothing.
-        }
-        return Push(number.toByteArray());
+    	if (number.equals(BigInteger.ONE.negate()))
+    		return add(ScriptOp.OP_1NEGATE);
+    	if (number.equals(BigInteger.ZERO))
+    		return add(ScriptOp.OP_0);
+    	if (number.compareTo(BigInteger.ZERO) > 0 && number.compareTo(new BigInteger("16")) <= 0)
+    		return add((byte)(ScriptOp.OP_1.getByte() - 1 + number.byteValue()));
+        return push(number.toByteArray());
     }
 
     /**
@@ -69,7 +74,7 @@ public class ScriptBuilder // TODO : IDisposable
      *  <param name="data">要压入栈中的字节数组</param>
      *  <returns>返回添加脚本之后的脚本生成器</returns>
      */
-    public ScriptBuilder Push(byte[] data)
+    public ScriptBuilder push(byte[] data)
     {
         if (data == null)
             throw new NullPointerException();
@@ -80,24 +85,22 @@ public class ScriptBuilder // TODO : IDisposable
         }
         else if (data.length < 0x100)
         {
-            Add(ScriptOp.OP_PUSHDATA1);
+            add(ScriptOp.OP_PUSHDATA1);
             ms.write((byte)data.length);
             ms.write(data, 0, data.length);
         }
         else if (data.length < 0x10000)
         {
-            Add(ScriptOp.OP_PUSHDATA2);
-            // TODO
-//            ms.write(BitConverter.GetBytes((ushort)data.Length), 0, 2);
-//            ms.Write(data, 0, data.Length);
+            add(ScriptOp.OP_PUSHDATA2);
+			ms.write(ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort((short)data.length).array(), 0, 2);
+            ms.write(data, 0, data.length);
         }
-        // TODO
-//        else if (data.LongLength < 0x100000000L)
-//        {
-//            Add(ScriptOp.OP_PUSHDATA4);
-//            ms.Write(BitConverter.GetBytes((uint)data.Length), 0, 4);
-//            ms.Write(data, 0, data.Length);
-//        }
+        else if (data.length < 0x100000000L)
+        {
+            add(ScriptOp.OP_PUSHDATA4);
+            ms.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(data.length).array(), 0, 4);
+            ms.write(data, 0, data.length);
+        }
         else
         {
             throw new IllegalArgumentException();
@@ -110,15 +113,15 @@ public class ScriptBuilder // TODO : IDisposable
      *  <param name="hash">要压入栈中的散列值</param>
      *  <returns>返回添加脚本之后的脚本生成器</returns>
      */
-    public ScriptBuilder Push(UIntBase hash)
+    public ScriptBuilder push(UIntBase hash)
     {
-        return Push(hash.toArray());
+        return push(hash.toArray());
     }
 
     /**
      *  获取脚本生成器中包含的脚本代码
      */
-    public byte[] ToArray()
+    public byte[] toArray()
     {
         return ms.toByteArray();
     }

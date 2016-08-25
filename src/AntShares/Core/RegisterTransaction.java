@@ -30,11 +30,11 @@ public class RegisterTransaction extends Transaction
 	            throw new IOException();
 	        name = reader.readVarString();
 	        amount = reader.readSerializable(Fixed8.class);
-	        if (amount.equals(Fixed8.ZERO) || amount.compareTo(Fixed8.SATOSHI.minus()) < 0)
+	        if (amount.equals(Fixed8.ZERO) || amount.compareTo(Fixed8.SATOSHI.negate()) < 0)
 	        	throw new IOException();
 	        if (assetType == AssetType.Share && amount.compareTo(Fixed8.ZERO) <= 0)
 	            throw new IOException();
-	        if (assetType == AssetType.Invoice && !amount.equals(Fixed8.SATOSHI.minus()))
+	        if (assetType == AssetType.Invoice && !amount.equals(Fixed8.SATOSHI.negate()))
 	            throw new IOException();
 	        issuer = reader.readECPoint();
 	        admin = reader.readSerializable(UInt160.class);

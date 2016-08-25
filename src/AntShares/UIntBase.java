@@ -1,6 +1,7 @@
 package AntShares;
 
 import java.io.IOException;
+import java.nio.*;
 import java.util.Arrays;
 
 import AntShares.IO.*;
@@ -43,16 +44,7 @@ public abstract class UIntBase implements Serializable
     @Override
     public int hashCode()
     {
-        //BitConverter.ToInt32(data_bytes, 0)
-        int v = 0;
-        v |= data_bytes[3];
-        v <<= 8;
-        v |= data_bytes[2];
-        v <<= 8;
-        v |= data_bytes[1];
-        v <<= 8;
-        v |= data_bytes[0];
-        return v;
+        return ByteBuffer.wrap(data_bytes).order(ByteOrder.LITTLE_ENDIAN).getInt();
     }
 
     public byte[] toArray()
@@ -60,16 +52,15 @@ public abstract class UIntBase implements Serializable
         return data_bytes;
     }
 
-// TODO
-//    /**
-//     * 转为16进制字符串
-//     * @return 返回16进制字符串
-//     */
-//    @Override
-//    public String toString()
-//    {
-//        return data_bytes.Reverse().ToHexString();
-//    }
+    /**
+     * 转为16进制字符串
+     * @return 返回16进制字符串
+     */
+    @Override
+    public String toString()
+    {
+        return Helper.toHexString(Helper.reverse(data_bytes));
+    }
     
     @Override
     public void serialize(BinaryWriter writer) throws IOException

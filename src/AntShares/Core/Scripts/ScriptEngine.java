@@ -36,8 +36,8 @@ public class ScriptEngine
     {
         try
         {
-            if (!ExecuteScript(script.StackScript, true)) return false;
-            if (!ExecuteScript(script.RedeemScript, false)) return false;
+            if (!ExecuteScript(script.stackScript, true)) return false;
+            if (!ExecuteScript(script.redeemScript, false)) return false;
         }
         catch (Exception ex)// TODO when (ex is FormatException || ex is InvalidCastException)
         {

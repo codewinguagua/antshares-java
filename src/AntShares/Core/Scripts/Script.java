@@ -10,21 +10,21 @@ import AntShares.IO.*;
  */
 public class Script implements Serializable
 {
-    public byte[] StackScript;
-    public byte[] RedeemScript;
+    public byte[] stackScript;
+    public byte[] redeemScript;
 
     @Override
     public void deserialize(BinaryReader reader) throws IOException
     {
-        StackScript = reader.readVarBytes();
-        RedeemScript = reader.readVarBytes();
+        stackScript = reader.readVarBytes();
+        redeemScript = reader.readVarBytes();
     }
 
     @Override
     public void serialize(BinaryWriter writer) throws IOException
     {
-        writer.writeVarBytes(StackScript);
-        writer.writeVarBytes(RedeemScript);
+        writer.writeVarBytes(stackScript);
+        writer.writeVarBytes(redeemScript);
     }
 
 //    /**

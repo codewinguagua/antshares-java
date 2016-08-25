@@ -1,8 +1,5 @@
 package AntShares;
 
-import java.math.BigInteger;
-import java.util.*;
-
 public class Helper
 {
     public static byte[] hexToBytes(String value)
@@ -26,66 +23,17 @@ public class Helper
         }
         return result;
     }
-
-    static BigInteger NextBigInteger(Random rand, int sizeInBits)
-    {
-        if (sizeInBits < 0)
-            throw new IllegalArgumentException("sizeInBits must be non-negative");
-        if (sizeInBits == 0)
-            return new BigInteger("0");
-        byte[] b = new byte[sizeInBits / 8 + 1];
-        rand.nextBytes(b);
-        if (sizeInBits % 8 == 0)
-            b[b.length - 1] = 0;
-        else
-            b[b.length - 1] &= (byte)((1 << sizeInBits % 8) - 1);
-        return new BigInteger(b);
-    }
-
-// TODO
-//    internal static BigInteger NextBigInteger(this RNGCryptoServiceProvider rng, int sizeInBits)
-//    {
-//        if (sizeInBits < 0)
-//            throw new ArgumentException("sizeInBits must be non-negative");
-//        if (sizeInBits == 0)
-//            return 0;
-//        byte[] b = new byte[sizeInBits / 8 + 1];
-//        rng.GetNonZeroBytes(b);
-//        if (sizeInBits % 8 == 0)
-//            b[b.Length - 1] = 0;
-//        else
-//            b[b.Length - 1] &= (byte)((1 << sizeInBits % 8) - 1);
-//        return new BigInteger(b);
-//    }
     
-    /**
-     * @param timestamp in seconds
-     * @return
-     */
-    public static Date ToDateTime(int timestamp)
-    {
-        return new Date(timestamp * 1000L);
-    }
-    
-    public static Date ToDateTime(long timestamp)
-    {
-        return new Date(timestamp * 1000L);
-    }
-    
-    public static String toHexString(Iterable<Byte> value)
+    public static String toHexString(byte[] value)
     {
         StringBuilder sb = new StringBuilder();
         for (byte b : value)
         {
-            int v = (b + 256) & 0xff;
-            sb.append(Integer.toHexString(v));
+            int v = Byte.toUnsignedInt(b);
+            sb.append(Integer.toHexString(v >>> 4));
+            sb.append(Integer.toHexString(v & 0x0f));
         }
         return sb.toString();
-    }
-
-    public static int ToTimestamp(Date time)
-    {
-        return (int) (time.getTime() / 1000);
     }
 
 // TODO
