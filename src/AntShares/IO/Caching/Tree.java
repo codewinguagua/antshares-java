@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class Tree<TKey, TValue>
+public class Tree<TKey, TValue>
 {
     private Map<TKey, TreeNode<TValue>> _nodes = new HashMap<TKey, TreeNode<TValue>>();
     private Map<TKey, TreeNode<TValue>> _leaves = new HashMap<TKey, TreeNode<TValue>>();

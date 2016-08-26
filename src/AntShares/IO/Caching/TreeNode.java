@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class TreeNode<TValue>
+public class TreeNode<TValue>
 {
     private List<TreeNode<TValue>> _children = new ArrayList<TreeNode<TValue>>();
 
