@@ -1,7 +1,8 @@
 package AntShares.Core;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.*;
 
 import AntShares.*;
@@ -127,20 +128,37 @@ public abstract class Transaction extends Inventory
 	@Override
 	public UInt160[] getScriptHashesForVerifying()
 	{
-//        if (References == null) throw new InvalidOperationException();
-//        HashSet<UInt160> hashes = new HashSet<UInt160>(Inputs.Select(p => References[p].ScriptHash));
-//        foreach (var group in Outputs.GroupBy(p => p.AssetId))
-//        {
-//            RegisterTransaction tx = Blockchain.Default.GetTransaction(group.Key) as RegisterTransaction;
-//            if (tx == null) throw new InvalidOperationException();
-//            if (tx.AssetType.HasFlag(AssetType.DutyFlag))
-//            {
-//                hashes.UnionWith(group.Select(p => p.ScriptHash));
-//            }
-//        }
-//        return hashes.OrderBy(p => p).ToArray();
-		return new UInt160[0];
+        if (references() == null) throw new IllegalStateException();
+        HashSet<UInt160> hashes = new HashSet<UInt160>(Arrays.stream(inputs).map(p -> references().get(p).scriptHash).collect(Collectors.toList()));
+        for (Entry<UInt256, List<TransactionOutput>> group : Arrays.stream(outputs).collect(Collectors.groupingBy(p -> p.assetId)).entrySet())
+        {
+            Transaction tx;
+			try
+			{
+				tx = Blockchain.current().getTransaction(group.getKey());
+			}
+			catch (Exception ex)
+			{
+				throw new IllegalStateException(ex);
+			}
+            if (tx == null || !(tx instanceof RegisterTransaction)) throw new IllegalStateException();
+            RegisterTransaction asset = (RegisterTransaction)tx;
+            if ((asset.assetType.value() & AssetType.DutyFlag.value()) > 0)
+            {
+                hashes.addAll(group.getValue().stream().map(p -> p.scriptHash).collect(Collectors.toList()));
+            }
+        }
+        return hashes.stream().sorted().toArray(UInt160[]::new);
 	}
+	
+    public TransactionResult[] getTransactionResults()
+    {
+        if (references() == null) return null;
+        Stream<TransactionResult> in = references().values().stream().map(p -> new TransactionResult(p.assetId, p.value));
+        Stream<TransactionResult> out = Arrays.stream(outputs).map(p -> new TransactionResult(p.assetId, p.value.negate()));
+        Map<UInt256, Fixed8> results = Stream.concat(in, out).collect(Collectors.toMap(p -> p.assetId, p -> p.amount, (a, b) -> a.add(b)));
+        return results.entrySet().stream().filter(p -> !p.getValue().equals(Fixed8.ZERO)).map(p -> new TransactionResult(p.getKey(), p.getValue())).toArray(TransactionResult[]::new);
+    }
 	
 	@Override
 	public int hashCode()
@@ -149,7 +167,7 @@ public abstract class Transaction extends Inventory
 	}
 
 	@Override
-	public final InventoryType getInventoryType()
+	public final InventoryType inventoryType()
 	{
 		return InventoryType.TX;
 	}
@@ -168,6 +186,35 @@ public abstract class Transaction extends Inventory
 	
 	protected void onDeserialized() throws IOException
 	{
+	}
+	
+    //[NonSerialized]
+    private Map<TransactionInput, TransactionOutput> _references = null;
+    public Map<TransactionInput, TransactionOutput> references()
+	{
+        if (_references == null)
+        {
+        	Map<TransactionInput, TransactionOutput> map = new HashMap<TransactionInput, TransactionOutput>();
+            for (Entry<UInt256, List<TransactionInput>> entry : getAllInputs().collect(Collectors.groupingBy(p -> p.prevHash)).entrySet())
+            {
+                Transaction tx;
+				try
+				{
+					tx = Blockchain.current().getTransaction(entry.getKey());
+				}
+				catch (Exception ex)
+				{
+					return null;
+				}
+                if (tx == null) return null;
+                for (TransactionInput input : entry.getValue())
+                {
+                    map.put(input, tx.outputs[input.prevIndex]);
+                }
+            }
+            _references = map;
+        }
+        return _references;
 	}
 	
 	@Override

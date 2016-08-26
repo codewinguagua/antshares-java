@@ -17,7 +17,7 @@ public abstract class Inventory implements Signable
         return _hash;
     }
 
-    public abstract InventoryType getInventoryType();
+    public abstract InventoryType inventoryType();
 
     public abstract boolean verify();
 }

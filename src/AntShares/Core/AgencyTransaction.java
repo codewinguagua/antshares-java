@@ -59,6 +59,7 @@ public class AgencyTransaction extends Transaction
 	@Override
 	public UInt160[] getScriptHashesForVerifying()
 	{
+		//TODO
 //        HashSet<UInt160> hashes = new HashSet<UInt160>();
 //        foreach (var group in Inputs.GroupBy(p => p.PrevHash))
 //        {

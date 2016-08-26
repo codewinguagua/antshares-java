@@ -247,7 +247,7 @@ public abstract class Blockchain implements AutoCloseable
      */
     public static UInt160 getMinerAddress(ECPoint[] miners)
     {
-        return Script.toScriptHash(MultiSigContract.CreateMultiSigRedeemScript(miners.length - (miners.length - 1) / 3, miners));
+        return Script.toScriptHash(MultiSigContract.createMultiSigRedeemScript(miners.length - (miners.length - 1) / 3, miners));
     }
 
     private ArrayList<ECPoint> _miners = new ArrayList<ECPoint>();

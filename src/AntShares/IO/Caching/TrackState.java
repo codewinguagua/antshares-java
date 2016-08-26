@@ -1,6 +1,6 @@
 package AntShares.IO.Caching;
 
-public enum TrackState // TODO : byte
+public enum TrackState
 {
     None,
     Added,

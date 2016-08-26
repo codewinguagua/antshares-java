@@ -22,7 +22,7 @@ public class TrackableCollection<TKey, TItem extends ITrackable<TKey>> extends A
     public boolean add(TItem e)
     {
     	e.setTrackState(TrackState.Added);
-    	return map.put(e.getKey(), e) == null;
+    	return map.put(e.key(), e) == null;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class TrackableCollection<TKey, TItem extends ITrackable<TKey>> extends A
     
     public boolean containsValue(TItem item)
     {
-    	return containsKey(item.getKey());
+    	return containsKey(item.key());
     }
     
     public TItem get(TKey key)

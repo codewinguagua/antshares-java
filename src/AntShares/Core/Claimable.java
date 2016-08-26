@@ -1,11 +1,15 @@
 package AntShares.Core;
 
+import AntShares.Fixed8;
+
 public class Claimable
 {
-    public TransactionOutput Output;
-    public int StartHeight;
-    public int EndHeight;
+    public TransactionOutput output;
+    public int startHeight;
+    public int endHeight;
 
-    // TODO
-    //public Fixed8 Value => Output.Value;
+    public Fixed8 value()
+    {
+    	return output.value;
+    }
 }

@@ -1,6 +1,7 @@
 package AntShares.Wallets;
 
 import AntShares.UInt160;
+import AntShares.Core.Scripts.Script;
 import AntShares.IO.Serializable;
 
 /**
@@ -11,22 +12,21 @@ public abstract class Contract implements Serializable
     /**
      *  合约脚本代码
      */
-    public byte[] RedeemScript;
+    public byte[] redeemScript;
     /**
      *  公钥散列值，用于标识该合约在钱包中隶属于哪一个账户
      */
-    public UInt160 PublicKeyHash;
+    public UInt160 publicKeyHash;
 
     private String _address;
     /**
      *  合约地址
      */
-    public String getAddress()
+    public String address()
     {
         if (_address == null)
         {
-            // TODO
-            //_address = Wallet.ToAddress(ScriptHash);
+            _address = Wallet.toAddress(scriptHash());
         }
         return _address;
     }
@@ -34,18 +34,17 @@ public abstract class Contract implements Serializable
     /**
      *  合约的形式参数列表
      */
-    public abstract ContractParameterType[] getParameterList();
+    public abstract ContractParameterType[] parameterList();
 
     private UInt160 _scriptHash;
     /**
      *  脚本散列值
      */
-    public UInt160 getScriptHash()
+    public UInt160 scriptHash()
     {
         if (_scriptHash == null)
         {
-            // TODO
-            //_scriptHash = RedeemScript.ToScriptHash();
+            _scriptHash = Script.toScriptHash(redeemScript);
         }
         return _scriptHash;
     }
@@ -60,7 +59,7 @@ public abstract class Contract implements Serializable
     {
         if (this == obj) return true;
         if (!(obj instanceof Contract)) return false;
-        return getScriptHash().equals(((Contract) obj).getScriptHash());
+        return scriptHash().equals(((Contract) obj).scriptHash());
     }
 
     /**
@@ -70,6 +69,6 @@ public abstract class Contract implements Serializable
     @Override
     public int hashCode()
     {
-        return getScriptHash().hashCode();
+        return scriptHash().hashCode();
     }
 }

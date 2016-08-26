@@ -2,15 +2,14 @@ package AntShares.Cryptography;
 
 import java.math.BigInteger;
 
-import AntShares.Helper;
-
 public class Base58
 {
     /**
      *  base58编码的字母表
      */
     public static final String ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
+    private static final BigInteger BASE = BigInteger.valueOf(ALPHABET.length());
+    
     /**
      *  解码
      *  <param name="input">要解码的字符串</param>
@@ -24,17 +23,12 @@ public class Base58
             int index = ALPHABET.indexOf(input.charAt(i));
             if (index == -1)
                 throw new IllegalArgumentException();
-            // TODO
-            //bi += index * BigInteger.Pow(58, input.Length - 1 - i);
+            bi = bi.add(BASE.pow(input.length() - 1 - i).multiply(BigInteger.valueOf(index)));
         }
         byte[] bytes = bi.toByteArray();
-        bytes = Helper.reverse(bytes);
-        boolean stripSignByte = bytes.length > 1 && bytes[0] == 0 && bytes[1] >= 0x80;
+        boolean stripSignByte = bytes.length > 1 && bytes[0] == 0 && bytes[1] < 0;
         int leadingZeros = 0;
-        for (int i = 0; i < input.length() && input.charAt(i) == ALPHABET.charAt(0); i++)
-        {
-            leadingZeros++;
-        }
+        for (; leadingZeros < input.length() && input.charAt(leadingZeros) == ALPHABET.charAt(0); leadingZeros++);
         byte[] tmp = new byte[bytes.length - (stripSignByte ? 1 : 0) + leadingZeros];
         System.arraycopy(bytes, stripSignByte ? 1 : 0, tmp, leadingZeros, tmp.length - leadingZeros);
         return tmp;
@@ -47,19 +41,13 @@ public class Base58
      */
     public static String encode(byte[] input)
     {
-        //BigInteger value = new BigInteger(new byte[1].Concat(input).Reverse().ToArray());
-        byte[] tmp = new byte[input.length + 1];
-        System.arraycopy(input, 0, tmp, 1, input.length);
-        byte[] rev = Helper.reverse(tmp);
-        BigInteger value = new BigInteger(rev);
-
+        BigInteger value = new BigInteger(1, input);
         StringBuilder sb = new StringBuilder();
-        BigInteger base58 = BigInteger.valueOf(58);
-        while (value.compareTo(base58) >= 0)
+        while (value.compareTo(BASE) >= 0)
         {
-            BigInteger mod = value.mod(base58);
-            sb.insert(0, ALPHABET.charAt(mod.intValue()));
-            value = value.divide(base58);
+        	BigInteger[] r = value.divideAndRemainder(BASE);
+            sb.insert(0, ALPHABET.charAt(r[1].intValue()));
+            value = r[0];
         }
         sb.insert(0, ALPHABET.charAt(value.intValue()));
         for (byte b : input)

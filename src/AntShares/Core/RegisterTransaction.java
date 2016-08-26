@@ -1,14 +1,17 @@
 package AntShares.Core;
 
 import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.*;
+import AntShares.Core.Scripts.Script;
 import AntShares.Cryptography.ECC;
 import AntShares.IO.*;
 import AntShares.IO.Json.*;
-import AntShares.Wallets.Wallet;
+import AntShares.Wallets.*;
 
 public class RegisterTransaction extends Transaction
 {
@@ -48,11 +51,49 @@ public class RegisterTransaction extends Transaction
 		}
 	}
 	
+	public String getName()
+	{
+		return getName(Locale.getDefault());
+	}
+	
+    //[NonSerialized]
+    private Map<Locale, String> _names;
+	public String getName(Locale locale)
+	{
+        if (_names == null)
+        {
+            JObject name_obj = JObject.parse(name);
+            if (name_obj instanceof JString)
+            {
+                _names = new HashMap<Locale, String>();
+                _names.put(Locale.ENGLISH, name_obj.asString());
+            }
+            else
+            {
+                _names = ((JArray)JObject.parse(name)).stream().collect(Collectors.toMap(p -> new Locale(p.get("lang").asString()), p -> p.get("name").asString()));
+            }
+        }
+        if (_names.containsKey(locale))
+        {
+            return _names.get(locale);
+        }
+        else if (_names.containsKey(Locale.ENGLISH))
+        {
+            return _names.get(Locale.ENGLISH);
+        }
+        else
+        {
+            return _names.values().stream().findFirst().orElse(name);
+        }
+	}
+	
 	@Override
 	public UInt160[] getScriptHashesForVerifying()
 	{
-		//TODO
-		return super.getScriptHashesForVerifying();
+        HashSet<UInt160> hashes = new HashSet<UInt160>(Arrays.asList(super.getScriptHashesForVerifying()));
+        hashes.add(Script.toScriptHash(SignatureContract.createSignatureRedeemScript(issuer)));
+        hashes.add(admin);
+        return hashes.stream().sorted().toArray(UInt160[]::new);
 	}
 	
 	@Override
@@ -99,7 +140,6 @@ public class RegisterTransaction extends Transaction
 	@Override
 	public String toString()
 	{
-		//TODO
-		return name;
+		return getName();
 	}
 }

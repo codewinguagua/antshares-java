@@ -1,7 +1,6 @@
 package AntShares.Core;
 
-import AntShares.Fixed8;
-import AntShares.UInt256;
+import AntShares.*;
 
 /**
  *  投票信息
@@ -11,9 +10,9 @@ public class Vote
     /**
      *  报名表的散列值列表
      */
-    public UInt256[] Enrollments;
+    public UInt256[] enrollments;
     /**
      *  选票的数目
      */
-    public Fixed8 Count;
+    public Fixed8 count;
 }

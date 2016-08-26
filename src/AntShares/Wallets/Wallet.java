@@ -75,8 +75,8 @@ public abstract class Wallet implements AutoCloseable
             this.iv = loadStoredData("IV");
 			this.masterKey = AES.decrypt(loadStoredData("MasterKey"), passwordKey, iv);
 	        //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
-            this.accounts = Arrays.stream(loadAccounts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
-            this.contracts = Arrays.stream(loadContracts()).collect(Collectors.toMap(p -> p.PublicKeyHash, p -> p));
+            this.accounts = Arrays.stream(loadAccounts()).collect(Collectors.toMap(p -> p.publicKeyHash, p -> p));
+            this.contracts = Arrays.stream(loadContracts()).collect(Collectors.toMap(p -> p.publicKeyHash, p -> p));
             this.coins = new TrackableCollection<TransactionInput, Coin>(loadCoins());
             this.current_height = ByteBuffer.wrap(loadStoredData("Height")).order(ByteOrder.LITTLE_ENDIAN).getInt();
         }
@@ -102,11 +102,11 @@ public abstract class Wallet implements AutoCloseable
     {
         synchronized (accounts)
         {
-            if (!accounts.containsKey(contract.PublicKeyHash))
+            if (!accounts.containsKey(contract.publicKeyHash))
                 throw new RuntimeException();
             synchronized(contracts)
             {
-                contracts.put(contract.getScriptHash(), contract);
+                contracts.put(contract.scriptHash(), contract);
             }
         }
     }
@@ -115,7 +115,7 @@ public abstract class Wallet implements AutoCloseable
     {
     }
 
-    public static Fixed8 CalculateClaimAmount(Iterable<TransactionInput> inputs)
+    public static Fixed8 calculateClaimAmount(Iterable<TransactionInput> inputs)
     {
 //        if (!Blockchain.Default.Ability.HasFlag(BlockchainAbility.UnspentIndexes))
 //            throw new NotSupportedException();
@@ -187,6 +187,7 @@ public abstract class Wallet implements AutoCloseable
         }
     }
 
+    @Override
     public void close()
     {
         isrunning = false;
@@ -236,7 +237,7 @@ public abstract class Wallet implements AutoCloseable
         Account account = new Account(privateKey);
         synchronized (accounts)
         {
-            accounts.put(account.PublicKeyHash, account);
+            accounts.put(account.publicKeyHash, account);
         }
         return account;
     }
@@ -257,9 +258,9 @@ public abstract class Wallet implements AutoCloseable
         {
             synchronized (contracts)
             {
-                for (Contract contract : contracts.values().stream().filter(p -> p.PublicKeyHash == publicKeyHash).toArray(Contract[]::new))
+                for (Contract contract : contracts.values().stream().filter(p -> p.publicKeyHash == publicKeyHash).toArray(Contract[]::new))
                 {
-                    deleteContract(contract.getScriptHash());
+                    deleteContract(contract.scriptHash());
                 }
             }
             return accounts.remove(publicKeyHash) != null;
@@ -363,7 +364,7 @@ public abstract class Wallet implements AutoCloseable
             synchronized (contracts)
             {
                 if (!contracts.containsKey(scriptHash)) return null;
-                return accounts.get(contracts.get(scriptHash).PublicKeyHash);
+                return accounts.get(contracts.get(scriptHash).publicKeyHash);
             }
         }
     }
@@ -404,7 +405,7 @@ public abstract class Wallet implements AutoCloseable
     {
         synchronized (contracts)
         {
-        	return contracts.values().stream().filter(p -> p instanceof SignatureContract).findAny().map(p -> p.getScriptHash()).orElse(contracts.keySet().stream().findAny().get());
+        	return contracts.values().stream().filter(p -> p instanceof SignatureContract).findAny().map(p -> p.scriptHash()).orElse(contracts.keySet().stream().findAny().get());
         }
     }
 
@@ -429,7 +430,7 @@ public abstract class Wallet implements AutoCloseable
     {
         synchronized (contracts)
         {
-        	return contracts.values().stream().filter(p -> p.PublicKeyHash.equals(publicKeyHash)).toArray(Contract[]::new);
+        	return contracts.values().stream().filter(p -> p.publicKeyHash.equals(publicKeyHash)).toArray(Contract[]::new);
         }
     }
 
@@ -486,7 +487,7 @@ public abstract class Wallet implements AutoCloseable
 
     protected abstract byte[] loadStoredData(String name);
 
-    public <T extends Transaction> T MakeTransaction(T tx, Fixed8 fee)
+    public <T extends Transaction> T makeTransaction(T tx, Fixed8 fee)
     {
         if (tx.outputs == null) throw new IllegalArgumentException();
         if (tx.attributes == null) tx.attributes = new TransactionAttribute[0];
@@ -722,7 +723,7 @@ public abstract class Wallet implements AutoCloseable
             Account account = getAccountByScriptHash(scriptHash);
             if (account == null) continue;
             byte[] signature = context.signable.sign(account);
-            fSuccess |= context.add(contract, account.PublicKey, signature);
+            fSuccess |= context.add(contract, account.publicKey, signature);
         }
         return fSuccess;
     }

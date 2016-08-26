@@ -6,34 +6,33 @@ import java.util.Arrays;
 import org.bouncycastle.math.ec.ECPoint;
 
 import AntShares.UInt160;
+import AntShares.Core.Scripts.Script;
 import AntShares.Cryptography.*;
 
 public class Account
 {
-    public final byte[] PrivateKey;
-    public final ECPoint PublicKey;
-    public final UInt160 PublicKeyHash;
+    public final byte[] privateKey;
+    public final ECPoint publicKey;
+    public final UInt160 publicKeyHash;
 
     public Account(byte[] privateKey)
     {
         if (privateKey.length != 32 && privateKey.length != 96 && privateKey.length != 104)
             throw new IllegalArgumentException();
-        this.PrivateKey = new byte[32];
-        System.arraycopy(privateKey, privateKey.length - 32, PrivateKey, 0, 32);
+        this.privateKey = new byte[32];
+        System.arraycopy(privateKey, privateKey.length - 32, this.privateKey, 0, 32);
         if (privateKey.length == 32)
         {
-            this.PublicKey = ECC.secp256r1.getG().multiply(new BigInteger(1, privateKey));
+            this.publicKey = ECC.secp256r1.getG().multiply(new BigInteger(1, privateKey));
         }
         else
         {
         	byte[] encoded = new byte[65];
         	encoded[0] = 0x04;
         	System.arraycopy(privateKey, 0, encoded, 1, 64);
-            this.PublicKey = ECC.secp256r1.getCurve().decodePoint(encoded);
+            this.publicKey = ECC.secp256r1.getCurve().decodePoint(encoded);
         }
-        // TODO
-        this.PublicKeyHash = new UInt160();
-        //this.PublicKeyHash = PublicKey.EncodePoint(true).ToScriptHash();
+        this.publicKeyHash = Script.toScriptHash(publicKey.getEncoded(true));
         //ProtectedMemory.Protect(PrivateKey, MemoryProtectionScope.SameProcess);
     }
 
@@ -48,31 +47,28 @@ public class Account
     {
         if (this == obj) return true;
         if (!(obj instanceof Account)) return false;
-        return PublicKeyHash.equals(((Account) obj).PublicKeyHash);
+        return publicKeyHash.equals(((Account) obj).publicKeyHash);
     }
 
     public String Export()
     {
-        // TODO
-//        using (Decrypt())
-//        {
+        //using (Decrypt())
+        {
             byte[] data = new byte[38];
             data[0] = (byte) 0x80;
-            System.arraycopy(PrivateKey, 0, data, 1, 32);
+            System.arraycopy(privateKey, 0, data, 1, 32);
             data[33] = (byte) 0x01;
-            // TODO
-            //byte[] checksum = data.Sha256(0, data.length - 4).Sha256();
-            byte[] checksum = new byte[1];
+            byte[] checksum = Digest.sha256(Digest.sha256(data, 0, data.length - 4));
             System.arraycopy(checksum, 0, data, data.length - 4, 4);
             String wif = Base58.encode(data);
             Arrays.fill(data, (byte) 0);
             return wif;
-//        }
+        }
     }
 
     @Override
     public int hashCode()
     {
-        return PublicKeyHash.hashCode();
+        return publicKeyHash.hashCode();
     }
 }

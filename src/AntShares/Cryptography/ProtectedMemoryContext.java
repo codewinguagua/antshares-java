@@ -1,6 +1,6 @@
 package AntShares.Cryptography;
 
-class ProtectedMemoryContext // TODO : IDisposable
+class ProtectedMemoryContext implements AutoCloseable
 {
 //TODO
 //    private static Dictionary<byte[], byte> counts = new Dictionary<byte[], byte>();
@@ -21,13 +21,15 @@ class ProtectedMemoryContext // TODO : IDisposable
 //            ProtectedMemory.Unprotect(memory, scope);
 //        }
 //    }
-//
-//    void IDisposable.Dispose()
-//    {
+	
+	@Override
+    public void close()
+    {
+		//TODO
 //        if (--counts[memory] == 0)
 //        {
 //            counts.Remove(memory);
 //            ProtectedMemory.Protect(memory, scope);
 //        }
-//    }
+    }
 }

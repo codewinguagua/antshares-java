@@ -1,6 +1,7 @@
 package AntShares.Core;
 
 import java.io.IOException;
+import java.util.*;
 
 import org.bouncycastle.math.ec.ECPoint;
 
@@ -28,8 +29,9 @@ public class EnrollmentTransaction extends Transaction
 	@Override
 	public UInt160[] getScriptHashesForVerifying()
 	{
-		//TODO
-		return super.getScriptHashesForVerifying();
+		HashSet<UInt160> hashes = new HashSet<UInt160>(Arrays.asList(super.getScriptHashesForVerifying()));
+		hashes.add(miner());
+		return hashes.stream().sorted().toArray(UInt160[]::new);
 	}
 	
 	@Override
@@ -45,7 +47,7 @@ public class EnrollmentTransaction extends Transaction
 	{
         if (_miner == null)
         {
-            _miner = SignatureContract.Create(publicKey).getScriptHash();
+            _miner = SignatureContract.create(publicKey).scriptHash();
         }
         return _miner;
 	}

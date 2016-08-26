@@ -1,7 +1,6 @@
 package AntShares.Core;
 
-import AntShares.Fixed8;
-import AntShares.UInt256;
+import AntShares.*;
 
 /**
  *  交易结果，表示交易中资产的变化量
@@ -11,9 +10,15 @@ public class TransactionResult
     /**
      *  资产编号
      */
-    public UInt256 AssetId;
+    public final UInt256 assetId;
     /**
      *  该资产的变化量
      */
-    public Fixed8 Amount;
+    public final Fixed8 amount;
+    
+    public TransactionResult(UInt256 assetId, Fixed8 amount)
+    {
+    	this.assetId = assetId;
+    	this.amount = amount;
+    }
 }

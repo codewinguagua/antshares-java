@@ -6,16 +6,13 @@ import java.util.stream.Stream;
 
 import AntShares.*;
 import AntShares.Core.*;
-import AntShares.IO.Serializable;
-import AntShares.IO.Json.*;
 import AntShares.Network.RPC.*;
-import AntShares.Wallets.Wallet;
 
 public class RpcBlockchain extends Blockchain
 {
-	private final RpcClient rpc;
+	private final RpcNode rpc;
 	
-	public RpcBlockchain(RpcClient rpc)
+	public RpcBlockchain(RpcNode rpc)
 	{
 		this.rpc = rpc;
 	}
@@ -29,57 +26,37 @@ public class RpcBlockchain extends Blockchain
 	@Override
 	public UInt256 currentBlockHash() throws RpcException, IOException
 	{
-		JObject result = rpc.call("getbestblockhash");
-		return UInt256.parse(result.asString());
+		return rpc.getBestBlockHash();
 	}
 	
 	@Override
 	public Block getBlock(int height) throws RpcException, IOException
 	{
-		JObject result = rpc.call("getblock", new JNumber(height));
-		try
-		{
-			return Serializable.from(Helper.hexToBytes(result.asString()), Block.class);
-		}
-		catch (InstantiationException | IllegalAccessException ex)
-		{
-			throw new RuntimeException(ex);
-		}
+		return rpc.getBlock(height);
 	}
 	
 	@Override
 	public Block getBlock(UInt256 hash) throws RpcException, IOException
 	{
-		JObject result = rpc.call("getblock", new JString(hash.toString()));
-		try
-		{
-			return Serializable.from(Helper.hexToBytes(result.asString()), Block.class);
-		}
-		catch (InstantiationException | IllegalAccessException ex)
-		{
-			throw new RuntimeException(ex);
-		}
+		return rpc.getBlock(hash);
 	}
 	
 	@Override
 	public UInt256 getBlockHash(int height) throws RpcException, IOException
 	{
-		JObject result = rpc.call("getblockhash", new JNumber(height));
-		return UInt256.parse(result.toString());
+		return rpc.getBlockHash(height);
 	}
 	
 	@Override
 	public Transaction getTransaction(UInt256 hash) throws RpcException, IOException
 	{
-		JObject result = rpc.call("getrawtransaction", new JString(hash.toString()));
-		return Transaction.deserializeFrom(Helper.hexToBytes(result.asString()));
+		return rpc.getRawTransaction(hash);
 	}
 
 	@Override
 	public int height() throws RpcException, IOException
 	{
-		JObject result = rpc.call("getblockcount");
-		return (int)result.asNumber() - 1;
+		return rpc.getBlockCount() - 1;
 	}
 
 	@Override
@@ -108,8 +85,7 @@ public class RpcBlockchain extends Blockchain
 	@Override
 	public boolean containsUnspent(UInt256 hash, int index) throws RpcException, IOException
 	{
-		JObject result = rpc.call("gettxout", new JString(hash.toString()), new JNumber(index));
-		return result != null;
+		return getUnspent(hash, index) != null;
 	}
 
 	@Override
@@ -163,12 +139,7 @@ public class RpcBlockchain extends Blockchain
 	@Override
 	public TransactionOutput getUnspent(UInt256 hash, int index) throws RpcException, IOException
 	{
-		JObject result = rpc.call("gettxout", new JString(hash.toString()), new JNumber(index));
-		TransactionOutput output = new TransactionOutput();
-		output.assetId = UInt256.parse(result.get("asset").asString());
-		output.value = Fixed8.parse(result.get("value").asString());
-		output.scriptHash = Wallet.toScriptHash(result.get("address").asString());
-		return output;
+		return rpc.getTxOut(hash, index);
 	}
 
 	@Override

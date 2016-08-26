@@ -1,5 +1,6 @@
 package AntShares.Core;
 
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
@@ -9,6 +10,7 @@ import org.bouncycastle.math.ec.ECPoint;
 import AntShares.*;
 import AntShares.Core.Scripts.*;
 import AntShares.Cryptography.ECC;
+import AntShares.IO.BinaryReader;
 import AntShares.IO.Json.*;
 import AntShares.Wallets.*;
 
@@ -65,16 +67,16 @@ public class SignatureContext
     {
         for (int i = 0; i < scriptHashes.length; i++)
         {
-            if (scriptHashes[i].equals(contract.getScriptHash()))
+            if (scriptHashes[i].equals(contract.scriptHash()))
             {
                 if (redeemScripts[i] == null)
-                    redeemScripts[i] = contract.RedeemScript;
+                    redeemScripts[i] = contract.redeemScript;
                 if (signatures[i] == null)
                 	signatures[i] = new HashMap<ECPoint, byte[]>();
                 signatures[i].put(pubkey, signature);
                 completed[i] |= 
-                        contract.getParameterList().length == signatures[i].size()
-                        && Arrays.stream(contract.getParameterList()).allMatch(
+                        contract.parameterList().length == signatures[i].size()
+                        && Arrays.stream(contract.parameterList()).allMatch(
                                 p -> p == ContractParameterType.Signature);
                 return true;
             }
@@ -87,36 +89,44 @@ public class SignatureContext
      *  <param name="json">json对象</param>
      *  <returns>返回上下文</returns>
      */
-    public static SignatureContext FromJson(JObject json)
+    public static SignatureContext fromJson(JObject json)
     {
-    	//TODO
-//        String typename = String.Format("{0}.{1}", typeof(SignatureContext).Namespace, json["type"].AsString());
-//        Signable signable = Assembly.GetExecutingAssembly().CreateInstance(typename) as Signable;
-//        using (MemoryStream ms = new MemoryStream(json["hex"].AsString().HexToBytes(), false))
-//        using (BinaryReader reader = new BinaryReader(ms, Encoding.UTF8))
-//        {
-//            signable.DeserializeUnsigned(reader);
-//        }
-//        SignatureContext context = new SignatureContext(signable);
-//        JArray scripts = (JArray)json["scripts"];
-//        for (int i = 0; i < scripts.Count; i++)
-//        {
-//            if (scripts[i] != null)
-//            {
-//                context.redeemScripts[i] = scripts[i]["redeem_script"].AsString().HexToBytes();
-//                context.signatures[i] = new Dictionary<ECPoint, byte[]>();
-//                JArray sigs = (JArray)scripts[i]["signatures"];
-//                for (int j = 0; j < sigs.Count; j++)
-//                {
-//                    ECPoint pubkey = ECPoint.DecodePoint(sigs[j]["pubkey"].AsString().HexToBytes(), ECCurve.Secp256r1);
-//                    byte[] signature = sigs[j]["signature"].AsString().HexToBytes();
-//                    context.signatures[i].Add(pubkey, signature);
-//                }
-//                context.completed[i] = scripts[i]["completed"].AsBoolean();
-//            }
-//        }
-//        return context;
-        return null;
+        String typename = "AntShares.Core." + json.get("type").asString();
+        Signable signable;
+		try
+		{
+			signable = (Signable) Class.forName(typename).newInstance();
+	        try (ByteArrayInputStream ms = new ByteArrayInputStream(Helper.hexToBytes(json.get("hex").asString())))
+	        {
+		        try (BinaryReader reader = new BinaryReader(ms))
+		        {
+		            signable.deserializeUnsigned(reader);
+		        }
+	        }
+	    }
+		catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException ex)
+		{
+			throw new IllegalArgumentException(ex);
+		}
+        SignatureContext context = new SignatureContext(signable);
+        JArray scripts = (JArray)json.get("scripts");
+        for (int i = 0; i < scripts.size(); i++)
+        {
+            if (scripts.get(i) != null)
+            {
+                context.redeemScripts[i] = Helper.hexToBytes(scripts.get(i).get("redeem_script").asString());
+                context.signatures[i] = new HashMap<ECPoint, byte[]>();
+                JArray sigs = (JArray)scripts.get(i).get("signatures");
+                for (int j = 0; j < sigs.size(); j++)
+                {
+                    ECPoint pubkey = ECC.secp256r1.getCurve().decodePoint(Helper.hexToBytes(sigs.get(j).get("pubkey").asString()));
+                    byte[] signature = Helper.hexToBytes(sigs.get(j).get("signature").asString());
+                    context.signatures[i].put(pubkey, signature);
+                }
+                context.completed[i] = scripts.get(i).get("completed").asBoolean();
+            }
+        }
+        return context;
     }
 
     /**
@@ -145,9 +155,7 @@ public class SignatureContext
 
     public static SignatureContext parse(String value)
     {
-        //return FromJson(JObject.Parse(value));
-    	//TODO
-    	return null;
+        return fromJson(JObject.parse(value));
     }
 
     /**

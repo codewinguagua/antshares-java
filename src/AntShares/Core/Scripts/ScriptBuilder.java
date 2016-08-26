@@ -64,7 +64,7 @@ public class ScriptBuilder implements AutoCloseable
     		return add(ScriptOp.OP_1NEGATE);
     	if (number.equals(BigInteger.ZERO))
     		return add(ScriptOp.OP_0);
-    	if (number.compareTo(BigInteger.ZERO) > 0 && number.compareTo(new BigInteger("16")) <= 0)
+    	if (number.compareTo(BigInteger.ZERO) > 0 && number.compareTo(BigInteger.valueOf(16)) <= 0)
     		return add((byte)(ScriptOp.OP_1.getByte() - 1 + number.byteValue()));
         return push(number.toByteArray());
     }

@@ -85,7 +85,7 @@ public class UserWallet extends Wallet
     {
         AntShares.Wallets.Account account = super.createAccount(privateKey);
         OnCreateAccount(account);
-        addContract(SignatureContract.Create(account.PublicKey));
+        addContract(SignatureContract.create(account.publicKey));
         return account;
     }
 

@@ -83,7 +83,8 @@ public class Block extends Inventory
     /**
      *  资产清单的类型
      */
-    @Override public InventoryType getInventoryType() { return InventoryType.Block; }
+    @Override
+	public InventoryType inventoryType() { return InventoryType.Block; }
 
     /**
      *  返回当前Block对象是否为区块头
@@ -129,7 +130,7 @@ public class Block extends Inventory
         {
             if (transactions[0].type != TransactionType.MinerTransaction || Arrays.stream(transactions).skip(1).anyMatch(p -> p.type == TransactionType.MinerTransaction))
                 throw new IOException();
-            if (!merkleRoot.equals(MerkleTree.ComputeRoot(Arrays.stream(transactions).map(p -> p.hash()).toArray(UInt256[]::new))))
+            if (!merkleRoot.equals(MerkleTree.computeRoot(Arrays.stream(transactions).map(p -> p.hash()).toArray(UInt256[]::new))))
                 throw new IOException();
         }
     }
@@ -213,11 +214,17 @@ public class Block extends Inventory
     {
         if (prevBlock.equals(UInt256.ZERO))
             return new UInt160[] { Script.toScriptHash(script.redeemScript) };
-        //TODO
-//        Block prev_header = Blockchain.Default.GetHeader(PrevBlock);
-//        if (prev_header == null) throw new UnsupportedOperationException();
-//        return new UInt160[] { prev_header.NextMiner };
-        return new UInt160[0];
+        Block prev_header;
+		try
+		{
+			prev_header = Blockchain.current().getHeader(prevBlock);
+		}
+		catch (Exception ex)
+		{
+			throw new IllegalStateException(ex);
+		}
+        if (prev_header == null) throw new IllegalStateException();
+        return new UInt160[] { prev_header.nextMiner };
     }
 
     /**
@@ -225,7 +232,7 @@ public class Block extends Inventory
      */
     public void rebuildMerkleRoot()
     {
-        merkleRoot = MerkleTree.ComputeRoot(Arrays.stream(transactions).map(p -> p.hash()).toArray(UInt256[]::new));
+        merkleRoot = MerkleTree.computeRoot(Arrays.stream(transactions).map(p -> p.hash()).toArray(UInt256[]::new));
     }
 
     /**

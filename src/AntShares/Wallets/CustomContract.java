@@ -1,43 +1,55 @@
 package AntShares.Wallets;
 
+import java.io.IOException;
+
 import AntShares.UInt160;
 import AntShares.IO.*;
 
 public class CustomContract extends Contract
 {
     private ContractParameterType[] parameterList;
-
-    public CustomContract(ContractParameterType[] parameterList2, byte[] redeemScript, UInt160 publicKeyHash) {
-        this.parameterList = parameterList2;
-        RedeemScript = redeemScript;
-        PublicKeyHash = publicKeyHash;
-    }
-
+    
     @Override
-    public ContractParameterType[] getParameterList() {
+    public ContractParameterType[] parameterList()
+    {
         return parameterList;
     }
 
-    public static CustomContract Create(UInt160 publicKeyHash, ContractParameterType[] parameterList, byte[] redeemScript)
+    public static CustomContract create(UInt160 publicKeyHash, ContractParameterType[] parameterList, byte[] redeemScript)
     {
-        return new CustomContract(parameterList, redeemScript, publicKeyHash);
+    	CustomContract contract = new CustomContract();
+    	contract.parameterList = parameterList;
+    	contract.redeemScript = redeemScript;
+    	contract.publicKeyHash = publicKeyHash;
+        return contract;
     }
 
     @Override
-    public void deserialize(BinaryReader reader)
+    public void deserialize(BinaryReader reader) throws IOException
     {
-        // TODO
-        //parameterList = reader.ReadVarBytes().Cast<ContractParameterType>().ToArray();
-        //RedeemScript = reader.ReadVarBytes();
-        //PublicKeyHash = reader.ReadSerializable<UInt160>();
+    	byte[] buffer = reader.readVarBytes();
+    	parameterList = new ContractParameterType[buffer.length];
+    	for (int i = 0; i < parameterList.length; i++)
+    		parameterList[i] = ContractParameterType.values()[buffer[i]];
+        redeemScript = reader.readVarBytes();
+        try
+        {
+			publicKeyHash = reader.readSerializable(UInt160.class);
+		}
+        catch (InstantiationException | IllegalAccessException ex)
+        {
+			throw new RuntimeException(ex);
+		}
     }
 
     @Override
-    public void serialize(BinaryWriter writer)
+    public void serialize(BinaryWriter writer) throws IOException
     {
-        // TODO
-//        writer.WriteVarBytes(parameterList.Cast<byte>().ToArray());
-//        writer.WriteVarBytes(RedeemScript);
-//        writer.Write(PublicKeyHash);
+    	byte[] buffer = new byte[parameterList.length];
+    	for (int i = 0; i < buffer.length; i++)
+    		buffer[i] = (byte)parameterList[i].ordinal();
+        writer.writeVarBytes(buffer);
+        writer.writeVarBytes(redeemScript);
+        writer.writeSerializable(publicKeyHash);
     }
 }

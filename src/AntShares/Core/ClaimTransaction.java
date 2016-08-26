@@ -1,9 +1,11 @@
 package AntShares.Core;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
-import AntShares.UInt160;
+import AntShares.*;
 import AntShares.IO.*;
 import AntShares.IO.Json.*;
 
@@ -35,8 +37,26 @@ public class ClaimTransaction extends Transaction
 	@Override
 	public UInt160[] getScriptHashesForVerifying()
 	{
-		//TODO
-		return super.getScriptHashesForVerifying();
+        HashSet<UInt160> hashes = new HashSet<UInt160>(Arrays.asList(super.getScriptHashesForVerifying()));
+        for (Entry<UInt256, List<TransactionInput>> group : Arrays.stream(claims).collect(Collectors.groupingBy(p -> p.prevHash)).entrySet())
+        {
+            Transaction tx;
+			try
+			{
+				tx = Blockchain.current().getTransaction(group.getKey());
+			}
+			catch (Exception ex)
+			{
+				throw new IllegalStateException(ex);
+			}
+            if (tx == null) throw new IllegalStateException();
+            for (TransactionInput claim : group.getValue())
+            {
+                if (tx.outputs.length <= claim.prevIndex) throw new IllegalStateException();
+                hashes.add(tx.outputs[claim.prevIndex].scriptHash);
+            }
+        }
+        return hashes.stream().sorted().toArray(UInt160[]::new);
 	}
 	
 	@Override

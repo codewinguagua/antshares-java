@@ -1,11 +1,8 @@
 package AntShares.Wallets;
 
-import AntShares.Fixed8;
-import AntShares.UInt160;
-import AntShares.UInt256;
+import AntShares.*;
 import AntShares.Core.TransactionInput;
-import AntShares.IO.Caching.ITrackable;
-import AntShares.IO.Caching.TrackState;
+import AntShares.IO.Caching.*;
 
 public class Coin implements ITrackable<TransactionInput>
 {
@@ -14,19 +11,18 @@ public class Coin implements ITrackable<TransactionInput>
     public Fixed8 value;
     public UInt160 scriptHash;
 
-    // TODO [NonSerialized]
+    //[NonSerialized]
     private String _address = null;
-
     public String address()
     {
         if (_address == null)
         {
-            // TODO _address = Wallet.ToAddress(ScriptHash);
+            _address = Wallet.toAddress(scriptHash);
         }
         return _address;
     }
 
-    // TODO [NonSerialized]
+    //[NonSerialized]
     private CoinState state;
     public CoinState getState()
     {
@@ -58,27 +54,22 @@ public class Coin implements ITrackable<TransactionInput>
         return input.hashCode();
     }
 
-    // TODO
-    //TransactionInput ITrackable<TransactionInput>.Key => Input;
-
     @Override
-    public TransactionInput getKey() {
-        // TODO Auto-generated method stub
-        return null;
+    public TransactionInput key()
+    {
+        return input;
     }
 
-    // TODO
-    //TrackState ITrackable<TransactionInput>.TrackState { get; set; }
-
+    private TrackState trackState;
     @Override
-    public TrackState getTrackState() {
-        // TODO Auto-generated method stub
-        return null;
+    public TrackState getTrackState()
+    {
+        return trackState;
     }
 
     @Override
-    public void setTrackState(TrackState state) {
-        // TODO Auto-generated method stub
-        
+    public void setTrackState(TrackState state)
+    {
+    	trackState = state;
     }
 }
