@@ -144,7 +144,7 @@ public class Block extends Inventory
             merkleRoot = reader.readSerializable(UInt256.class);
             timestamp = reader.readInt();
             height = reader.readInt();
-            nonce = reader.readInt();
+            nonce = reader.readLong();
 			nextMiner = reader.readSerializable(UInt160.class);
 	        transactions = new Transaction[0];
 		}

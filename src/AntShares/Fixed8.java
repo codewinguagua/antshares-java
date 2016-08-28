@@ -24,6 +24,11 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
     public static final Fixed8 SATOSHI = new Fixed8(1);
 
     public static final Fixed8 ZERO = new Fixed8(0);
+    
+    public Fixed8()
+    {
+    	this(0);
+    }
 
     public Fixed8(long data)
     {
