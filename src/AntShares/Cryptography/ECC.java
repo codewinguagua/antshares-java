@@ -2,8 +2,6 @@ package AntShares.Cryptography;
 
 import java.security.*;
 
-import javax.security.auth.DestroyFailedException;
-
 import org.bouncycastle.asn1.x9.*;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.math.ec.ECPoint;
@@ -25,31 +23,10 @@ public class ECC
 	
 	public static byte[] generateKey()
 	{
-		KeyPair keyPair = null;
-		try
-		{
-			KeyPairGenerator g = KeyPairGenerator.getInstance("ECDSA", "BC");
-			g.initialize(256);
-			keyPair = g.generateKeyPair();
-			return keyPair.getPrivate().getEncoded();
-		}
-		catch (NoSuchAlgorithmException | NoSuchProviderException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-		finally
-		{
-			if (keyPair != null)
-			{
-				try
-				{
-					keyPair.getPrivate().destroy();
-				}
-				catch (DestroyFailedException ex)
-				{
-				}
-			}
-		}
+		byte[] key = new byte[32];
+		SecureRandom sr = new SecureRandom();
+		sr.nextBytes(key);
+		return key;
 	}
 	
 	public static String toString(ECPoint p)

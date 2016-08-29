@@ -30,11 +30,11 @@ public class AES
 			SecretKey secretKey = new SecretKeySpec(key, KEY_ALGORITHM);
 			AlgorithmParameters params = AlgorithmParameters.getInstance(KEY_ALGORITHM);
 			params.init(new IvParameterSpec(iv));
-			Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+			Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM, "BC");
 			cipher.init(Cipher.DECRYPT_MODE, secretKey, params);
 			return cipher.doFinal(encryptedData);
 		}
-		catch (NoSuchAlgorithmException | InvalidParameterSpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException ex)
+		catch (NoSuchAlgorithmException | InvalidParameterSpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | NoSuchProviderException ex)
 		{
 			throw new RuntimeException(ex);
 		}
@@ -49,11 +49,11 @@ public class AES
 			SecretKey secretKey = new SecretKeySpec(key, KEY_ALGORITHM);
 			AlgorithmParameters params = AlgorithmParameters.getInstance(KEY_ALGORITHM);
 			params.init(new IvParameterSpec(iv));
-			Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+			Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM, "BC");
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey, params);
 			return cipher.doFinal(data);
 		}
-		catch (NoSuchAlgorithmException | InvalidParameterSpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException ex)
+		catch (NoSuchAlgorithmException | InvalidParameterSpecException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException | NoSuchProviderException ex)
 		{
 			throw new RuntimeException(ex);
 		}
