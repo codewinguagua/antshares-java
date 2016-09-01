@@ -106,13 +106,12 @@ public class Fixed8 implements Comparable<Fixed8>, Serializable
     
     public static <T> Fixed8 sum(T[] values, Function<T, Fixed8> selector)
     {
-        long sum = 0;
-        // TODO checked
+    	Fixed8 sum = Fixed8.ZERO;
         for (T item : values)
         {
-            sum += selector.apply(item).value;
+            sum = sum.add(selector.apply(item));
         }
-        return new Fixed8(sum);
+        return sum;
     }
 
     @Override

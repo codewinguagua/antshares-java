@@ -309,15 +309,23 @@ public abstract class Wallet implements AutoCloseable
 
     public Coin[] findUnspentCoins(UInt256 asset_id, Fixed8 amount)
     {
-        synchronized (coins)
-        {
-            return findUnspentCoins(coins.stream().filter(p -> p.getState() == CoinState.Unspent), asset_id, amount);
-        }
+        return findUnspentCoins(asset_id, amount, null);
+    }
+    
+    public Coin[] findUnspentCoins(UInt256 asset_id, Fixed8 amount, UInt160 from)
+    {
+    	synchronized (coins)
+    	{
+    		Stream<Coin> unspents = coins.stream().filter(p -> p.getState() == CoinState.Unspent);
+    		if (from != null)
+    			unspents = unspents.filter(p -> p.scriptHash.equals(from));
+    		return findUnspentCoins(unspents, asset_id, amount);
+    	}
     }
 
     protected static Coin[] findUnspentCoins(Stream<Coin> unspents, UInt256 asset_id, Fixed8 amount)
     {
-        Coin[] unspents_asset = unspents.filter(p -> p.assetId == asset_id).toArray(Coin[]::new);
+        Coin[] unspents_asset = unspents.filter(p -> p.assetId.equals(asset_id)).toArray(Coin[]::new);
         Fixed8 sum = Fixed8.sum(unspents_asset, p -> p.value);
         if (sum.compareTo(amount) < 0) return null;
         if (sum.equals(amount)) return unspents_asset;
@@ -438,7 +446,7 @@ public abstract class Wallet implements AutoCloseable
     {
         if (wif == null) throw new NullPointerException();
         byte[] data = Base58.decode(wif);
-        if (data.length != 38 || data[0] != 0x80 || data[33] != 0x01)
+        if (data.length != 38 || data[0] != (byte)0x80 || data[33] != 0x01)
             throw new IllegalArgumentException();
         byte[] checksum = Digest.sha256(Digest.sha256(data, 0, data.length - 4));
         for (int i = 0; i < 4; i++)
@@ -486,8 +494,13 @@ public abstract class Wallet implements AutoCloseable
     protected abstract Contract[] loadContracts();
 
     protected abstract byte[] loadStoredData(String name);
-
+    
     public <T extends Transaction> T makeTransaction(T tx, Fixed8 fee)
+    {
+    	return makeTransaction(tx, fee, null);
+    }
+
+    public <T extends Transaction> T makeTransaction(T tx, Fixed8 fee, UInt160 from)
     {
         if (tx.outputs == null) throw new IllegalArgumentException();
         if (tx.attributes == null) tx.attributes = new TransactionAttribute[0];
@@ -500,7 +513,7 @@ public abstract class Wallet implements AutoCloseable
         	value = value.add(fee);
         	pay_total.put(Blockchain.ANTCOIN.hash(), value);
         }
-        Map<UInt256, Coin[]> pay_coins = pay_total.entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> findUnspentCoins(p.getKey(), p.getValue())));
+        Map<UInt256, Coin[]> pay_coins = pay_total.entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> findUnspentCoins(p.getKey(), p.getValue(), from)));
         if (pay_coins.values().stream().anyMatch(p -> p == null)) return null;
         Map<UInt256, Fixed8> input_sum = pay_coins.entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> Fixed8.sum(p.getValue(), c -> c.value)));
         UInt160 change_address = getChangeAddress();

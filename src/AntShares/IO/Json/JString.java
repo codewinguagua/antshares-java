@@ -10,7 +10,7 @@ public class JString extends JObject
 
     public JString(String val)
     {
-        if (_value == null)
+        if (val == null)
             throw new NullPointerException();
         this._value = val;
     }
