@@ -21,10 +21,8 @@ public class UInt160 extends UIntBase implements Comparable<UInt160>
         byte[] y = other.data_bytes;
         for (int i = x.length - 1; i >= 0; i--)
         {
-            if (x[i] > y[i])
-                return 1;
-            if (x[i] < y[i])
-                return -1;
+        	int r = Byte.toUnsignedInt(x[i]) - Byte.toUnsignedInt(y[i]);
+        	if (r != 0) return r;
         }
         return 0;
     }

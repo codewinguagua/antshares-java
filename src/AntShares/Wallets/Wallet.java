@@ -516,7 +516,7 @@ public abstract class Wallet implements AutoCloseable
         Map<UInt256, Coin[]> pay_coins = pay_total.entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> findUnspentCoins(p.getKey(), p.getValue(), from)));
         if (pay_coins.values().stream().anyMatch(p -> p == null)) return null;
         Map<UInt256, Fixed8> input_sum = pay_coins.entrySet().stream().collect(Collectors.toMap(p -> p.getKey(), p -> Fixed8.sum(p.getValue(), c -> c.value)));
-        UInt160 change_address = getChangeAddress();
+        UInt160 change_address = from == null ? getChangeAddress() : from;
         List<TransactionOutput> outputs_new = new ArrayList<TransactionOutput>(Arrays.asList(tx.outputs));
         for (Entry<UInt256, Fixed8> entry : input_sum.entrySet())
         {

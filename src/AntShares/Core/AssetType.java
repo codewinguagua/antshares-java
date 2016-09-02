@@ -26,11 +26,11 @@ public enum AssetType
     /**
      * π…»®
      */
-    Share(DutyFlag.value() | 0x10),
+    Share(Byte.toUnsignedInt(DutyFlag.value()) | 0x10),
 
-    Invoice(DutyFlag.value() | 0x18),
+    Invoice(Byte.toUnsignedInt(DutyFlag.value()) | 0x18),
 
-    Token(CreditFlag.value() | 0x20);
+    Token(Byte.toUnsignedInt(CreditFlag.value()) | 0x20);
 
     private byte value;
 
