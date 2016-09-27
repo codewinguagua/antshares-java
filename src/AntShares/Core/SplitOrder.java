@@ -1,4 +1,4 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import java.io.IOException;
 
@@ -6,20 +6,20 @@ import AntShares.*;
 import AntShares.IO.*;
 
 /**
- *  ²¿·Ö³É½»µÄ¶©µ¥
+ *  éƒ¨åˆ†æˆäº¤çš„è®¢å•
  */
 public class SplitOrder implements Serializable
 {
     /**
-     *  ÂòÈë»òÂô³öµÄÊıÁ¿
+     *  ä¹°å…¥æˆ–å–å‡ºçš„æ•°é‡
      */
     public Fixed8 amount;
     /**
-     *  ¼Û¸ñ
+     *  ä»·æ ¼
      */
     public Fixed8 price;
     /**
-     *  Î¯ÍĞÈËµÄºÏÔ¼É¢ÁĞ
+     *  å§”æ‰˜äººçš„åˆçº¦æ•£åˆ—
      */
     public UInt160 client;
     

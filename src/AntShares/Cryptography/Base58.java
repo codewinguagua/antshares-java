@@ -1,19 +1,19 @@
-package AntShares.Cryptography;
+ï»¿package AntShares.Cryptography;
 
 import java.math.BigInteger;
 
 public class Base58
 {
     /**
-     *  base58±àÂëµÄ×ÖÄ¸±í
+     *  base58ç¼–ç çš„å­—æ¯è¡¨
      */
     public static final String ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     private static final BigInteger BASE = BigInteger.valueOf(ALPHABET.length());
     
     /**
-     *  ½âÂë
-     *  <param name="input">Òª½âÂëµÄ×Ö·û´®</param>
-     *  <returns>·µ»Ø½âÂëºóµÄ×Ö½ÚÊı×é</returns>
+     *  è§£ç 
+     *  <param name="input">è¦è§£ç çš„å­—ç¬¦ä¸²</param>
+     *  <returns>è¿”å›è§£ç åçš„å­—èŠ‚æ•°ç»„</returns>
      */
     public static byte[] decode(String input)
     {
@@ -35,9 +35,9 @@ public class Base58
     }
 
     /**
-     *  ±àÂë
-     *  <param name="input">Òª±àÂëµÄ×Ö½ÚÊı×é</param>
-     *  <returns>·µ»Ø±àÂëºóµÄ×Ö·û´®</returns>
+     *  ç¼–ç 
+     *  <param name="input">è¦ç¼–ç çš„å­—èŠ‚æ•°ç»„</param>
+     *  <returns>è¿”å›ç¼–ç åçš„å­—ç¬¦ä¸²</returns>
      */
     public static String encode(byte[] input)
     {

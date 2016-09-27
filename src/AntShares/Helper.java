@@ -1,4 +1,4 @@
-package AntShares;
+﻿package AntShares;
 
 public class Helper
 {

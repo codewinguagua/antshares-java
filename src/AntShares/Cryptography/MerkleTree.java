@@ -1,18 +1,18 @@
-package AntShares.Cryptography;
+ï»¿package AntShares.Cryptography;
 
 import java.util.Arrays;
 
 import AntShares.UInt256;
 
 /**
- *  ¹şÏ£Ê÷
+ *  å“ˆå¸Œæ ‘
  */
 public class MerkleTree
 {
     /**
-     *  ¼ÆËã¸ù½ÚµãµÄÖµ
-     *  <param name="hashes">×Ó½ÚµãÁĞ±í</param>
-     *  <returns>·µ»Ø¼ÆËãµÄ½á¹û</returns>
+     *  è®¡ç®—æ ¹èŠ‚ç‚¹çš„å€¼
+     *  <param name="hashes">å­èŠ‚ç‚¹åˆ—è¡¨</param>
+     *  <returns>è¿”å›è®¡ç®—çš„ç»“æœ</returns>
      */
     public static UInt256 computeRoot(UInt256[] hashes)
     {

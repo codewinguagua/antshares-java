@@ -1,18 +1,18 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import AntShares.*;
 
 /**
- *  Í¶Æ±ĞÅÏ¢
+ *  æŠ•ç¥¨ä¿¡æ¯
  */
 public class Vote
 {
     /**
-     *  ±¨Ãû±íµÄÉ¢ÁĞÖµÁĞ±í
+     *  æŠ¥åè¡¨çš„æ•£åˆ—å€¼åˆ—è¡¨
      */
     public UInt256[] enrollments;
     /**
-     *  Ñ¡Æ±µÄÊıÄ¿
+     *  é€‰ç¥¨çš„æ•°ç›®
      */
     public Fixed8 count;
 }

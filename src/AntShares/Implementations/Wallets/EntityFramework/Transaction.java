@@ -1,4 +1,4 @@
-package AntShares.Implementations.Wallets.EntityFramework;
+﻿package AntShares.Implementations.Wallets.EntityFramework;
 
 import java.util.Date;
 

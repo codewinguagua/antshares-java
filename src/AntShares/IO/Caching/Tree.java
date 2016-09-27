@@ -1,4 +1,4 @@
-package AntShares.IO.Caching;
+﻿package AntShares.IO.Caching;
 
 import java.util.ArrayList;
 import java.util.Arrays;

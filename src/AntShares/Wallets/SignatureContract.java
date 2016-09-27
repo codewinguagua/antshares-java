@@ -1,4 +1,4 @@
-package AntShares.Wallets;
+ï»¿package AntShares.Wallets;
 
 import java.io.IOException;
 
@@ -8,14 +8,14 @@ import AntShares.Core.Scripts.*;
 import AntShares.IO.*;
 
 /**
- *  ¼òµ¥Ç©ÃûºÏÔ¼£¬¸ÃºÏÔ¼Ö»ĞèÒªÒ»¸öÖ¸¶¨ÕË»§µÄÇ©Ãû¼´¿ÉÉúĞ§
+ *  ç®€å•ç­¾ååˆçº¦ï¼Œè¯¥åˆçº¦åªéœ€è¦ä¸€ä¸ªæŒ‡å®šè´¦æˆ·çš„ç­¾åå³å¯ç”Ÿæ•ˆ
  */
 public class SignatureContract extends Contract
 {
     private ECPoint publicKey;
 
     /**
-     *  ºÏÔ¼µÄĞÎÊ½²ÎÊıÁĞ±í
+     *  åˆçº¦çš„å½¢å¼å‚æ•°åˆ—è¡¨
      */
     @Override
     public ContractParameterType[] parameterList()
@@ -24,9 +24,9 @@ public class SignatureContract extends Contract
     }
 
     /**
-     *  ÓÃÖ¸¶¨µÄ¹«Ô¿´´½¨Ò»¸öSignatureContractÊµÀı
-     *  <param name="publicKey">ÓÃÓÚ´´½¨SignatureContractÊµÀıµÄ¹«Ô¿</param>
-     *  <returns>·µ»ØÒ»¸ö¼òµ¥Ç©ÃûºÏÔ¼</returns>
+     *  ç”¨æŒ‡å®šçš„å…¬é’¥åˆ›å»ºä¸€ä¸ªSignatureContractå®ä¾‹
+     *  <param name="publicKey">ç”¨äºåˆ›å»ºSignatureContractå®ä¾‹çš„å…¬é’¥</param>
+     *  <returns>è¿”å›ä¸€ä¸ªç®€å•ç­¾ååˆçº¦</returns>
      */
     public static SignatureContract create(ECPoint publicKey)
     {
@@ -38,9 +38,9 @@ public class SignatureContract extends Contract
     }
 
     /**
-     *  ÓÃÖ¸¶¨µÄ¹«Ô¿´´½¨Ò»¶ÎSignatureContractºÏÔ¼µÄ½Å±¾
-     *  <param name="publicKey">ÓÃÓÚ´´½¨SignatureContractºÏÔ¼½Å±¾µÄ¹«Ô¿</param>
-     *  <returns>·µ»ØÒ»¶Î¼òµ¥Ç©ÃûºÏÔ¼µÄ½Å±¾´úÂë</returns>
+     *  ç”¨æŒ‡å®šçš„å…¬é’¥åˆ›å»ºä¸€æ®µSignatureContractåˆçº¦çš„è„šæœ¬
+     *  <param name="publicKey">ç”¨äºåˆ›å»ºSignatureContractåˆçº¦è„šæœ¬çš„å…¬é’¥</param>
+     *  <returns>è¿”å›ä¸€æ®µç®€å•ç­¾ååˆçº¦çš„è„šæœ¬ä»£ç </returns>
      */
     public static byte[] createSignatureRedeemScript(ECPoint publicKey)
     {
@@ -53,8 +53,8 @@ public class SignatureContract extends Contract
     }
 
     /**
-     *  ·´ĞòÁĞ»¯
-     *  <param name="reader">·´ĞòÁĞ»¯µÄÊı¾İÀ´Ô´</param>
+     *  ååºåˆ—åŒ–
+     *  <param name="reader">ååºåˆ—åŒ–çš„æ•°æ®æ¥æº</param>
      * @throws IOException 
      */
     @Override
@@ -66,8 +66,8 @@ public class SignatureContract extends Contract
     }
 
     /**
-     *  ĞòÁĞ»¯
-     *  <param name="writer">´æ·ÅĞòÁĞ»¯ºóµÄ½á¹û</param>
+     *  åºåˆ—åŒ–
+     *  <param name="writer">å­˜æ”¾åºåˆ—åŒ–åçš„ç»“æœ</param>
      * @throws IOException 
      */
     @Override

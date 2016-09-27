@@ -1,4 +1,4 @@
-package AntShares.Implementations.Blockchains.RPC;
+﻿package AntShares.Implementations.Blockchains.RPC;
 
 import java.io.IOException;
 import java.util.*;

@@ -1,29 +1,29 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import java.util.EnumSet;
 
 /**
- * ±íÊ¾ÌØ¶¨Çø¿éÁ´ÊµÏÖËùÌá¹©µÄ¹¦ÄÜ
+ * è¡¨ç¤ºç‰¹å®šåŒºå—é“¾å®ç°æ‰€æä¾›çš„åŠŸèƒ½
  */
 public enum BlockchainAbility
 {
     /**
-     *  ±ØĞëÊµÏÖµÄĞéº¯Êı£ºGetBlockAndHeight, GetBlockHeight, GetNextBlock, GetNextBlockHash, GetSysFeeAmount
+     *  å¿…é¡»å®ç°çš„è™šå‡½æ•°ï¼šGetBlockAndHeight, GetBlockHeight, GetNextBlock, GetNextBlockHash, GetSysFeeAmount
      */
     BlockIndexes(0x01),
 
     /**
-     *  ±ØĞëÊµÏÖµÄĞéº¯Êı£ºContainsAsset, GetAssets, GetEnrollments
+     *  å¿…é¡»å®ç°çš„è™šå‡½æ•°ï¼šContainsAsset, GetAssets, GetEnrollments
      */
     TransactionIndexes(0x02),
 
     /**
-     *  ±ØĞëÊµÏÖµÄĞéº¯Êı£ºContainsUnspent, GetUnclaimed, GetUnspent, GetVotes, IsDoubleSpend
+     *  å¿…é¡»å®ç°çš„è™šå‡½æ•°ï¼šContainsUnspent, GetUnclaimed, GetUnspent, GetVotes, IsDoubleSpend
      */
     UnspentIndexes(0x04),
 
     /**
-     *  ±ØĞëÊµÏÖµÄĞéº¯Êı£ºGetQuantityIssued
+     *  å¿…é¡»å®ç°çš„è™šå‡½æ•°ï¼šGetQuantityIssued
      */
     Statistics(0x08);
 

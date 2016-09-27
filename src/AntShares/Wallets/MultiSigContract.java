@@ -1,4 +1,4 @@
-package AntShares.Wallets;
+ï»¿package AntShares.Wallets;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -12,7 +12,7 @@ import AntShares.Core.Scripts.*;
 import AntShares.IO.*;
 
 /**
- *  ¶à·½Ç©ÃûºÏÔ¼£¬¸ÃºÏÔ¼ĞèÒªÖ¸¶¨µÄN¸öÕË»§ÖĞÖÁÉÙM¸öÕË»§Ç©Ãûºó²ÅÄÜÉúĞ§
+ *  å¤šæ–¹ç­¾ååˆçº¦ï¼Œè¯¥åˆçº¦éœ€è¦æŒ‡å®šçš„Nä¸ªè´¦æˆ·ä¸­è‡³å°‘Mä¸ªè´¦æˆ·ç­¾ååæ‰èƒ½ç”Ÿæ•ˆ
  */
 public class MultiSigContract extends Contract
 {
@@ -20,7 +20,7 @@ public class MultiSigContract extends Contract
     private ECPoint[] publicKeys;
 
     /**
-     *  ºÏÔ¼µÄĞÎÊ½²ÎÊıÁĞ±í
+     *  åˆçº¦çš„å½¢å¼å‚æ•°åˆ—è¡¨
      */
     @Override
     public ContractParameterType[] parameterList()
@@ -29,11 +29,11 @@ public class MultiSigContract extends Contract
     }
 
     /**
-     *  ÓÃÖ¸¶¨µÄN¸ö¹«Ô¿´´½¨Ò»¸öMultiSigContractÊµÀı£¬²¢Ö¸¶¨ÖÁÉÙĞèÒªM¸öÕË»§µÄÇ©Ãû
-     *  <param name="publicKeyHash">ºÏÔ¼ËùÊôµÄÕË»§</param>
-     *  <param name="m">Ò»¸öÕûÊı£¬¸ÃºÏÔ¼ÖÁÉÙĞèÒª°üº¬´ËÊıÁ¿µÄÇ©Ãû²ÅÄÜÉúĞ§</param>
-     *  <param name="publicKeys">¹«Ô¿ÁĞ±í£¬¸ÃºÏÔ¼ĞèÒª´ËÁĞ±íÖĞÖÁÉÙm¸öÕË»§Ç©Ãûºó²ÅÄÜÉúĞ§</param>
-     *  <returns>·µ»ØÒ»¸ö¶à·½Ç©ÃûºÏÔ¼</returns>
+     *  ç”¨æŒ‡å®šçš„Nä¸ªå…¬é’¥åˆ›å»ºä¸€ä¸ªMultiSigContractå®ä¾‹ï¼Œå¹¶æŒ‡å®šè‡³å°‘éœ€è¦Mä¸ªè´¦æˆ·çš„ç­¾å
+     *  <param name="publicKeyHash">åˆçº¦æ‰€å±çš„è´¦æˆ·</param>
+     *  <param name="m">ä¸€ä¸ªæ•´æ•°ï¼Œè¯¥åˆçº¦è‡³å°‘éœ€è¦åŒ…å«æ­¤æ•°é‡çš„ç­¾åæ‰èƒ½ç”Ÿæ•ˆ</param>
+     *  <param name="publicKeys">å…¬é’¥åˆ—è¡¨ï¼Œè¯¥åˆçº¦éœ€è¦æ­¤åˆ—è¡¨ä¸­è‡³å°‘mä¸ªè´¦æˆ·ç­¾ååæ‰èƒ½ç”Ÿæ•ˆ</param>
+     *  <returns>è¿”å›ä¸€ä¸ªå¤šæ–¹ç­¾ååˆçº¦</returns>
      */
     public static MultiSigContract create(UInt160 publicKeyHash, int m, ECPoint ...publicKeys)
     {
@@ -46,10 +46,10 @@ public class MultiSigContract extends Contract
     }
 
     /**
-     *  ÓÃÖ¸¶¨µÄN¸ö¹«Ô¿´´½¨Ò»¶ÎMultiSigContractºÏÔ¼µÄ½Å±¾£¬²¢Ö¸¶¨ÖÁÉÙĞèÒªM¸öÕË»§µÄÇ©Ãû
-     *  <param name="m">Ò»¸öÕûÊı£¬¸ÃºÏÔ¼ÖÁÉÙĞèÒª°üº¬´ËÊıÁ¿µÄÇ©Ãû²ÅÄÜÉúĞ§</param>
-     *  <param name="publicKeys">¹«Ô¿ÁĞ±í£¬¸ÃºÏÔ¼ĞèÒª´ËÁĞ±íÖĞÖÁÉÙm¸öÕË»§Ç©Ãûºó²ÅÄÜÉúĞ§</param>
-     *  <returns>·µ»ØÒ»¶Î¶à·½Ç©ÃûºÏÔ¼µÄ½Å±¾´úÂë</returns>
+     *  ç”¨æŒ‡å®šçš„Nä¸ªå…¬é’¥åˆ›å»ºä¸€æ®µMultiSigContractåˆçº¦çš„è„šæœ¬ï¼Œå¹¶æŒ‡å®šè‡³å°‘éœ€è¦Mä¸ªè´¦æˆ·çš„ç­¾å
+     *  <param name="m">ä¸€ä¸ªæ•´æ•°ï¼Œè¯¥åˆçº¦è‡³å°‘éœ€è¦åŒ…å«æ­¤æ•°é‡çš„ç­¾åæ‰èƒ½ç”Ÿæ•ˆ</param>
+     *  <param name="publicKeys">å…¬é’¥åˆ—è¡¨ï¼Œè¯¥åˆçº¦éœ€è¦æ­¤åˆ—è¡¨ä¸­è‡³å°‘mä¸ªè´¦æˆ·ç­¾ååæ‰èƒ½ç”Ÿæ•ˆ</param>
+     *  <returns>è¿”å›ä¸€æ®µå¤šæ–¹ç­¾ååˆçº¦çš„è„šæœ¬ä»£ç </returns>
      */
     public static byte[] createMultiSigRedeemScript(int m, ECPoint ...publicKeys)
     {
@@ -69,8 +69,8 @@ public class MultiSigContract extends Contract
     }
 
     /**
-     *  ·´ĞòÁĞ»¯
-     *  <param name="reader">·´ĞòÁĞ»¯µÄÊı¾İÀ´Ô´</param>
+     *  ååºåˆ—åŒ–
+     *  <param name="reader">ååºåˆ—åŒ–çš„æ•°æ®æ¥æº</param>
      * @throws IOException 
      */
     @Override
@@ -94,8 +94,8 @@ public class MultiSigContract extends Contract
     }
 
     /**
-     *  ĞòÁĞ»¯
-     *  <param name="writer">´æ·ÅĞòÁĞ»¯ºóµÄ½á¹û</param>
+     *  åºåˆ—åŒ–
+     *  <param name="writer">å­˜æ”¾åºåˆ—åŒ–åçš„ç»“æœ</param>
      * @throws IOException 
      */
     @Override

@@ -1,4 +1,4 @@
-package AntShares.Network;
+ï»¿package AntShares.Network;
 
 import java.time.Duration;
 import java.util.*;
@@ -305,7 +305,7 @@ public class RemoteNode // TODO : IDisposable
             case "ping":
             case "pong":
             case "reject":
-                //ÔÝÊ±ºöÂÔ
+                //æš‚æ—¶å¿½ç•¥
                 break;
             case "verack":
             case "version":

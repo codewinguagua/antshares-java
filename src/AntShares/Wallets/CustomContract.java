@@ -1,4 +1,4 @@
-package AntShares.Wallets;
+﻿package AntShares.Wallets;
 
 import java.io.IOException;
 

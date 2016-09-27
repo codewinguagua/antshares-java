@@ -1,7 +1,7 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 /**
- * ×Ê²úÀà±ğ
+ * èµ„äº§ç±»åˆ«
  */
 public enum AssetType
 {
@@ -9,22 +9,22 @@ public enum AssetType
     DutyFlag(0x80),
 
     /**
-     * Ğ¡ÒÏ¹É
+     * å°èšè‚¡
      */
     AntShare(0x00),
 
     /**
-     * Ğ¡ÒÏ±Ò
+     * å°èšå¸
      */
     AntCoin(0x01),
 
     /**
-     * ·¨±Ò
+     * æ³•å¸
      */
     Currency(0x08),
 
     /**
-     * ¹ÉÈ¨
+     * è‚¡æƒ
      */
     Share(Byte.toUnsignedInt(DutyFlag.value()) | 0x10),
 

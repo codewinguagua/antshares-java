@@ -1,4 +1,4 @@
-package AntShares.Core.Scripts;
+﻿package AntShares.Core.Scripts;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

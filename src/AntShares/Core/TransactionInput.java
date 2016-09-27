@@ -1,4 +1,4 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import java.io.IOException;
 
@@ -7,23 +7,23 @@ import AntShares.IO.*;
 import AntShares.IO.Json.*;
 
 /**
- *  ½»Ò×ÊäÈë
+ *  äº¤æ˜“è¾“å…¥
  */
 public class TransactionInput implements Serializable
 {
     /**
-     *  ÒıÓÃ½»Ò×µÄÉ¢ÁĞÖµ
+     *  å¼•ç”¨äº¤æ˜“çš„æ•£åˆ—å€¼
      */
     public UInt256 prevHash;
     /**
-     *  ÒıÓÃ½»Ò×Êä³öµÄË÷Òı
+     *  å¼•ç”¨äº¤æ˜“è¾“å‡ºçš„ç´¢å¼•
      */
     public short prevIndex; // unsigned short
 
     /**
-     *  ±È½Ïµ±Ç°¶ÔÏóÓëÖ¸¶¨¶ÔÏóÊÇ·ñÏàµÈ
-     *  <param name="obj">Òª±È½ÏµÄ¶ÔÏó</param>
-     *  <returns>·µ»Ø¶ÔÏóÊÇ·ñÏàµÈ</returns>
+     *  æ¯”è¾ƒå½“å‰å¯¹è±¡ä¸æŒ‡å®šå¯¹è±¡æ˜¯å¦ç›¸ç­‰
+     *  <param name="obj">è¦æ¯”è¾ƒçš„å¯¹è±¡</param>
+     *  <returns>è¿”å›å¯¹è±¡æ˜¯å¦ç›¸ç­‰</returns>
      */
     @Override
     public boolean equals(Object obj)
@@ -36,8 +36,8 @@ public class TransactionInput implements Serializable
     }
 
     /**
-     *  »ñµÃ¶ÔÏóµÄHashCode
-     *  <returns>·µ»Ø¶ÔÏóµÄHashCode</returns>
+     *  è·å¾—å¯¹è±¡çš„HashCode
+     *  <returns>è¿”å›å¯¹è±¡çš„HashCode</returns>
      */
     @Override
     public int hashCode()
@@ -66,8 +66,8 @@ public class TransactionInput implements Serializable
 	}
 
     /**
-     *  ½«½»Ò×ÊäÈë×ª±äÎªjson¶ÔÏó
-     *  <returns>·µ»Øjson¶ÔÏó</returns>
+     *  å°†äº¤æ˜“è¾“å…¥è½¬å˜ä¸ºjsonå¯¹è±¡
+     *  <returns>è¿”å›jsonå¯¹è±¡</returns>
      */
     public JObject json()
     {

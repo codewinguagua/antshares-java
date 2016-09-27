@@ -1,4 +1,4 @@
-package AntShares.Core.Scripts;
+锘縫ackage AntShares.Core.Scripts;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import AntShares.IO.*;
 import AntShares.IO.Json.*;
 
 /**
- *  脚本
+ *  鑴氭湰
  */
 public class Script implements Serializable
 {
@@ -30,8 +30,8 @@ public class Script implements Serializable
     }
 
     /**
-     *  变成json对象
-     *  <returns>返回json对象</returns>
+     *  鍙樻垚json瀵硅薄
+     *  <returns>杩斿洖json瀵硅薄</returns>
      */
     public JObject json()
     {

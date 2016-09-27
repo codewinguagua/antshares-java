@@ -1,4 +1,4 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,13 +14,13 @@ import AntShares.IO.*;
 import AntShares.Wallets.Account;
 
 /**
- *  ÎªĞèÒªÇ©ÃûµÄÊı¾İÌá¹©Ò»¸ö½Ó¿Ú
+ *  ä¸ºéœ€è¦ç­¾åçš„æ•°æ®æä¾›ä¸€ä¸ªæ¥å£
  */
 public interface Signable extends Serializable
 {
     /**
-     *  ·´ĞòÁĞ»¯Î´Ç©ÃûµÄÊı¾İ
-     *  <param name="reader">Êı¾İÀ´Ô´</param>
+     *  ååºåˆ—åŒ–æœªç­¾åçš„æ•°æ®
+     *  <param name="reader">æ•°æ®æ¥æº</param>
      * @throws IOException 
      */
     void deserializeUnsigned(BinaryReader reader) throws IOException;
@@ -43,14 +43,14 @@ public interface Signable extends Serializable
     }
 
     /**
-     *  »ñµÃĞèÒªĞ£ÑéµÄ½Å±¾HashÖµ
-     *  <returns>·µ»ØĞèÒªĞ£ÑéµÄ½Å±¾HashÖµ</returns>
+     *  è·å¾—éœ€è¦æ ¡éªŒçš„è„šæœ¬Hashå€¼
+     *  <returns>è¿”å›éœ€è¦æ ¡éªŒçš„è„šæœ¬Hashå€¼</returns>
      */
     UInt160[] getScriptHashesForVerifying();
     
     /**
-     *  ĞòÁĞ»¯Î´Ç©ÃûµÄÊı¾İ
-     *  <param name="writer">´æ·ÅĞòÁĞ»¯ºóµÄ½á¹û</param>
+     *  åºåˆ—åŒ–æœªç­¾åçš„æ•°æ®
+     *  <param name="writer">å­˜æ”¾åºåˆ—åŒ–åçš„ç»“æœ</param>
      * @throws IOException 
      */
     void serializeUnsigned(BinaryWriter writer) throws IOException;

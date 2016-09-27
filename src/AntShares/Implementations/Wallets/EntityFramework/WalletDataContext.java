@@ -1,4 +1,4 @@
-package AntShares.Implementations.Wallets.EntityFramework;
+﻿package AntShares.Implementations.Wallets.EntityFramework;
 
 public class WalletDataContext // : DbContext
 {

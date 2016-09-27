@@ -1,4 +1,4 @@
-package AntShares;
+﻿package AntShares;
 
 /**
  * To simulate out keyword in c#

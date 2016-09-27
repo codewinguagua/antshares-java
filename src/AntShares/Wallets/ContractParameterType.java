@@ -1,28 +1,28 @@
-package AntShares.Wallets;
+ï»¿package AntShares.Wallets;
 
 /**
- *  ±íÊ¾ÖÇÄÜºÏÔ¼µÄ²ÎÊıÀàĞÍ
+ *  è¡¨ç¤ºæ™ºèƒ½åˆçº¦çš„å‚æ•°ç±»å‹
  */
 public enum ContractParameterType
 {
     /**
-     *  Ç©Ãû
+     *  ç­¾å
      */
     Signature,
     /**
-     *  ÕûÊı
+     *  æ•´æ•°
      */
     Integer,
     /**
-     *  160Î»É¢ÁĞÖµ
+     *  160ä½æ•£åˆ—å€¼
      */
     Hash160,
     /**
-     *  256Î»É¢ÁĞÖµ
+     *  256ä½æ•£åˆ—å€¼
      */
     Hash256,
     /**
-     *  ×Ö½ÚÊı×é
+     *  å­—èŠ‚æ•°ç»„
      */
     ByteArray
 }

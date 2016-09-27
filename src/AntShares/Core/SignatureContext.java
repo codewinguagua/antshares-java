@@ -1,4 +1,4 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import java.io.*;
 import java.lang.reflect.Array;
@@ -15,16 +15,16 @@ import AntShares.IO.Json.*;
 import AntShares.Wallets.*;
 
 /**
- *  Ç©ÃûÉÏÏÂÎÄ
+ *  ç­¾åä¸Šä¸‹æ–‡
  */
 public class SignatureContext
 {
     /**
-     *  ÒªÇ©ÃûµÄÊı¾İ
+     *  è¦ç­¾åçš„æ•°æ®
      */
     public final Signable signable;
     /**
-     *  ÒªÑéÖ¤µÄ½Å±¾É¢ÁĞÖµ
+     *  è¦éªŒè¯çš„è„šæœ¬æ•£åˆ—å€¼
      */
     public final UInt160[] scriptHashes;
     private final byte[][] redeemScripts;
@@ -32,7 +32,7 @@ public class SignatureContext
     private final boolean[] completed;
 
     /**
-     *  ÅĞ¶ÏÇ©ÃûÊÇ·ñÍê³É
+     *  åˆ¤æ–­ç­¾åæ˜¯å¦å®Œæˆ
      */
     public boolean isCompleted()
     {
@@ -43,8 +43,8 @@ public class SignatureContext
     }
 
     /**
-     *  ¶ÔÖ¸¶¨µÄÊı¾İ¹¹ÔìÇ©ÃûÉÏÏÂÎÄ
-     *  <param name="signable">ÒªÇ©ÃûµÄÊı¾İ</param>
+     *  å¯¹æŒ‡å®šçš„æ•°æ®æ„é€ ç­¾åä¸Šä¸‹æ–‡
+     *  <param name="signable">è¦ç­¾åçš„æ•°æ®</param>
      */
     @SuppressWarnings("unchecked")
 	public SignatureContext(Signable signable)
@@ -57,11 +57,11 @@ public class SignatureContext
     }
 
     /**
-     *  Ìí¼ÓÒ»¸öÇ©Ãû
-     *  <param name="contract">¸ÃÇ©ÃûËù¶ÔÓ¦µÄºÏÔ¼</param>
-     *  <param name="pubkey">¸ÃÇ©ÃûËù¶ÔÓ¦µÄ¹«Ô¿</param>
-     *  <param name="signature">Ç©Ãû</param>
-     *  <returns>·µ»ØÇ©ÃûÊÇ·ñÒÑ³É¹¦Ìí¼Ó</returns>
+     *  æ·»åŠ ä¸€ä¸ªç­¾å
+     *  <param name="contract">è¯¥ç­¾åæ‰€å¯¹åº”çš„åˆçº¦</param>
+     *  <param name="pubkey">è¯¥ç­¾åæ‰€å¯¹åº”çš„å…¬é’¥</param>
+     *  <param name="signature">ç­¾å</param>
+     *  <returns>è¿”å›ç­¾åæ˜¯å¦å·²æˆåŠŸæ·»åŠ </returns>
      */
     public boolean add(Contract contract, ECPoint pubkey, byte[] signature)
     {
@@ -85,9 +85,9 @@ public class SignatureContext
     }
 
     /**
-     *  ´ÓÖ¸¶¨µÄjson¶ÔÏóÖĞ½âÎö³öÇ©ÃûÉÏÏÂÎÄ
-     *  <param name="json">json¶ÔÏó</param>
-     *  <returns>·µ»ØÉÏÏÂÎÄ</returns>
+     *  ä»æŒ‡å®šçš„jsonå¯¹è±¡ä¸­è§£æå‡ºç­¾åä¸Šä¸‹æ–‡
+     *  <param name="json">jsonå¯¹è±¡</param>
+     *  <returns>è¿”å›ä¸Šä¸‹æ–‡</returns>
      */
     public static SignatureContext fromJson(JObject json)
     {
@@ -130,8 +130,8 @@ public class SignatureContext
     }
 
     /**
-     *  ´ÓÇ©ÃûÉÏÏÂÎÄÖĞ»ñµÃÍêÕûÇ©ÃûµÄºÏÔ¼½Å±¾
-     *  <returns>·µ»ØºÏÔ¼½Å±¾</returns>
+     *  ä»ç­¾åä¸Šä¸‹æ–‡ä¸­è·å¾—å®Œæ•´ç­¾åçš„åˆçº¦è„šæœ¬
+     *  <returns>è¿”å›åˆçº¦è„šæœ¬</returns>
      */
     public Script[] getScripts()
     {
@@ -159,8 +159,8 @@ public class SignatureContext
     }
 
     /**
-     *  °ÑÇ©ÃûÉÏÏÂÎÄ×ªÎªjson¶ÔÏó
-     *  <returns>·µ»Øjson¶ÔÏó</returns>
+     *  æŠŠç­¾åä¸Šä¸‹æ–‡è½¬ä¸ºjsonå¯¹è±¡
+     *  <returns>è¿”å›jsonå¯¹è±¡</returns>
      */
     public JObject json()
     {

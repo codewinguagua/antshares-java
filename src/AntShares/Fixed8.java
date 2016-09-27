@@ -1,4 +1,4 @@
-package AntShares;
+ï»¿package AntShares;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -7,8 +7,8 @@ import java.util.function.Function;
 import AntShares.IO.*;
 
 /**
- * ¾«È·µ½10^-8µÄ64Î»¶¨µãÊı£¬½«ÉáÈëÎó²î½µµ½×îµÍ¡£
- * Í¨¹ı¿ØÖÆ³ËÊıµÄ¾«¶È£¬¿ÉÒÔÍêÈ«Ïû³ıÉáÈëÎó²î¡£
+ * ç²¾ç¡®åˆ°10^-8çš„64ä½å®šç‚¹æ•°ï¼Œå°†èˆå…¥è¯¯å·®é™åˆ°æœ€ä½ã€‚
+ * é€šè¿‡æ§åˆ¶ä¹˜æ•°çš„ç²¾åº¦ï¼Œå¯ä»¥å®Œå…¨æ¶ˆé™¤èˆå…¥è¯¯å·®ã€‚
  */
 public class Fixed8 implements Comparable<Fixed8>, Serializable
 {

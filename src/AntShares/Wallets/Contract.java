@@ -1,26 +1,26 @@
-package AntShares.Wallets;
+ï»¿package AntShares.Wallets;
 
 import AntShares.UInt160;
 import AntShares.Core.Scripts.Script;
 import AntShares.IO.Serializable;
 
 /**
- *  ËùÓĞºÏÔ¼µÄ»ùÀà
+ *  æ‰€æœ‰åˆçº¦çš„åŸºç±»
  */
 public abstract class Contract implements Serializable
 {
     /**
-     *  ºÏÔ¼½Å±¾´úÂë
+     *  åˆçº¦è„šæœ¬ä»£ç 
      */
     public byte[] redeemScript;
     /**
-     *  ¹«Ô¿É¢ÁĞÖµ£¬ÓÃÓÚ±êÊ¶¸ÃºÏÔ¼ÔÚÇ®°üÖĞÁ¥ÊôÓÚÄÄÒ»¸öÕË»§
+     *  å…¬é’¥æ•£åˆ—å€¼ï¼Œç”¨äºæ ‡è¯†è¯¥åˆçº¦åœ¨é’±åŒ…ä¸­éš¶å±äºå“ªä¸€ä¸ªè´¦æˆ·
      */
     public UInt160 publicKeyHash;
 
     private String _address;
     /**
-     *  ºÏÔ¼µØÖ·
+     *  åˆçº¦åœ°å€
      */
     public String address()
     {
@@ -32,13 +32,13 @@ public abstract class Contract implements Serializable
     }
 
     /**
-     *  ºÏÔ¼µÄĞÎÊ½²ÎÊıÁĞ±í
+     *  åˆçº¦çš„å½¢å¼å‚æ•°åˆ—è¡¨
      */
     public abstract ContractParameterType[] parameterList();
 
     private UInt160 _scriptHash;
     /**
-     *  ½Å±¾É¢ÁĞÖµ
+     *  è„šæœ¬æ•£åˆ—å€¼
      */
     public UInt160 scriptHash()
     {
@@ -50,9 +50,9 @@ public abstract class Contract implements Serializable
     }
 
     /**
-     *  ±È½ÏÓëÁíÒ»¸ö¶ÔÏóÊÇ·ñÏàµÈ
-     *  <param name="obj">ÁíÒ»¸ö¶ÔÏó</param>
-     *  <returns>·µ»Ø±È½ÏµÄ½á¹û</returns>
+     *  æ¯”è¾ƒä¸å¦ä¸€ä¸ªå¯¹è±¡æ˜¯å¦ç›¸ç­‰
+     *  <param name="obj">å¦ä¸€ä¸ªå¯¹è±¡</param>
+     *  <returns>è¿”å›æ¯”è¾ƒçš„ç»“æœ</returns>
      */
     @Override
     public boolean equals(Object obj)
@@ -63,8 +63,8 @@ public abstract class Contract implements Serializable
     }
 
     /**
-     *  »ñµÃHashCode
-     *  <returns>·µ»ØHashCode</returns>
+     *  è·å¾—HashCode
+     *  <returns>è¿”å›HashCode</returns>
      */
     @Override
     public int hashCode()

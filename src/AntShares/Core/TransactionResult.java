@@ -1,18 +1,18 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import AntShares.*;
 
 /**
- *  ½»Ò×½á¹û£¬±íÊ¾½»Ò×ÖĞ×Ê²úµÄ±ä»¯Á¿
+ *  äº¤æ˜“ç»“æœï¼Œè¡¨ç¤ºäº¤æ˜“ä¸­èµ„äº§çš„å˜åŒ–é‡
  */
 public class TransactionResult
 {
     /**
-     *  ×Ê²ú±àºÅ
+     *  èµ„äº§ç¼–å·
      */
     public final UInt256 assetId;
     /**
-     *  ¸Ã×Ê²úµÄ±ä»¯Á¿
+     *  è¯¥èµ„äº§çš„å˜åŒ–é‡
      */
     public final Fixed8 amount;
     

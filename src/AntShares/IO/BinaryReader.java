@@ -1,4 +1,4 @@
-package AntShares.IO;
+﻿package AntShares.IO;
 
 import java.io.*;
 import java.lang.reflect.Array;

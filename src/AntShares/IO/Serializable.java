@@ -1,22 +1,22 @@
-package AntShares.IO;
+ï»¿package AntShares.IO;
 
 import java.io.*;
 
 /**
- *  ÎªĞòÁĞ»¯Ìá¹©Ò»¸ö½Ó¿Ú
+ *  ä¸ºåºåˆ—åŒ–æä¾›ä¸€ä¸ªæ¥å£
  */
 public interface Serializable
 {    
     /**
-     *  ·´ĞòÁĞ»¯
-     *  <param name="reader">Êı¾İÀ´Ô´</param>
+     *  ååºåˆ—åŒ–
+     *  <param name="reader">æ•°æ®æ¥æº</param>
      * @throws IOException 
      */
     void deserialize(BinaryReader reader) throws IOException;
     
     /**
-     *  ĞòÁĞ»¯
-     *  <param name="writer">´æ·ÅĞòÁĞ»¯ºóµÄ½á¹û</param>
+     *  åºåˆ—åŒ–
+     *  <param name="writer">å­˜æ”¾åºåˆ—åŒ–åçš„ç»“æœ</param>
      * @throws IOException 
      */
     void serialize(BinaryWriter writer) throws IOException;

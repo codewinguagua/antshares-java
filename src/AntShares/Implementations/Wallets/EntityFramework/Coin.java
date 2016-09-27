@@ -1,4 +1,4 @@
-package AntShares.Implementations.Wallets.EntityFramework;
+﻿package AntShares.Implementations.Wallets.EntityFramework;
 
 import AntShares.Wallets.CoinState;
 import AntShares.Wallets.Contract;

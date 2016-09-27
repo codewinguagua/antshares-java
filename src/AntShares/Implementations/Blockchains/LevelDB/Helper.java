@@ -1,4 +1,4 @@
-package AntShares.Implementations.Blockchains.LevelDB;
+﻿package AntShares.Implementations.Blockchains.LevelDB;
 
 import java.util.ArrayList;
 import java.util.List;

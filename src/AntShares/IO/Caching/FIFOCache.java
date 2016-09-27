@@ -1,4 +1,4 @@
-package AntShares.IO.Caching;
+﻿package AntShares.IO.Caching;
 
 abstract class FIFOCache<TKey, TValue> extends Cache<TKey, TValue>
 {

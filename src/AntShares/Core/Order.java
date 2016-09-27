@@ -1,4 +1,4 @@
-package AntShares.Core;
+锘縫ackage AntShares.Core;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -8,40 +8,40 @@ import AntShares.Core.Scripts.Script;
 import AntShares.IO.*;
 
 /**
- *  订单
+ *  璁㈠崟
  */
 public class Order implements Signable
 {
     /**
-     *  资产编号
+     *  璧勪骇缂栧彿
      */
     public UInt256 assetId;
     /**
-     *  货币编号
+     *  璐у竵缂栧彿
      */
     public UInt256 valueAssetId;
     /**
-     *  代理人的合约散列
+     *  浠ｇ悊浜虹殑鍚堢害鏁ｅ垪
      */
     public UInt160 agent;
     /**
-     *  买入或卖出的数量，正数表示买入，负数表示卖出
+     *  涔板叆鎴栧崠鍑虹殑鏁伴噺锛屾鏁拌〃绀轰拱鍏ワ紝璐熸暟琛ㄧず鍗栧嚭
      */
     public Fixed8 amount;
     /**
-     *  价格
+     *  浠锋牸
      */
     public Fixed8 price;
     /**
-     *  委托人的合约散列
+     *  濮旀墭浜虹殑鍚堢害鏁ｅ垪
      */
     public UInt160 client;
     /**
-     *  输入列表
+     *  杈撳叆鍒楄〃
      */
     public TransactionInput[] inputs;
     /**
-     *  用于验证该订单的脚本列表
+     *  鐢ㄤ簬楠岃瘉璇ヨ鍗曠殑鑴氭湰鍒楄〃
      */
     public Script[] scripts;
 

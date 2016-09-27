@@ -1,4 +1,4 @@
-package AntShares.Core;
+﻿package AntShares.Core;
 
 public class ContractTransaction extends Transaction
 {

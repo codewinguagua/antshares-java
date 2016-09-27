@@ -1,4 +1,4 @@
-package AntShares.Network.Payloads;
+﻿package AntShares.Network.Payloads;
 
 import AntShares.UInt256;
 import AntShares.IO.*;

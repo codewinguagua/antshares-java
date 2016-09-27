@@ -1,4 +1,4 @@
-package AntShares.Cryptography;
+﻿package AntShares.Cryptography;
 
 class ProtectedMemoryContext implements AutoCloseable
 {

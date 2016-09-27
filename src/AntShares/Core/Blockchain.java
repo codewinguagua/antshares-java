@@ -1,4 +1,4 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import java.time.Duration;
 import java.util.*;
@@ -13,34 +13,34 @@ import AntShares.IO.Serializable;
 import AntShares.Wallets.MultiSigContract;
 
 /**
- *  ÊµÏÖÇø¿éÁ´¹¦ÄÜµÄ»ùÀà
+ *  å®ç°åŒºå—é“¾åŠŸèƒ½çš„åŸºç±»
  */
 public abstract class Blockchain implements AutoCloseable
 {
     /**
-     *  µ±Çø¿é±»Ğ´Èëµ½Ó²ÅÌºó´¥·¢
+     *  å½“åŒºå—è¢«å†™å…¥åˆ°ç¡¬ç›˜åè§¦å‘
      */
 	//TODO
     //public static event EventHandler<Block> PersistCompleted;
 
     /**
-     *  ²úÉúÃ¿¸öÇø¿éµÄÊ±¼ä¼ä¸ô£¬ÒÑÃëÎªµ¥Î»
+     *  äº§ç”Ÿæ¯ä¸ªåŒºå—çš„æ—¶é—´é—´éš”ï¼Œå·²ç§’ä¸ºå•ä½
      */
     public static final int SECONDS_PER_BLOCK = 15;
     /**
-     *  Ğ¡ÒÏ±Ò²úÁ¿µİ¼õµÄÊ±¼ä¼ä¸ô£¬ÒÔÇø¿éÊıÁ¿Îªµ¥Î»
+     *  å°èšå¸äº§é‡é€’å‡çš„æ—¶é—´é—´éš”ï¼Œä»¥åŒºå—æ•°é‡ä¸ºå•ä½
      */
     public static final int DECREMENT_INTERVAL = 2000000;
     /**
-     *  Ã¿¸öÇø¿é²úÉúµÄĞ¡ÒÏ±ÒµÄÊıÁ¿
+     *  æ¯ä¸ªåŒºå—äº§ç”Ÿçš„å°èšå¸çš„æ•°é‡
      */
     public static final int[] MINTING_AMOUNT = { 8, 7, 6, 5, 4, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
     /**
-     *  ²úÉúÃ¿¸öÇø¿éµÄÊ±¼ä¼ä¸ô
+     *  äº§ç”Ÿæ¯ä¸ªåŒºå—çš„æ—¶é—´é—´éš”
      */
     public static final Duration TIME_PER_BLOCK = Duration.ofSeconds(SECONDS_PER_BLOCK);
     /**
-     *  ºó±¸¼ÇÕËÈËÁĞ±í
+     *  åå¤‡è®°è´¦äººåˆ—è¡¨
      */
     public static final ECPoint[] STANDBY_MINERS =
     {
@@ -54,52 +54,52 @@ public abstract class Blockchain implements AutoCloseable
     };
 
     /**
-     *  Ğ¡ÒÏ¹É
+     *  å°èšè‚¡
      */
     public static final RegisterTransaction ANTSHARE;
 
     /**
-     *  Ğ¡ÒÏ±Ò
+     *  å°èšå¸
      */
     public static final RegisterTransaction ANTCOIN;
     
     //TODO: mainnet
     /**
-     *  ´´ÊÀÇø¿é
+     *  åˆ›ä¸–åŒºå—
      */
     public static final Block GENESIS_BLOCK;
 
     /**
-     *  Çø¿éÁ´ËùÌá¹©µÄ¹¦ÄÜ
+     *  åŒºå—é“¾æ‰€æä¾›çš„åŠŸèƒ½
      */
     public abstract EnumSet<BlockchainAbility> ability();
     /**
-     *  µ±Ç°×îĞÂÇø¿éÉ¢ÁĞÖµ
+     *  å½“å‰æœ€æ–°åŒºå—æ•£åˆ—å€¼
      * @throws Exception 
      */
     public abstract UInt256 currentBlockHash() throws Exception;
     /**
-     *  µ±Ç°×îĞÂÇø¿éÍ·µÄÉ¢ÁĞÖµ
+     *  å½“å‰æœ€æ–°åŒºå—å¤´çš„æ•£åˆ—å€¼
      * @throws Exception 
      */
     public UInt256 currentHeaderHash() throws Exception{ return currentBlockHash(); }
     /**
-     *  Ä¬ÈÏµÄÇø¿éÁ´ÊµÀı
+     *  é»˜è®¤çš„åŒºå—é“¾å®ä¾‹
      */
     private static Blockchain _default = null;
     public static Blockchain current() { return _default; }
     /**
-     *  Çø¿éÍ·¸ß¶È
+     *  åŒºå—å¤´é«˜åº¦
      * @throws Exception 
      */
     public int headerHeight() throws Exception { return height(); }
     /**
-     *  Çø¿é¸ß¶È
+     *  åŒºå—é«˜åº¦
      * @throws Exception
      */
     public abstract int height() throws Exception;
     /**
-     *  ±íÊ¾µ±Ç°µÄÇø¿éÁ´ÊµÏÖÊÇ·ñÎªÖ»¶ÁµÄ
+     *  è¡¨ç¤ºå½“å‰çš„åŒºå—é“¾å®ç°æ˜¯å¦ä¸ºåªè¯»çš„
      */
     public abstract boolean isReadOnly();
 
@@ -118,15 +118,15 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ½«Ö¸¶¨µÄÇø¿éÌí¼Óµ½Çø¿éÁ´ÖĞ
-     *  <param name="block">ÒªÌí¼ÓµÄÇø¿é</param>
-     *  <returns>·µ»ØÊÇ·ñÌí¼Ó³É¹¦</returns>
+     *  å°†æŒ‡å®šçš„åŒºå—æ·»åŠ åˆ°åŒºå—é“¾ä¸­
+     *  <param name="block">è¦æ·»åŠ çš„åŒºå—</param>
+     *  <returns>è¿”å›æ˜¯å¦æ·»åŠ æˆåŠŸ</returns>
      */
     protected abstract boolean addBlock(Block block);
 
     /**
-     *  ½«Ö¸¶¨µÄÇø¿éÍ·Ìí¼Óµ½Çø¿éÍ·Á´ÖĞ
-     *  <param name="headers">ÒªÌí¼ÓµÄÇø¿éÍ·ÁĞ±í</param>
+     *  å°†æŒ‡å®šçš„åŒºå—å¤´æ·»åŠ åˆ°åŒºå—å¤´é“¾ä¸­
+     *  <param name="headers">è¦æ·»åŠ çš„åŒºå—å¤´åˆ—è¡¨</param>
      */
     protected abstract void addHeaders(Iterable<Block> headers);
     
@@ -134,9 +134,9 @@ public abstract class Blockchain implements AutoCloseable
     public abstract void close();
 
     /**
-     *  ÅĞ¶ÏÇø¿éÁ´ÖĞÊÇ·ñ°üº¬Ö¸¶¨µÄ×Ê²ú
-     *  <param name="hash">×Ê²ú±àºÅ</param>
-     *  <returns>Èç¹û°üº¬Ö¸¶¨×Ê²úÔò·µ»Øtrue</returns>
+     *  åˆ¤æ–­åŒºå—é“¾ä¸­æ˜¯å¦åŒ…å«æŒ‡å®šçš„èµ„äº§
+     *  <param name="hash">èµ„äº§ç¼–å·</param>
+     *  <returns>å¦‚æœåŒ…å«æŒ‡å®šèµ„äº§åˆ™è¿”å›true</returns>
      */
     public boolean containsAsset(UInt256 hash)
     {
@@ -144,9 +144,9 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ÅĞ¶ÏÇø¿éÁ´ÖĞÊÇ·ñ°üº¬Ö¸¶¨µÄÇø¿é
-     *  <param name="hash">Çø¿é±àºÅ</param>
-     *  <returns>Èç¹û°üº¬Ö¸¶¨Çø¿éÔò·µ»Øtrue</returns>
+     *  åˆ¤æ–­åŒºå—é“¾ä¸­æ˜¯å¦åŒ…å«æŒ‡å®šçš„åŒºå—
+     *  <param name="hash">åŒºå—ç¼–å·</param>
+     *  <returns>å¦‚æœåŒ…å«æŒ‡å®šåŒºå—åˆ™è¿”å›true</returns>
      */
     public boolean containsBlock(UInt256 hash)
     {
@@ -154,9 +154,9 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ÅĞ¶ÏÇø¿éÁ´ÖĞÊÇ·ñ°üº¬Ö¸¶¨µÄ½»Ò×
-     *  <param name="hash">½»Ò×±àºÅ</param>
-     *  <returns>Èç¹û°üº¬Ö¸¶¨½»Ò×Ôò·µ»Øtrue</returns>
+     *  åˆ¤æ–­åŒºå—é“¾ä¸­æ˜¯å¦åŒ…å«æŒ‡å®šçš„äº¤æ˜“
+     *  <param name="hash">äº¤æ˜“ç¼–å·</param>
+     *  <returns>å¦‚æœåŒ…å«æŒ‡å®šäº¤æ˜“åˆ™è¿”å›true</returns>
      */
     public boolean containsTransaction(UInt256 hash)
     {
@@ -173,9 +173,9 @@ public abstract class Blockchain implements AutoCloseable
     public abstract Stream<RegisterTransaction> getAssets();
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄ¸ß¶È£¬·µ»Ø¶ÔÓ¦µÄÇø¿éĞÅÏ¢
-     *  <param name="height">Çø¿é¸ß¶È</param>
-     *  <returns>·µ»Ø¶ÔÓ¦µÄÇø¿éĞÅÏ¢</returns>
+     *  æ ¹æ®æŒ‡å®šçš„é«˜åº¦ï¼Œè¿”å›å¯¹åº”çš„åŒºå—ä¿¡æ¯
+     *  <param name="height">åŒºå—é«˜åº¦</param>
+     *  <returns>è¿”å›å¯¹åº”çš„åŒºå—ä¿¡æ¯</returns>
      * @throws Exception 
      */
     public Block getBlock(int height) throws Exception
@@ -184,9 +184,9 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÉ¢ÁĞÖµ£¬·µ»Ø¶ÔÓ¦µÄÇø¿éĞÅÏ¢
-     *  <param name="hash">É¢ÁĞÖµ</param>
-     *  <returns>·µ»Ø¶ÔÓ¦µÄÇø¿éĞÅÏ¢</returns>
+     *  æ ¹æ®æŒ‡å®šçš„æ•£åˆ—å€¼ï¼Œè¿”å›å¯¹åº”çš„åŒºå—ä¿¡æ¯
+     *  <param name="hash">æ•£åˆ—å€¼</param>
+     *  <returns>è¿”å›å¯¹åº”çš„åŒºå—ä¿¡æ¯</returns>
      * @throws Exception 
      */
     public Block getBlock(UInt256 hash) throws Exception
@@ -197,9 +197,9 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄ¸ß¶È£¬·µ»Ø¶ÔÓ¦Çø¿éµÄÉ¢ÁĞÖµ
-     *  <param name="height">Çø¿é¸ß¶È</param>
-     *  <returns>·µ»Ø¶ÔÓ¦Çø¿éµÄÉ¢ÁĞÖµ</returns>
+     *  æ ¹æ®æŒ‡å®šçš„é«˜åº¦ï¼Œè¿”å›å¯¹åº”åŒºå—çš„æ•£åˆ—å€¼
+     *  <param name="height">åŒºå—é«˜åº¦</param>
+     *  <returns>è¿”å›å¯¹åº”åŒºå—çš„æ•£åˆ—å€¼</returns>
      * @throws Exception 
      */
     public UInt256 getBlockHash(int height) throws Exception
@@ -216,9 +216,9 @@ public abstract class Blockchain implements AutoCloseable
     public abstract Stream<EnrollmentTransaction> getEnrollments(Stream<Transaction> others);
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄ¸ß¶È£¬·µ»Ø¶ÔÓ¦µÄÇø¿éÍ·ĞÅÏ¢
-     *  <param name="height">Çø¿é¸ß¶È</param>
-     *  <returns>·µ»Ø¶ÔÓ¦µÄÇø¿éÍ·ĞÅÏ¢</returns>
+     *  æ ¹æ®æŒ‡å®šçš„é«˜åº¦ï¼Œè¿”å›å¯¹åº”çš„åŒºå—å¤´ä¿¡æ¯
+     *  <param name="height">åŒºå—é«˜åº¦</param>
+     *  <returns>è¿”å›å¯¹åº”çš„åŒºå—å¤´ä¿¡æ¯</returns>
      * @throws Exception 
      */
     public Block getHeader(int height) throws Exception
@@ -227,9 +227,9 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÉ¢ÁĞÖµ£¬·µ»Ø¶ÔÓ¦µÄÇø¿éÍ·ĞÅÏ¢
-     *  <param name="hash">É¢ÁĞÖµ</param>
-     *  <returns>·µ»Ø¶ÔÓ¦µÄÇø¿éÍ·ĞÅÏ¢</returns>
+     *  æ ¹æ®æŒ‡å®šçš„æ•£åˆ—å€¼ï¼Œè¿”å›å¯¹åº”çš„åŒºå—å¤´ä¿¡æ¯
+     *  <param name="hash">æ•£åˆ—å€¼</param>
+     *  <returns>è¿”å›å¯¹åº”çš„åŒºå—å¤´ä¿¡æ¯</returns>
      * @throws Exception 
      */
     public Block getHeader(UInt256 hash) throws Exception
@@ -241,9 +241,9 @@ public abstract class Blockchain implements AutoCloseable
     public abstract UInt256[] getLeafHeaderHashes();
 
     /**
-     *  »ñÈ¡¼ÇÕËÈËµÄºÏÔ¼µØÖ·
-     *  <param name="miners">¼ÇÕËÈËµÄ¹«Ô¿ÁĞ±í</param>
-     *  <returns>·µ»Ø¼ÇÕËÈËµÄºÏÔ¼µØÖ·</returns>
+     *  è·å–è®°è´¦äººçš„åˆçº¦åœ°å€
+     *  <param name="miners">è®°è´¦äººçš„å…¬é’¥åˆ—è¡¨</param>
+     *  <returns>è¿”å›è®°è´¦äººçš„åˆçº¦åœ°å€</returns>
      */
     public static UInt160 getMinerAddress(ECPoint[] miners)
     {
@@ -252,8 +252,8 @@ public abstract class Blockchain implements AutoCloseable
 
     private ArrayList<ECPoint> _miners = new ArrayList<ECPoint>();
     /**
-     *  »ñÈ¡ÏÂÒ»¸öÇø¿éµÄ¼ÇÕËÈËÁĞ±í
-     *  <returns>·µ»ØÒ»×é¹«Ô¿£¬±íÊ¾ÏÂÒ»¸öÇø¿éµÄ¼ÇÕËÈËÁĞ±í</returns>
+     *  è·å–ä¸‹ä¸€ä¸ªåŒºå—çš„è®°è´¦äººåˆ—è¡¨
+     *  <returns>è¿”å›ä¸€ç»„å…¬é’¥ï¼Œè¡¨ç¤ºä¸‹ä¸€ä¸ªåŒºå—çš„è®°è´¦äººåˆ—è¡¨</returns>
      */
     public ECPoint[] getMiners()
     {
@@ -273,7 +273,7 @@ public abstract class Blockchain implements AutoCloseable
     	//TODO
 //        if (!Ability.HasFlag(BlockchainAbility.TransactionIndexes) || !Ability.HasFlag(BlockchainAbility.UnspentIndexes))
 //            throw new NotSupportedException();
-//        //TODO: ´Ë´¦ÅÅĞò¿ÉÄÜ½«ºÄ·Ñ´óÁ¿ÄÚ´æ£¬¿¼ÂÇÊÇ·ñ²ÉÓÃÆäËü»úÖÆ
+//        //TODO: æ­¤å¤„æ’åºå¯èƒ½å°†è€—è´¹å¤§é‡å†…å­˜ï¼Œè€ƒè™‘æ˜¯å¦é‡‡ç”¨å…¶å®ƒæœºåˆ¶
 //        Vote[] votes = GetVotes(others).OrderBy(p => p.Enrollments.Length).ToArray();
 //        int miner_count = (int)votes.WeightedFilter(0.25, 0.75, p => p.Count.GetData(), (p, w) => new
 //        {
@@ -301,30 +301,30 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÉ¢ÁĞÖµ£¬·µ»ØÏÂÒ»¸öÇø¿éµÄĞÅÏ¢
-     *  <param name="hash">É¢ÁĞÖµ</param>
-     *  <returns>·µ»ØÏÂÒ»¸öÇø¿éµÄĞÅÏ¢>
+     *  æ ¹æ®æŒ‡å®šçš„æ•£åˆ—å€¼ï¼Œè¿”å›ä¸‹ä¸€ä¸ªåŒºå—çš„ä¿¡æ¯
+     *  <param name="hash">æ•£åˆ—å€¼</param>
+     *  <returns>è¿”å›ä¸‹ä¸€ä¸ªåŒºå—çš„ä¿¡æ¯>
      */
     public abstract Block getNextBlock(UInt256 hash);
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÉ¢ÁĞÖµ£¬·µ»ØÏÂÒ»¸öÇø¿éµÄÉ¢ÁĞÖµ
-     *  <param name="hash">É¢ÁĞÖµ</param>
-     *  <returns>·µ»ØÏÂÒ»¸öÇø¿éµÄÉ¢ÁĞÖµ</returns>
+     *  æ ¹æ®æŒ‡å®šçš„æ•£åˆ—å€¼ï¼Œè¿”å›ä¸‹ä¸€ä¸ªåŒºå—çš„æ•£åˆ—å€¼
+     *  <param name="hash">æ•£åˆ—å€¼</param>
+     *  <returns>è¿”å›ä¸‹ä¸€ä¸ªåŒºå—çš„æ•£åˆ—å€¼</returns>
      */
     public abstract UInt256 getNextBlockHash(UInt256 hash);
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄ×Ê²ú±àºÅ£¬·µ»Ø¶ÔÓ¦×Ê²úµÄ·¢ĞĞÁ¿
-     *  <param name="asset_id">×Ê²ú±àºÅ</param>
-     *  <returns>·µ»Ø¶ÔÓ¦×Ê²úµÄµ±Ç°ÒÑ¾­·¢ĞĞµÄÊıÁ¿</returns>
+     *  æ ¹æ®æŒ‡å®šçš„èµ„äº§ç¼–å·ï¼Œè¿”å›å¯¹åº”èµ„äº§çš„å‘è¡Œé‡
+     *  <param name="asset_id">èµ„äº§ç¼–å·</param>
+     *  <returns>è¿”å›å¯¹åº”èµ„äº§çš„å½“å‰å·²ç»å‘è¡Œçš„æ•°é‡</returns>
      */
     public abstract Fixed8 getQuantityIssued(UInt256 asset_id);
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÇø¿é¸ß¶È£¬·µ»Ø¶ÔÓ¦Çø¿é¼°Ö®Ç°ËùÓĞÇø¿éÖĞ°üº¬µÄÏµÍ³·ÑÓÃµÄ×ÜÁ¿
-     *  <param name="height">Çø¿é¸ß¶È</param>
-     *  <returns>·µ»Ø¶ÔÓ¦µÄÏµÍ³·ÑÓÃµÄ×ÜÁ¿</returns>
+     *  æ ¹æ®æŒ‡å®šçš„åŒºå—é«˜åº¦ï¼Œè¿”å›å¯¹åº”åŒºå—åŠä¹‹å‰æ‰€æœ‰åŒºå—ä¸­åŒ…å«çš„ç³»ç»Ÿè´¹ç”¨çš„æ€»é‡
+     *  <param name="height">åŒºå—é«˜åº¦</param>
+     *  <returns>è¿”å›å¯¹åº”çš„ç³»ç»Ÿè´¹ç”¨çš„æ€»é‡</returns>
      * @throws Exception 
      */
     public long getSysFeeAmount(int height) throws Exception
@@ -333,16 +333,16 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÇø¿éÉ¢ÁĞÖµ£¬·µ»Ø¶ÔÓ¦Çø¿é¼°Ö®Ç°ËùÓĞÇø¿éÖĞ°üº¬µÄÏµÍ³·ÑÓÃµÄ×ÜÁ¿
-     *  <param name="hash">É¢ÁĞÖµ</param>
-     *  <returns>·µ»ØÏµÍ³·ÑÓÃµÄ×ÜÁ¿</returns>
+     *  æ ¹æ®æŒ‡å®šçš„åŒºå—æ•£åˆ—å€¼ï¼Œè¿”å›å¯¹åº”åŒºå—åŠä¹‹å‰æ‰€æœ‰åŒºå—ä¸­åŒ…å«çš„ç³»ç»Ÿè´¹ç”¨çš„æ€»é‡
+     *  <param name="hash">æ•£åˆ—å€¼</param>
+     *  <returns>è¿”å›ç³»ç»Ÿè´¹ç”¨çš„æ€»é‡</returns>
      */
     public abstract long getSysFeeAmount(UInt256 hash);
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÉ¢ÁĞÖµ£¬·µ»Ø¶ÔÓ¦µÄ½»Ò×ĞÅÏ¢
-     *  <param name="hash">É¢ÁĞÖµ</param>
-     *  <returns>·µ»Ø¶ÔÓ¦µÄ½»Ò×ĞÅÏ¢</returns>
+     *  æ ¹æ®æŒ‡å®šçš„æ•£åˆ—å€¼ï¼Œè¿”å›å¯¹åº”çš„äº¤æ˜“ä¿¡æ¯
+     *  <param name="hash">æ•£åˆ—å€¼</param>
+     *  <returns>è¿”å›å¯¹åº”çš„äº¤æ˜“ä¿¡æ¯</returns>
      * @throws Exception 
      */
     public Transaction getTransaction(UInt256 hash) throws Exception
@@ -352,10 +352,10 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÉ¢ÁĞÖµ£¬·µ»Ø¶ÔÓ¦µÄ½»Ò×ĞÅÏ¢Óë¸Ã½»Ò×ËùÔÚÇø¿éµÄ¸ß¶È
-     *  <param name="hash">½»Ò×É¢ÁĞÖµ</param>
-     *  <param name="height">·µ»Ø¸Ã½»Ò×ËùÔÚÇø¿éµÄ¸ß¶È</param>
-     *  <returns>·µ»Ø¶ÔÓ¦µÄ½»Ò×ĞÅÏ¢</returns>
+     *  æ ¹æ®æŒ‡å®šçš„æ•£åˆ—å€¼ï¼Œè¿”å›å¯¹åº”çš„äº¤æ˜“ä¿¡æ¯ä¸è¯¥äº¤æ˜“æ‰€åœ¨åŒºå—çš„é«˜åº¦
+     *  <param name="hash">äº¤æ˜“æ•£åˆ—å€¼</param>
+     *  <param name="height">è¿”å›è¯¥äº¤æ˜“æ‰€åœ¨åŒºå—çš„é«˜åº¦</param>
+     *  <returns>è¿”å›å¯¹åº”çš„äº¤æ˜“ä¿¡æ¯</returns>
      */
     public Transaction getTransaction(UInt256 hash, Out<Integer> height)
     {
@@ -372,17 +372,17 @@ public abstract class Blockchain implements AutoCloseable
     public abstract Map<Short, Claimable> getUnclaimed(UInt256 hash);
 
     /**
-     *  ¸ù¾İÖ¸¶¨µÄÉ¢ÁĞÖµºÍË÷Òı£¬»ñÈ¡¶ÔÓ¦µÄÎ´»¨·ÑµÄ×Ê²ú
-     *  <param name="hash">½»Ò×É¢ÁĞÖµ</param>
-     *  <param name="index">Êä³öµÄË÷Òı</param>
-     *  <returns>·µ»ØÒ»¸ö½»Ò×Êä³ö£¬±íÊ¾Ò»¸öÎ´»¨·ÑµÄ×Ê²ú</returns>
+     *  æ ¹æ®æŒ‡å®šçš„æ•£åˆ—å€¼å’Œç´¢å¼•ï¼Œè·å–å¯¹åº”çš„æœªèŠ±è´¹çš„èµ„äº§
+     *  <param name="hash">äº¤æ˜“æ•£åˆ—å€¼</param>
+     *  <param name="index">è¾“å‡ºçš„ç´¢å¼•</param>
+     *  <returns>è¿”å›ä¸€ä¸ªäº¤æ˜“è¾“å‡ºï¼Œè¡¨ç¤ºä¸€ä¸ªæœªèŠ±è´¹çš„èµ„äº§</returns>
      * @throws Exception 
      */
     public abstract TransactionOutput getUnspent(UInt256 hash, int index) throws Exception;
 
     /**
-     *  »ñÈ¡Ñ¡Æ±ĞÅÏ¢
-     *  <returns>·µ»ØÒ»¸öÑ¡Æ±ÁĞ±í£¬°üº¬µ±Ç°Çø¿éÁ´ÖĞËùÓĞÓĞĞ§µÄÑ¡Æ±</returns>
+     *  è·å–é€‰ç¥¨ä¿¡æ¯
+     *  <returns>è¿”å›ä¸€ä¸ªé€‰ç¥¨åˆ—è¡¨ï¼ŒåŒ…å«å½“å‰åŒºå—é“¾ä¸­æ‰€æœ‰æœ‰æ•ˆçš„é€‰ç¥¨</returns>
      */
     public Stream<Vote> getVotes()
     {
@@ -392,15 +392,15 @@ public abstract class Blockchain implements AutoCloseable
     public abstract Stream<Vote> getVotes(Stream<Transaction> others);
 
     /**
-     *  ÅĞ¶Ï½»Ò×ÊÇ·ñË«»¨
-     *  <param name="tx">½»Ò×</param>
-     *  <returns>·µ»Ø½»Ò×ÊÇ·ñË«»¨</returns>
+     *  åˆ¤æ–­äº¤æ˜“æ˜¯å¦åŒèŠ±
+     *  <param name="tx">äº¤æ˜“</param>
+     *  <returns>è¿”å›äº¤æ˜“æ˜¯å¦åŒèŠ±</returns>
      */
     public abstract boolean isDoubleSpend(Transaction tx);
 
     /**
-     *  µ±Çø¿é±»Ğ´Èëµ½Ó²ÅÌºóµ÷ÓÃ
-     *  <param name="block">Çø¿é</param>
+     *  å½“åŒºå—è¢«å†™å…¥åˆ°ç¡¬ç›˜åè°ƒç”¨
+     *  <param name="block">åŒºå—</param>
      */
     protected void onPersistCompleted(Block block)
     {
@@ -413,9 +413,9 @@ public abstract class Blockchain implements AutoCloseable
     }
 
     /**
-     *  ×¢²áÄ¬ÈÏµÄÇø¿éÁ´ÊµÀı
-     *  <param name="blockchain">Çø¿éÁ´ÊµÀı</param>
-     *  <returns>·µ»Ø×¢²áºóµÄÇø¿éÁ´ÊµÀı</returns>
+     *  æ³¨å†Œé»˜è®¤çš„åŒºå—é“¾å®ä¾‹
+     *  <param name="blockchain">åŒºå—é“¾å®ä¾‹</param>
+     *  <returns>è¿”å›æ³¨å†Œåçš„åŒºå—é“¾å®ä¾‹</returns>
      */
     public static Blockchain register(Blockchain blockchain)
     {

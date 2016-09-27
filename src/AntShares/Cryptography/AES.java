@@ -1,4 +1,4 @@
-package AntShares.Cryptography;
+﻿package AntShares.Cryptography;
 
 import java.io.UnsupportedEncodingException;
 import java.security.*;

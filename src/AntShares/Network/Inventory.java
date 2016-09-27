@@ -1,4 +1,4 @@
-package AntShares.Network;
+﻿package AntShares.Network;
 
 import AntShares.UInt256;
 import AntShares.Core.Signable;

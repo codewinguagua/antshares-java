@@ -1,4 +1,4 @@
-package AntShares;
+﻿package AntShares;
 
 public class UInt160 extends UIntBase implements Comparable<UInt160>
 {

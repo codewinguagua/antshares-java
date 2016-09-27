@@ -1,4 +1,4 @@
-package AntShares.Network;
+﻿package AntShares.Network;
 
 import java.net.InetAddress;
 

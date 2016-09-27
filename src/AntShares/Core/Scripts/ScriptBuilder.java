@@ -1,4 +1,4 @@
-package AntShares.Core.Scripts;
+ï»¿package AntShares.Core.Scripts;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -7,16 +7,16 @@ import java.nio.*;
 import AntShares.UIntBase;
 
 /**
- *  ½Å±¾Éú³ÉÆ÷
+ *  è„šæœ¬ç”Ÿæˆå™¨
  */
 public class ScriptBuilder implements AutoCloseable
 {
     private ByteArrayOutputStream ms = new ByteArrayOutputStream();
 
     /**
-     *  Ìí¼Ó²Ù×÷·û
-     *  <param name="op">²Ù×÷·û</param>
-     *  <returns>·µ»ØÌí¼Ó²Ù×÷·ûÖ®ºóµÄ½Å±¾Éú³ÉÆ÷</returns>
+     *  æ·»åŠ æ“ä½œç¬¦
+     *  <param name="op">æ“ä½œç¬¦</param>
+     *  <returns>è¿”å›æ·»åŠ æ“ä½œç¬¦ä¹‹åçš„è„šæœ¬ç”Ÿæˆå™¨</returns>
      */
     public ScriptBuilder add(ScriptOp op)
     {
@@ -30,9 +30,9 @@ public class ScriptBuilder implements AutoCloseable
     }
 
     /**
-     *  Ìí¼ÓÒ»¶Î½Å±¾
-     *  <param name="script">½Å±¾</param>
-     *  <returns>·µ»ØÌí¼Ó½Å±¾Ö®ºóµÄ½Å±¾Éú³ÉÆ÷</returns>
+     *  æ·»åŠ ä¸€æ®µè„šæœ¬
+     *  <param name="script">è„šæœ¬</param>
+     *  <returns>è¿”å›æ·»åŠ è„šæœ¬ä¹‹åçš„è„šæœ¬ç”Ÿæˆå™¨</returns>
      */
     public ScriptBuilder add(byte[] script)
     {
@@ -54,9 +54,9 @@ public class ScriptBuilder implements AutoCloseable
     }
 
     /**
-     *  Ìí¼ÓÒ»¶Î½Å±¾£¬¸Ã½Å±¾µÄ×÷ÓÃÊÇ½«Ò»¸öÕûÊıÑ¹ÈëÕ»ÖĞ
-     *  <param name="number">ÒªÑ¹ÈëÕ»ÖĞµÄÕûÊı</param>
-     *  <returns>·µ»ØÌí¼Ó½Å±¾Ö®ºóµÄ½Å±¾Éú³ÉÆ÷</returns>
+     *  æ·»åŠ ä¸€æ®µè„šæœ¬ï¼Œè¯¥è„šæœ¬çš„ä½œç”¨æ˜¯å°†ä¸€ä¸ªæ•´æ•°å‹å…¥æ ˆä¸­
+     *  <param name="number">è¦å‹å…¥æ ˆä¸­çš„æ•´æ•°</param>
+     *  <returns>è¿”å›æ·»åŠ è„šæœ¬ä¹‹åçš„è„šæœ¬ç”Ÿæˆå™¨</returns>
      */
     public ScriptBuilder push(BigInteger number)
     {
@@ -70,9 +70,9 @@ public class ScriptBuilder implements AutoCloseable
     }
 
     /**
-     *  Ìí¼ÓÒ»¶Î½Å±¾£¬¸Ã½Å±¾µÄ×÷ÓÃÊÇ½«Ò»¸ö×Ö½ÚÊı×éÑ¹ÈëÕ»ÖĞ
-     *  <param name="data">ÒªÑ¹ÈëÕ»ÖĞµÄ×Ö½ÚÊı×é</param>
-     *  <returns>·µ»ØÌí¼Ó½Å±¾Ö®ºóµÄ½Å±¾Éú³ÉÆ÷</returns>
+     *  æ·»åŠ ä¸€æ®µè„šæœ¬ï¼Œè¯¥è„šæœ¬çš„ä½œç”¨æ˜¯å°†ä¸€ä¸ªå­—èŠ‚æ•°ç»„å‹å…¥æ ˆä¸­
+     *  <param name="data">è¦å‹å…¥æ ˆä¸­çš„å­—èŠ‚æ•°ç»„</param>
+     *  <returns>è¿”å›æ·»åŠ è„šæœ¬ä¹‹åçš„è„šæœ¬ç”Ÿæˆå™¨</returns>
      */
     public ScriptBuilder push(byte[] data)
     {
@@ -109,9 +109,9 @@ public class ScriptBuilder implements AutoCloseable
     }
 
     /**
-     *  Ìí¼ÓÒ»¶Î½Å±¾£¬¸Ã½Å±¾µÄ×÷ÓÃÊÇ½«Ò»¸öÉ¢ÁĞÖµÑ¹ÈëÕ»ÖĞ
-     *  <param name="hash">ÒªÑ¹ÈëÕ»ÖĞµÄÉ¢ÁĞÖµ</param>
-     *  <returns>·µ»ØÌí¼Ó½Å±¾Ö®ºóµÄ½Å±¾Éú³ÉÆ÷</returns>
+     *  æ·»åŠ ä¸€æ®µè„šæœ¬ï¼Œè¯¥è„šæœ¬çš„ä½œç”¨æ˜¯å°†ä¸€ä¸ªæ•£åˆ—å€¼å‹å…¥æ ˆä¸­
+     *  <param name="hash">è¦å‹å…¥æ ˆä¸­çš„æ•£åˆ—å€¼</param>
+     *  <returns>è¿”å›æ·»åŠ è„šæœ¬ä¹‹åçš„è„šæœ¬ç”Ÿæˆå™¨</returns>
      */
     public ScriptBuilder push(UIntBase hash)
     {
@@ -119,7 +119,7 @@ public class ScriptBuilder implements AutoCloseable
     }
 
     /**
-     *  »ñÈ¡½Å±¾Éú³ÉÆ÷ÖĞ°üº¬µÄ½Å±¾´úÂë
+     *  è·å–è„šæœ¬ç”Ÿæˆå™¨ä¸­åŒ…å«çš„è„šæœ¬ä»£ç 
      */
     public byte[] toArray()
     {

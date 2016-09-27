@@ -1,4 +1,4 @@
-package AntShares.Implementations.Blockchains.LevelDB;
+ï»¿package AntShares.Implementations.Blockchains.LevelDB;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -729,10 +729,10 @@ public class LevelDBBlockchain extends Blockchain
 //        }
     }
 
-    /*ÓÉÓÚunclaimedÎŞ·¨»Ö¸´£¬ËùÒÔRollbackÃ»ÓĞ°ì·¨ÊµÏÖ£¬³ı·Ç¶ÔÃ¿¸ö½»Ò×Êä³ö¶¼½¨Á¢Ë÷Òı¡£
+    /*ç”±äºunclaimedæ— æ³•æ¢å¤ï¼Œæ‰€ä»¥Rollbackæ²¡æœ‰åŠæ³•å®ç°ï¼Œé™¤éå¯¹æ¯ä¸ªäº¤æ˜“è¾“å‡ºéƒ½å»ºç«‹ç´¢å¼•ã€‚
     /**
-     * ½«Çø¿éÁ´µÄ×´Ì¬»Ø¹öµ½Ö¸¶¨µÄÎ»ÖÃ
-     * @param hash Òª»Ø¹öµ½µÄÇø¿éµÄÉ¢ÁĞÖµ
+     * å°†åŒºå—é“¾çš„çŠ¶æ€å›æ»šåˆ°æŒ‡å®šçš„ä½ç½®
+     * @param hash è¦å›æ»šåˆ°çš„åŒºå—çš„æ•£åˆ—å€¼
      */
 //    private void Rollback(UInt256 hash)
 //    {

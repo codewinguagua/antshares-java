@@ -1,4 +1,4 @@
-package AntShares.IO.Json;
+﻿package AntShares.IO.Json;
 
 import java.io.*;
 

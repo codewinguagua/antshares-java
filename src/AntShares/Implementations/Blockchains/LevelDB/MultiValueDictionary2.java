@@ -1,4 +1,4 @@
-package AntShares.Implementations.Blockchains.LevelDB;
+﻿package AntShares.Implementations.Blockchains.LevelDB;
 
 import java.util.HashMap;
 import java.util.Map;

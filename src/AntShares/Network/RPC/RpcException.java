@@ -1,4 +1,4 @@
-package AntShares.Network.RPC;
+﻿package AntShares.Network.RPC;
 
 public class RpcException extends Exception
 {

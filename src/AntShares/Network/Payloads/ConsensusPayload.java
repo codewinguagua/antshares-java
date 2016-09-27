@@ -1,4 +1,4 @@
-package AntShares.Network.Payloads;
+﻿package AntShares.Network.Payloads;
 
 import AntShares.*;
 import AntShares.Core.Scripts.Script;

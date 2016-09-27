@@ -1,4 +1,4 @@
-package AntShares.Core;
+ï»¿package AntShares.Core;
 
 import java.io.*;
 import java.util.Arrays;
@@ -15,44 +15,44 @@ import AntShares.Network.*;
 import AntShares.Wallets.Wallet;
 
 /**
- *  Çø¿é»òÇø¿éÍ·
+ *  åŒºå—æˆ–åŒºå—å¤´
  */
 public class Block extends Inventory
 {
     /**
-     *  Çø¿é°æ±¾
+     *  åŒºå—ç‰ˆæœ¬
      */
     public int version; // unsigned int
     /**
-     *  Ç°Ò»¸öÇø¿éµÄÉ¢ÁĞÖµ
+     *  å‰ä¸€ä¸ªåŒºå—çš„æ•£åˆ—å€¼
      */
     public UInt256 prevBlock;
     /**
-     *  ¸ÃÇø¿éÖĞËùÓĞ½»Ò×µÄMerkleÊ÷µÄ¸ù
+     *  è¯¥åŒºå—ä¸­æ‰€æœ‰äº¤æ˜“çš„Merkleæ ‘çš„æ ¹
      */
     public UInt256 merkleRoot;
     /**
-     *  Ê±¼ä´Á
+     *  æ—¶é—´æˆ³
      */
     public int timestamp; // unsigned int
     /**
-     *  Çø¿é¸ß¶È
+     *  åŒºå—é«˜åº¦
      */
     public int height; // unsigned int
     /**
-     *  Ëæ»úÊı
+     *  éšæœºæ•°
      */
     public long nonce; // unsigned long
     /**
-     *  ÏÂÒ»¸öÇø¿éµÄ¼ÇÕËºÏÔ¼µÄÉ¢ÁĞÖµ
+     *  ä¸‹ä¸€ä¸ªåŒºå—çš„è®°è´¦åˆçº¦çš„æ•£åˆ—å€¼
      */
     public UInt160 nextMiner;
     /**
-     *  ÓÃÓÚÑéÖ¤¸ÃÇø¿éµÄ½Å±¾
+     *  ç”¨äºéªŒè¯è¯¥åŒºå—çš„è„šæœ¬
      */
     public Script script;
     /**
-     *  ½»Ò×ÁĞ±í£¬µ±ÁĞ±íÖĞ½»Ò×µÄÊıÁ¿Îª0Ê±£¬¸ÃBlock¶ÔÏó±íÊ¾Ò»¸öÇø¿éÍ·
+     *  äº¤æ˜“åˆ—è¡¨ï¼Œå½“åˆ—è¡¨ä¸­äº¤æ˜“çš„æ•°é‡ä¸º0æ—¶ï¼Œè¯¥Blockå¯¹è±¡è¡¨ç¤ºä¸€ä¸ªåŒºå—å¤´
      */
     public Transaction[] transactions;
 
@@ -60,7 +60,7 @@ public class Block extends Inventory
 //    [NonSerialized]
     private Block _header = null;
     /**
-     *  ¸ÃÇø¿éµÄÇø¿éÍ·
+     *  è¯¥åŒºå—çš„åŒºå—å¤´
      */
     public Block header()
     {
@@ -81,13 +81,13 @@ public class Block extends Inventory
     }
 
     /**
-     *  ×Ê²úÇåµ¥µÄÀàĞÍ
+     *  èµ„äº§æ¸…å•çš„ç±»å‹
      */
     @Override
 	public InventoryType inventoryType() { return InventoryType.Block; }
 
     /**
-     *  ·µ»Øµ±Ç°Block¶ÔÏóÊÇ·ñÎªÇø¿éÍ·
+     *  è¿”å›å½“å‰Blockå¯¹è±¡æ˜¯å¦ä¸ºåŒºå—å¤´
      */
     public boolean isHeader() { return transactions.length == 0; }
 
@@ -103,8 +103,8 @@ public class Block extends Inventory
     }
 
     /**
-     *  ·´ĞòÁĞ»¯
-     *  <param name="reader">Êı¾İÀ´Ô´</param>
+     *  ååºåˆ—åŒ–
+     *  <param name="reader">æ•°æ®æ¥æº</param>
      * @throws IOException 
      * @throws IllegalAccessException 
      * @throws InstantiationException 
@@ -155,9 +155,9 @@ public class Block extends Inventory
     }
 
     /**
-     *  ±È½Ïµ±Ç°Çø¿éÓëÖ¸¶¨Çø¿éÊÇ·ñÏàµÈ
-     *  <param name="obj">Òª±È½ÏµÄÇø¿é</param>
-     *  <returns>·µ»Ø¶ÔÏóÊÇ·ñÏàµÈ</returns>
+     *  æ¯”è¾ƒå½“å‰åŒºå—ä¸æŒ‡å®šåŒºå—æ˜¯å¦ç›¸ç­‰
+     *  <param name="obj">è¦æ¯”è¾ƒçš„åŒºå—</param>
+     *  <returns>è¿”å›å¯¹è±¡æ˜¯å¦ç›¸ç­‰</returns>
      */
     @Override public boolean equals(Object obj)
     {
@@ -202,8 +202,8 @@ public class Block extends Inventory
     }
 
     /**
-     *  »ñµÃÇø¿éµÄHashCode
-     *  <returns>·µ»ØÇø¿éµÄHashCode</returns>
+     *  è·å¾—åŒºå—çš„HashCode
+     *  <returns>è¿”å›åŒºå—çš„HashCode</returns>
      */
     @Override public int hashCode()
     {
@@ -228,7 +228,7 @@ public class Block extends Inventory
     }
 
     /**
-     *  ¸ù¾İÇø¿éÖĞËùÓĞ½»Ò×µÄHashÉú³ÉMerkleRoot
+     *  æ ¹æ®åŒºå—ä¸­æ‰€æœ‰äº¤æ˜“çš„Hashç”ŸæˆMerkleRoot
      */
     public void rebuildMerkleRoot()
     {
@@ -236,8 +236,8 @@ public class Block extends Inventory
     }
 
     /**
-     *  ĞòÁĞ»¯
-     *  <param name="writer">´æ·ÅĞòÁĞ»¯ºóµÄÊı¾İ</param>
+     *  åºåˆ—åŒ–
+     *  <param name="writer">å­˜æ”¾åºåˆ—åŒ–åçš„æ•°æ®</param>
      * @throws IOException 
      */
     @Override public void serialize(BinaryWriter writer) throws IOException
@@ -259,8 +259,8 @@ public class Block extends Inventory
     }
 
     /**
-     *  ±ä³Éjson¶ÔÏó
-     *  <returns>·µ»Øjson¶ÔÏó</returns>
+     *  å˜æˆjsonå¯¹è±¡
+     *  <returns>è¿”å›jsonå¯¹è±¡</returns>
      */
     public JObject json()
     {
@@ -279,8 +279,8 @@ public class Block extends Inventory
     }
 
     /**
-     *  °ÑÇø¿é¶ÔÏó±äÎªÖ»°üº¬Çø¿éÍ·ºÍ½»Ò×HashµÄ×Ö½ÚÊı×é£¬È¥³ı½»Ò×Êı¾İ
-     *  <returns>·µ»ØÖ»°üº¬Çø¿éÍ·ºÍ½»Ò×HashµÄ×Ö½ÚÊı×é</returns>
+     *  æŠŠåŒºå—å¯¹è±¡å˜ä¸ºåªåŒ…å«åŒºå—å¤´å’Œäº¤æ˜“Hashçš„å­—èŠ‚æ•°ç»„ï¼Œå»é™¤äº¤æ˜“æ•°æ®
+     *  <returns>è¿”å›åªåŒ…å«åŒºå—å¤´å’Œäº¤æ˜“Hashçš„å­—èŠ‚æ•°ç»„</returns>
      */
     public byte[] trim()
     {
@@ -302,8 +302,8 @@ public class Block extends Inventory
     }
 
     /**
-     *  ÑéÖ¤¸ÃÇø¿éÍ·ÊÇ·ñºÏ·¨
-     *  <returns>·µ»Ø¸ÃÇø¿éÍ·µÄºÏ·¨ĞÔ£¬·µ»Øtrue¼´ÎªºÏ·¨£¬·ñÔò£¬·Ç·¨¡£</returns>
+     *  éªŒè¯è¯¥åŒºå—å¤´æ˜¯å¦åˆæ³•
+     *  <returns>è¿”å›è¯¥åŒºå—å¤´çš„åˆæ³•æ€§ï¼Œè¿”å›trueå³ä¸ºåˆæ³•ï¼Œå¦åˆ™ï¼Œéæ³•ã€‚</returns>
      */
     @Override public boolean verify()
     {
@@ -311,9 +311,9 @@ public class Block extends Inventory
     }
 
     /**
-     *  ÑéÖ¤¸ÃÇø¿éÍ·ÊÇ·ñºÏ·¨
-     *  <param name="completely">ÊÇ·ñÍ¬Ê±ÑéÖ¤Çø¿éÖĞµÄÃ¿Ò»±Ê½»Ò×</param>
-     *  <returns>·µ»Ø¸ÃÇø¿éÍ·µÄºÏ·¨ĞÔ£¬·µ»Øtrue¼´ÎªºÏ·¨£¬·ñÔò£¬·Ç·¨¡£</returns>
+     *  éªŒè¯è¯¥åŒºå—å¤´æ˜¯å¦åˆæ³•
+     *  <param name="completely">æ˜¯å¦åŒæ—¶éªŒè¯åŒºå—ä¸­çš„æ¯ä¸€ç¬”äº¤æ˜“</param>
+     *  <returns>è¿”å›è¯¥åŒºå—å¤´çš„åˆæ³•æ€§ï¼Œè¿”å›trueå³ä¸ºåˆæ³•ï¼Œå¦åˆ™ï¼Œéæ³•ã€‚</returns>
      */
     public boolean verify(boolean completely)
     {

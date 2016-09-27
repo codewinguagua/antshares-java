@@ -1,20 +1,20 @@
-package AntShares.Network;
+锘縫ackage AntShares.Network;
 
 /**
- *  定义清单中的对象类型
+ *  瀹氫箟娓呭崟涓殑瀵硅薄绫诲瀷
  */
 public enum InventoryType
 {
     /**
-     *  交易
+     *  浜ゆ槗
      */
     TX(0x01),
     /**
-     *  区块
+     *  鍖哄潡
      */
     Block(0x02),
     /**
-     *  共识数据
+     *  鍏辫瘑鏁版嵁
      */
     Consensus(0xe0),
     

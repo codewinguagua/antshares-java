@@ -1,4 +1,4 @@
-package AntShares;
+ï»¿package AntShares;
 
 import java.io.IOException;
 import java.nio.*;
@@ -53,8 +53,8 @@ public abstract class UIntBase implements Serializable
     }
 
     /**
-     * ×ªÎª16½øÖÆ×Ö·û´®
-     * @return ·µ»Ø16½øÖÆ×Ö·û´®
+     * è½¬ä¸º16è¿›åˆ¶å­—ç¬¦ä¸²
+     * @return è¿”å›ž16è¿›åˆ¶å­—ç¬¦ä¸²
      */
     @Override
     public String toString()

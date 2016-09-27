@@ -1,4 +1,4 @@
-package AntShares.Network;
+ï»¿package AntShares.Network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class LocalNode // TODO : IDisposable
 //    public final int DEFAULT_PORT = 10333;
 //#endif
 
-    //TODO: ĞèÒª´î½¨Ò»ÅúÖÖ×Ó½Úµã
+    //TODO: éœ€è¦æ­å»ºä¸€æ‰¹ç§å­èŠ‚ç‚¹
     private static final String[] SeedList =
     {
         "seed1.antshares.org",

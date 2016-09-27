@@ -1,4 +1,4 @@
-package AntShares.Core;
+锘縫ackage AntShares.Core;
 
 import java.io.IOException;
 
@@ -8,20 +8,20 @@ import AntShares.IO.Json.*;
 import AntShares.Wallets.Wallet;
 
 /**
- *  交易输出
+ *  浜ゆ槗杈撳嚭
  */
 public class TransactionOutput implements Serializable
 {
     /**
-     *  资产编号
+     *  璧勪骇缂栧彿
      */
     public UInt256 assetId;
     /**
-     *  金额
+     *  閲戦
      */
     public Fixed8 value;
     /**
-     *  收款地址
+     *  鏀舵鍦板潃
      */
     public UInt160 scriptHash;
     
@@ -50,9 +50,9 @@ public class TransactionOutput implements Serializable
 	}
 
     /**
-     *  将交易输出转变为json对象
-     *  <param name="index">该交易输出在交易中的索引</param>
-     *  <returns>返回json对象</returns>
+     *  灏嗕氦鏄撹緭鍑鸿浆鍙樹负json瀵硅薄
+     *  <param name="index">璇ヤ氦鏄撹緭鍑哄湪浜ゆ槗涓殑绱㈠紩</param>
+     *  <returns>杩斿洖json瀵硅薄</returns>
      */
     public JObject json(/*ushort*/int index)
     {

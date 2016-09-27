@@ -1,4 +1,4 @@
-package AntShares.IO.Caching;
+锘縫ackage AntShares.IO.Caching;
 
 import java.util.*;
 
@@ -64,7 +64,7 @@ abstract class Cache<TKey, TValue> implements Collection<TValue> // TODO, IDispo
             {
                 if (InnerDictionary.size() >= max_capacity)
                 {
-                    //TODO: 对PLINQ查询进行性能测试，以便确定此处使用何种算法更优（并行或串行）
+                    //TODO: 瀵筆LINQ鏌ヨ杩涜鎬ц兘娴嬭瘯锛屼互渚跨‘瀹氭澶勪娇鐢ㄤ綍绉嶇畻娉曟洿浼橈紙骞惰鎴栦覆琛岋級
 //                    foreach (CacheItem item_del in InnerDictionary.Values.AsParallel().OrderBy(p => p.Time).Take(InnerDictionary.Count - max_capacity + 1))
 //                    {
 //                        RemoveInternal(item_del);

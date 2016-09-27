@@ -1,4 +1,4 @@
-package AntShares;
+ï»¿package AntShares;
 
 public class UInt256 extends UIntBase implements Comparable<UInt256>
 {
@@ -34,7 +34,7 @@ public class UInt256 extends UIntBase implements Comparable<UInt256>
         if (s.startsWith("0x"))
             s = s.substring(2);
         if (s.length() != 64)
-            throw new IllegalArgumentException(String.format("×Ö·û´®\"{0}\"ÎÞ·¨Ê¶±ðÎªÕýÈ·µÄUInt256¡£", s));
+            throw new IllegalArgumentException(String.format("å­—ç¬¦ä¸²\"{0}\"æ— æ³•è¯†åˆ«ä¸ºæ­£ç¡®çš„UInt256ã€‚", s));
         byte[] v = Helper.hexToBytes(s);
         return new UInt256(Helper.reverse(v));
     }
