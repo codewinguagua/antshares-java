@@ -20,7 +20,7 @@ public class RpcClient
 		if (response.containsProperty("result"))
 			return response.get("result");
 		else if (response.containsProperty("error"))
-			throw new RpcException((int)response.get("code").asNumber(), response.get("message").asString());
+			throw new RpcException((int)response.get("error").get("code").asNumber(), response.get("error").get("message").asString());
 		else
 			throw new IOException();
 	}
