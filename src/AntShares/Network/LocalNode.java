@@ -12,7 +12,6 @@ import AntShares.Core.Block;
 import AntShares.Core.Transaction;
 import AntShares.Core.TransactionInput;
 import AntShares.IO.Caching.RelayCache;
-import AntShares.Implementations.Wallets.EntityFramework.Version;
 
 public class LocalNode // TODO : IDisposable
 {
@@ -118,7 +117,7 @@ public class LocalNode // TODO : IDisposable
         this.listenerThread = new Thread(()->AcceptPeersLoop());
         this.listenerThread.setDaemon(true);
         this.listenerThread.setName("LocalNode.AcceptPeersLoop");
-        this.UserAgent = String.format("/AntSharesCore:{0}/", Version.ToString());
+        //this.UserAgent = String.format("/AntSharesCore:{0}/", Version.ToString());
     }
 
     private void AcceptPeersLoop()

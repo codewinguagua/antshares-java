@@ -9,7 +9,7 @@ import AntShares.*;
 import AntShares.Cryptography.ECC;
 import AntShares.IO.*;
 import AntShares.IO.Json.*;
-import AntShares.Wallets.SignatureContract;
+import AntShares.Wallets.Contract;
 
 public class EnrollmentTransaction extends Transaction
 {
@@ -47,7 +47,7 @@ public class EnrollmentTransaction extends Transaction
 	{
         if (_miner == null)
         {
-            _miner = SignatureContract.create(publicKey).scriptHash();
+            _miner = Contract.createSignatureContract(publicKey).scriptHash();
         }
         return _miner;
 	}

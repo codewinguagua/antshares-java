@@ -91,7 +91,7 @@ public class RegisterTransaction extends Transaction
 	public UInt160[] getScriptHashesForVerifying()
 	{
         HashSet<UInt160> hashes = new HashSet<UInt160>(Arrays.asList(super.getScriptHashesForVerifying()));
-        hashes.add(Script.toScriptHash(SignatureContract.createSignatureRedeemScript(issuer)));
+        hashes.add(Script.toScriptHash(Contract.createSignatureRedeemScript(issuer)));
         hashes.add(admin);
         return hashes.stream().sorted().toArray(UInt160[]::new);
 	}

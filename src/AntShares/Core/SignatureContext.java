@@ -75,8 +75,8 @@ public class SignatureContext
                 	signatures[i] = new HashMap<ECPoint, byte[]>();
                 signatures[i].put(pubkey, signature);
                 completed[i] |= 
-                        contract.parameterList().length == signatures[i].size()
-                        && Arrays.stream(contract.parameterList()).allMatch(
+                        contract.parameterList.length == signatures[i].size()
+                        && Arrays.stream(contract.parameterList).allMatch(
                                 p -> p == ContractParameterType.Signature);
                 return true;
             }

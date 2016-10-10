@@ -10,7 +10,7 @@ import AntShares.*;
 import AntShares.Core.Scripts.Script;
 import AntShares.Cryptography.ECC;
 import AntShares.IO.Serializable;
-import AntShares.Wallets.MultiSigContract;
+import AntShares.Wallets.Contract;
 
 /**
  *  实现区块链功能的基类
@@ -247,7 +247,7 @@ public abstract class Blockchain implements AutoCloseable
      */
     public static UInt160 getMinerAddress(ECPoint[] miners)
     {
-        return Script.toScriptHash(MultiSigContract.createMultiSigRedeemScript(miners.length - (miners.length - 1) / 3, miners));
+        return Script.toScriptHash(Contract.createMultiSigRedeemScript(miners.length - (miners.length - 1) / 3, miners));
     }
 
     private ArrayList<ECPoint> _miners = new ArrayList<ECPoint>();

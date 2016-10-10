@@ -413,7 +413,7 @@ public abstract class Wallet implements AutoCloseable
     {
         synchronized (contracts)
         {
-        	return contracts.values().stream().filter(p -> p instanceof SignatureContract).findAny().map(p -> p.scriptHash()).orElse(contracts.keySet().stream().findAny().get());
+        	return contracts.values().stream().filter(p -> p.isStandard()).findAny().map(p -> p.scriptHash()).orElse(contracts.keySet().stream().findAny().get());
         }
     }
 
@@ -486,6 +486,18 @@ public abstract class Wallet implements AutoCloseable
         Arrays.fill(privateKey, (byte) 0);
         return account;
     }
+    
+    protected boolean isWalletTransaction(Transaction tx)
+    {
+    	synchronized (contracts)
+        {
+            if (Arrays.stream(tx.outputs).anyMatch(p -> contracts.containsKey(p.scriptHash)))
+                return true;
+            if (Arrays.stream(tx.scripts).anyMatch(p -> contracts.containsKey(Script.toScriptHash(p.redeemScript))))
+                return true;
+        }
+        return false;
+    }
 
     protected abstract Account[] loadAccounts();
 
@@ -535,8 +547,8 @@ public abstract class Wallet implements AutoCloseable
         return tx;
     }
 
-    protected abstract void onProcessNewBlock(Block block, Transaction[] transactions, Coin[] added, Coin[] changed, Coin[] deleted);
-    protected abstract void onSendTransaction(Transaction tx, Coin[] added, Coin[] changed);
+    protected abstract void onProcessNewBlock(Block block, Coin[] added, Coin[] changed, Coin[] deleted);
+    protected abstract void onSaveTransaction(Transaction tx, Coin[] added, Coin[] changed);
 
     private void processBlocks()
     {
@@ -589,7 +601,6 @@ public abstract class Wallet implements AutoCloseable
         {
             synchronized (coins)
             {
-                HashSet<Transaction> transactions = new HashSet<Transaction>();
                 for (Transaction tx : block.transactions)
                 {
                     for (/*ushort*/int index = 0; index < tx.outputs.length; index++)
@@ -614,7 +625,6 @@ public abstract class Wallet implements AutoCloseable
                             	coin.setState(CoinState.Unspent);
                                 coins.add(coin);
                             }
-                            transactions.add(tx);
                         }
                     }
                 }
@@ -629,7 +639,6 @@ public abstract class Wallet implements AutoCloseable
                             	coin.setState(CoinState.Spent);
                             else
                                 coins.remove(input);
-                            transactions.add(tx);
                         }
                     }
                 }
@@ -640,29 +649,16 @@ public abstract class Wallet implements AutoCloseable
                         if (coins.containsKey(claim))
                         {
                             coins.remove(claim);
-                            transactions.add(tx);
                         }
                     }
                 }
                 current_height++;
                 changeset = coins.getChangeSet(Coin[]::new);
-                int chain_height;
-				try
-				{
-					chain_height = Blockchain.current().height();
-				}
-				catch (Exception ex)
-				{
-					chain_height = 0;
-				}
-                if (block.height == chain_height || chain_height == 0 || changeset.length > 0)
-                {
-                	Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
-                	Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
-                	Coin[] deleted = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Deleted).toArray(Coin[]::new);
-                    onProcessNewBlock(block, transactions.toArray(new Transaction[transactions.size()]), added, changed, deleted);
-                    coins.commit();
-                }
+                Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
+                Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
+                Coin[] deleted = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Deleted).toArray(Coin[]::new);
+                onProcessNewBlock(block, added, changed, deleted);
+                coins.commit();
             }
         }
         // TODO
@@ -716,7 +712,7 @@ public abstract class Wallet implements AutoCloseable
                 {
                 	Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
                 	Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
-                    onSendTransaction(tx, added, changed);
+                    onSaveTransaction(tx, added, changed);
                     coins.commit();
                 }
             }

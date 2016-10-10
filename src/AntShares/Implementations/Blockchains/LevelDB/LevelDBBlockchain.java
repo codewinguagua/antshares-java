@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 import AntShares.*;
 import AntShares.Core.*;
 import AntShares.IO.Caching.*;
-import AntShares.Implementations.Wallets.EntityFramework.Version;
 
 public class LevelDBBlockchain extends Blockchain
 {
@@ -46,7 +45,7 @@ public class LevelDBBlockchain extends Blockchain
     public LevelDBBlockchain(String path)
     {
         header_index.add(GENESIS_BLOCK.hash());
-        Version version;
+//        Version version;
 //        Slice value;
 //        db = DB.Open(path, new Options { CreateIfMissing = true });
 //        if (db.TryGet(ReadOptions.Default, SliceBuilder.Begin(DataEntryPrefix.CFG_Version), out value) && Version.TryParse(value.ToString(), out version) && version >= Version.Parse("0.6.6043.32131"))
