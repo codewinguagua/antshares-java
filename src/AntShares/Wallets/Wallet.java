@@ -681,7 +681,7 @@ public abstract class Wallet implements AutoCloseable
 
     protected abstract void saveStoredData(String name, byte[] value);
 
-    public boolean sendTransaction(Transaction tx)
+    public boolean saveTransaction(Transaction tx)
     {
         Coin[] changeset;
         synchronized (contracts)

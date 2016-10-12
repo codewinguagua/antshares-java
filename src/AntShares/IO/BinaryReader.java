@@ -155,9 +155,9 @@ public class BinaryReader implements AutoCloseable
         long fb = Byte.toUnsignedLong(readByte());
         long value;
         if (fb == 0xFD)
-            value = Short.toUnsignedLong(reader.readShort());
+            value = Short.toUnsignedLong(readShort());
         else if (fb == 0xFE)
-            value = Integer.toUnsignedLong(reader.readInt());
+            value = Integer.toUnsignedLong(readInt());
         else if (fb == 0xFF)
             value = readLong();
         else
