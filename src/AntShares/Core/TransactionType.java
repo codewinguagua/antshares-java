@@ -37,6 +37,10 @@ public enum TransactionType
      *  委托交易
      */
     AgencyTransaction(0xb0),
+    /**
+     *  Publish scripts to the blockchain for being invoked later.
+     */
+    PublishTransaction(0xd0),
     ;
 
     private byte value;

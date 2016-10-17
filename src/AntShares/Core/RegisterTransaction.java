@@ -18,6 +18,7 @@ public class RegisterTransaction extends Transaction
 	public AssetType assetType;
 	public String name;
 	public Fixed8 amount;
+	public byte precision;
 	public ECPoint issuer;
 	public UInt160 admin;
 	
@@ -42,6 +43,8 @@ public class RegisterTransaction extends Transaction
 	            throw new IOException();
 	        if (assetType == AssetType.Invoice && !amount.equals(Fixed8.SATOSHI.negate()))
 	            throw new IOException();
+            precision = reader.readByte();
+            if (precision < 0 || precision > 8) throw new IOException();
 	        issuer = reader.readECPoint();
 	        admin = reader.readSerializable(UInt160.class);
 		}
@@ -113,6 +116,7 @@ public class RegisterTransaction extends Transaction
         json.get("asset").set("amount", new JString(amount.toString()));
         json.get("asset").set("high", new JNumber(amount.getData() >> 32));
         json.get("asset").set("low", new JNumber(amount.getData() & 0xffffffff));
+        json.get("asset").set("precision", new JNumber(precision));
         json.get("asset").set("issuer", new JString(ECC.toString(issuer)));
         json.get("asset").set("admin", new JString(Wallet.toAddress(admin)));
         return json;
@@ -124,6 +128,7 @@ public class RegisterTransaction extends Transaction
         writer.writeByte(assetType.value());
         writer.writeVarString(name);
         writer.writeSerializable(amount);
+        writer.writeByte(precision);
         writer.writeECPoint(issuer);
         writer.writeSerializable(admin);
 	}
@@ -133,8 +138,7 @@ public class RegisterTransaction extends Transaction
 	{
         if (assetType == AssetType.AntShare || assetType == AssetType.AntCoin)
             return Fixed8.ZERO;
-        //TODO: mainnet
-        return Fixed8.fromLong(100);
+        return Fixed8.fromLong(10000);
 	}
 	
 	@Override

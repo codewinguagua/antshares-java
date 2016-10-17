@@ -14,6 +14,7 @@ import AntShares.Network.*;
 public abstract class Transaction extends Inventory
 {
 	public final TransactionType type;
+	public static final byte version = 0;
 	public TransactionAttribute[] attributes;
 	public TransactionInput[] inputs;
 	public TransactionOutput[] outputs;
@@ -87,6 +88,8 @@ public abstract class Transaction extends Inventory
 	{
         try
         {
+            if (reader.readByte() != version)
+                throw new IOException();
             deserializeExclusiveData(reader);
 			attributes = reader.readSerializableArray(TransactionAttribute.class);
 	        if (Arrays.stream(attributes).map(p -> p.usage).distinct().count() != attributes.length)
@@ -177,6 +180,7 @@ public abstract class Transaction extends Inventory
         JObject json = new JObject();
         json.set("txid", new JString(hash().toString()));
         json.set("type", new JString(type.toString()));
+        json.set("version", new JNumber(version));
         json.set("attributes", new JArray(Arrays.stream(attributes).map(p -> p.json()).toArray(JObject[]::new)));
         json.set("vin", new JArray(Arrays.stream(inputs).map(p -> p.json()).toArray(JObject[]::new)));
         json.set("vout", new JArray(IntStream.range(0, outputs.length).boxed().map(i -> outputs[i].json(i)).toArray(JObject[]::new)));
@@ -232,6 +236,7 @@ public abstract class Transaction extends Inventory
 	public void serializeUnsigned(BinaryWriter writer) throws IOException
 	{
         writer.writeByte(type.value());
+        writer.writeByte(version);
         serializeExclusiveData(writer);
         writer.writeSerializableArray(attributes);
         writer.writeSerializableArray(inputs);

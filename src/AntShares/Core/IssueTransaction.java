@@ -1,25 +1,14 @@
 ﻿package AntShares.Core;
 
-import java.io.IOException;
 import java.util.*;
 
 import AntShares.*;
-import AntShares.IO.*;
-import AntShares.IO.Json.*;
 
 public class IssueTransaction extends Transaction
-{
-	public int nonce; // unsigned int
-	
+{	
 	public IssueTransaction()
 	{
 		super(TransactionType.IssueTransaction);
-	}
-	
-	@Override
-	protected void deserializeExclusiveData(BinaryReader reader) throws IOException
-	{
-		nonce = reader.readInt();
 	}
 	
 	@Override
@@ -45,24 +34,11 @@ public class IssueTransaction extends Transaction
 	}
 	
 	@Override
-    public JObject json()
-    {
-        JObject json = super.json();
-        json.set("nonce", new JNumber(Integer.toUnsignedLong(nonce)));
-        return json;
-    }
-	
-	@Override
-	protected void serializeExclusiveData(BinaryWriter writer) throws IOException
-	{
-		writer.writeInt(nonce);
-	}
-	
-	@Override
 	public Fixed8 systemFee()
 	{
-		//TODO: mainnet
-		return Fixed8.ZERO;
+        if (Arrays.stream(outputs).allMatch(p -> p.assetId.equals(Blockchain.ANTSHARE.hash()) || p.assetId.equals(Blockchain.ANTCOIN.hash())))
+            return Fixed8.ZERO;
+        return Fixed8.fromLong(500);
 	}
 	
 	@Override
