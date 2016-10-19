@@ -50,7 +50,7 @@ public class Account
         return publicKeyHash.equals(((Account) obj).publicKeyHash);
     }
 
-    public String Export()
+    public String export()
     {
         //using (Decrypt())
         {

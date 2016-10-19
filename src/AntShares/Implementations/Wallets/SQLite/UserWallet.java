@@ -332,7 +332,7 @@ public class UserWallet extends Wallet
         //TransactionsChanged?.Invoke(this, GetTransactionInfo(new[] { tx_changed }));
     }
 
-    public static UserWallet Open(String path, String password) throws BadPaddingException, IllegalBlockSizeException
+    public static UserWallet open(String path, String password) throws BadPaddingException, IllegalBlockSizeException
     {
         return new UserWallet(path, password, false);
     }
