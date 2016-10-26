@@ -370,4 +370,15 @@ public class UserWallet extends Wallet
     	entity.value = value;
     	ctx.insertOrUpdate(entity);
     }
+    
+    /*
+     *  ********************ChangeLog**************************
+     *  date:20161024
+     *  auth:tsh
+     *  desp:add method to get local'WalletHeight, cause sdk'client need to synchronous data with remote
+     *  
+     */
+    public int getWalletHeight() {
+    	return walletHeight();
+    }
 }
