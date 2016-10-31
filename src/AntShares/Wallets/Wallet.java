@@ -76,7 +76,15 @@ public abstract class Wallet implements AutoCloseable
 			this.masterKey = AES.decrypt(loadStoredData("MasterKey"), passwordKey, iv);
 	        //ProtectedMemory.Protect(masterKey, MemoryProtectionScope.SameProcess);
             this.accounts = Arrays.stream(loadAccounts()).collect(Collectors.toMap(p -> p.publicKeyHash, p -> p));
-            this.contracts = Arrays.stream(loadContracts()).collect(Collectors.toMap(p -> p.publicKeyHash, p -> p));
+//          this.contracts = Arrays.stream(loadContracts()).collect(Collectors.toMap(p -> p.publicKeyHash, p -> p));
+            /*
+             *  ********************ChangeLog**************************
+             *  date:20161024
+             *  auth:tsh
+             *  desp:change method to get Constracts.Key,cause wallet.addContract
+             *  
+             */
+            this.contracts = Arrays.stream(loadContracts()).collect(Collectors.toMap(p -> p.scriptHash(), p -> p));
             this.coins = new TrackableCollection<TransactionInput, Coin>(loadCoins());
             this.current_height = ByteBuffer.wrap(loadStoredData("Height")).order(ByteOrder.LITTLE_ENDIAN).getInt();
         }
