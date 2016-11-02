@@ -18,6 +18,8 @@
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.7</version>
       </plugin>
+     
+      
     </plugins>
   </build>
   <dependencies>
