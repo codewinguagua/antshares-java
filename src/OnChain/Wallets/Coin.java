@@ -1,4 +1,4 @@
-﻿package OnChain.Wallets;
+package OnChain.Wallets;
 
 import OnChain.*;
 import OnChain.Core.TransactionInput;

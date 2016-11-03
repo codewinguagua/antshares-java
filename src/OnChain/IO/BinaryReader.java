@@ -1,4 +1,4 @@
-﻿package OnChain.IO;
+package OnChain.IO;
 
 import java.io.*;
 import java.lang.reflect.Array;

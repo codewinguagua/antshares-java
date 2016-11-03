@@ -1,4 +1,4 @@
-﻿package OnChain.Network;
+package OnChain.Network;
 
 /**
  *  定义清单中的对象类型

@@ -1,4 +1,4 @@
-﻿package OnChain.Cryptography;
+package OnChain.Cryptography;
 
 import java.io.UnsupportedEncodingException;
 import java.security.*;

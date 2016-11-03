@@ -1,4 +1,4 @@
-﻿package OnChain.Core;
+package OnChain.Core;
 
 /**
  *  交易类型

@@ -1,4 +1,4 @@
-﻿package OnChain.Network;
+package OnChain.Network;
 
 import OnChain.UInt256;
 import OnChain.Core.Signable;

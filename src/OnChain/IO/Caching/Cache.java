@@ -1,4 +1,4 @@
-﻿package OnChain.IO.Caching;
+package OnChain.IO.Caching;
 
 import java.util.*;
 

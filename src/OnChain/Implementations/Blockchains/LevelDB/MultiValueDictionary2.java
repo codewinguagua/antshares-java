@@ -1,4 +1,4 @@
-﻿package OnChain.Implementations.Blockchains.LevelDB;
+package OnChain.Implementations.Blockchains.LevelDB;
 
 import java.util.HashMap;
 import java.util.Map;

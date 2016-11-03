@@ -1,4 +1,4 @@
-﻿package OnChain.Core;
+package OnChain.Core;
 
 public class ContractTransaction extends Transaction
 {

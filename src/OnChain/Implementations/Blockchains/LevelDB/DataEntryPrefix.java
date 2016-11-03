@@ -1,4 +1,4 @@
-﻿package OnChain.Implementations.Blockchains.LevelDB;
+package OnChain.Implementations.Blockchains.LevelDB;
 
 public enum DataEntryPrefix // : byte
 {

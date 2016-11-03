@@ -1,4 +1,4 @@
-﻿package OnChain.Wallets;
+package OnChain.Wallets;
 
 /**
  *  表示智能合约的参数类型

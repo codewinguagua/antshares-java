@@ -1,4 +1,4 @@
-﻿package OnChain.Implementations.Wallets.SQLite;
+package OnChain.Implementations.Wallets.SQLite;
 
 class Key
 {

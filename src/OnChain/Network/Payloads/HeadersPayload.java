@@ -1,4 +1,4 @@
-﻿package OnChain.Network.Payloads;
+package OnChain.Network.Payloads;
 
 import OnChain.Core.Block;
 import OnChain.IO.*;

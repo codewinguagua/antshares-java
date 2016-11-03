@@ -1,4 +1,4 @@
-﻿package OnChain;
+package OnChain;
 
 public class Helper
 {

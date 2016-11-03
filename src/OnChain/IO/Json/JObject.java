@@ -1,4 +1,4 @@
-﻿package OnChain.IO.Json;
+package OnChain.IO.Json;
 
 import java.io.*;
 import java.util.*;

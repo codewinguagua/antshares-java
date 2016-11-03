@@ -1,4 +1,4 @@
-﻿package OnChain.Core;
+package OnChain.Core;
 
 /**
  *  表示交易特性的用途

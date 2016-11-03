@@ -1,4 +1,4 @@
-﻿package OnChain.Core.Scripts;
+package OnChain.Core.Scripts;
 //package AntShares.Core.Scripts;
 //
 //import java.io.ByteArrayInputStream;

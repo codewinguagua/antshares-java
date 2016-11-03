@@ -1,4 +1,4 @@
-﻿package OnChain;
+package OnChain;
 
 /**
  * To simulate out keyword in c#

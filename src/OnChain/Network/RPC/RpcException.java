@@ -1,4 +1,4 @@
-﻿package OnChain.Network.RPC;
+package OnChain.Network.RPC;
 
 public class RpcException extends Exception
 {

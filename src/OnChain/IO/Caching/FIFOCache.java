@@ -1,4 +1,4 @@
-﻿package OnChain.IO.Caching;
+package OnChain.IO.Caching;
 
 abstract class FIFOCache<TKey, TValue> extends Cache<TKey, TValue>
 {

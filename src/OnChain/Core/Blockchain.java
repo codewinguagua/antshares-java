@@ -1,4 +1,4 @@
-﻿package OnChain.Core;
+package OnChain.Core;
 
 import java.time.Duration;
 import java.util.*;
@@ -172,7 +172,7 @@ public abstract class Blockchain implements AutoCloseable
     public abstract Stream<RegisterTransaction> getAssets();
 
     /**
-     *  根据指定的高度，返回对应的区块信息
+     *  根据指定的高度，返回对应的区���信息
      *  <param name="height">区块高度</param>
      *  <returns>返回对应的区块信息</returns>
      * @throws Exception 
@@ -314,7 +314,7 @@ public abstract class Blockchain implements AutoCloseable
     public abstract UInt256 getNextBlockHash(UInt256 hash);
 
     /**
-     *  根据指定的资产编号，返回对应资产的发行量
+     *  ���据指定的资产编号，返回对应资产的发行量
      *  <param name="asset_id">资产编号</param>
      *  <returns>返回对应资产的当前已经发行的数量</returns>
      */
@@ -339,7 +339,7 @@ public abstract class Blockchain implements AutoCloseable
     public abstract long getSysFeeAmount(UInt256 hash);
 
     /**
-     *  根据指定的散列值，返回对应的交易信息
+     *  根据指定的散列值，返回对��交易信息
      *  <param name="hash">散列值</param>
      *  <returns>返回对应的交易信息</returns>
      * @throws Exception 

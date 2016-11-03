@@ -1,4 +1,4 @@
-﻿package OnChain;
+package OnChain;
 
 import java.io.IOException;
 import java.math.BigDecimal;

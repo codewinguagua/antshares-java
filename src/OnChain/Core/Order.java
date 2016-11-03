@@ -1,4 +1,4 @@
-﻿package OnChain.Core;
+package OnChain.Core;
 
 import java.io.IOException;
 import java.util.Arrays;

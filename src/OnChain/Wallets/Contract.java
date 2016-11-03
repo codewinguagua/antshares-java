@@ -1,4 +1,4 @@
-﻿package OnChain.Wallets;
+package OnChain.Wallets;
 
 import java.io.IOException;
 import java.math.BigInteger;

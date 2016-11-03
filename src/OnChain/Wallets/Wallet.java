@@ -1,4 +1,4 @@
-﻿package OnChain.Wallets;
+package OnChain.Wallets;
 
 import java.lang.Thread.State;
 import java.nio.*;

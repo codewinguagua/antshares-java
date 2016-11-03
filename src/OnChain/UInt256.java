@@ -1,4 +1,4 @@
-﻿package OnChain;
+package OnChain;
 
 public class UInt256 extends UIntBase implements Comparable<UInt256>
 {

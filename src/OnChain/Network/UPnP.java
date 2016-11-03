@@ -1,4 +1,4 @@
-﻿package OnChain.Network;
+package OnChain.Network;
 
 import java.net.InetAddress;
 

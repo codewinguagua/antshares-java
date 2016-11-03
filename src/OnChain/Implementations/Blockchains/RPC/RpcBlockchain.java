@@ -1,4 +1,4 @@
-﻿package OnChain.Implementations.Blockchains.RPC;
+package OnChain.Implementations.Blockchains.RPC;
 
 import java.io.IOException;
 import java.util.*;
