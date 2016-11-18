@@ -36,7 +36,6 @@ public abstract class Wallet implements AutoCloseable
 
     protected String dbPath() { return path; }
     protected final Object syncroot = new Object();
-
     protected int walletHeight() {
         return current_height;
     }
@@ -601,7 +600,6 @@ public abstract class Wallet implements AutoCloseable
             }
         }
     }
-
     private void processNewBlock(Block block)
     {
         Coin[] changeset;
@@ -660,13 +658,14 @@ public abstract class Wallet implements AutoCloseable
                         }
                     }
                 }
-                current_height++;
+//                current_height++;
                 changeset = coins.getChangeSet(Coin[]::new);
                 Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
                 Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
                 Coin[] deleted = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Deleted).toArray(Coin[]::new);
                 onProcessNewBlock(block, added, changed, deleted);
                 coins.commit();
+                current_height++;
             }
         }
         // TODO
@@ -674,7 +673,7 @@ public abstract class Wallet implements AutoCloseable
 //            BalanceChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public void rebuild()
+	public void rebuild()
     {
         synchronized (syncroot)
         {

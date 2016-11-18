@@ -38,7 +38,7 @@ public class IssueTransaction extends Transaction
 	{
         if (Arrays.stream(outputs).allMatch(p -> p.assetId.equals(Blockchain.ANTSHARE.hash()) || p.assetId.equals(Blockchain.ANTCOIN.hash())))
             return Fixed8.ZERO;
-        return Fixed8.fromLong(500);
+        return Fixed8.ZERO;//Fixed8.fromLong(500);
 	}
 	
 	@Override

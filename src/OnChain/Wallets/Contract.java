@@ -8,8 +8,12 @@ import java.util.stream.Stream;
 import org.bouncycastle.math.ec.ECPoint;
 
 import OnChain.UInt160;
-import OnChain.Core.Scripts.*;
-import OnChain.IO.*;
+import OnChain.Core.Scripts.Script;
+import OnChain.Core.Scripts.ScriptBuilder;
+import OnChain.Core.Scripts.ScriptOp;
+import OnChain.IO.BinaryReader;
+import OnChain.IO.BinaryWriter;
+import OnChain.IO.Serializable;
 
 /**
  *  所有合约的基类
@@ -85,7 +89,21 @@ public class Contract implements Serializable
         try (ScriptBuilder sb = new ScriptBuilder())
         {
 	        sb.push(BigInteger.valueOf(m));
-	        for (ECPoint publicKey : Arrays.stream(publicKeys).sorted().toArray(ECPoint[]::new))
+	        /*
+             *  ********************ChangeLog**************************
+             *  date:20161115
+             *  auth:tsh
+             *  desp:need to implement a comparator for ECPoint 
+             *  
+             */
+//	        for (ECPoint publicKey : Arrays.stream(publicKeys).sorted().toArray(ECPoint[]::new))
+	        ECPoint[] ecPoint = Arrays.stream(publicKeys).sorted((o1,o2) -> {
+	        	if(o1.getYCoord().toString().compareTo(o2.getYCoord().toString()) == 0) {
+	        		return o1.getYCoord().toString().compareTo(o2.getYCoord().toString());
+	        	}
+	        	return o1.getXCoord().toString().compareTo(o2.getXCoord().toString());
+	        }).toArray(ECPoint[]::new);
+	        for (ECPoint publicKey : ecPoint)
 	        {
 	            sb.push(publicKey.getEncoded(true));
 	        }

@@ -235,6 +235,27 @@ class WalletDataContext implements AutoCloseable
 		}
     }
     
+    public Transaction[] getTransaction() {
+    	try {
+    		ArrayList<Transaction> trans = new ArrayList<Transaction>();
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery("SELECT * FROM [Transaction]");
+			while (result.next())
+			{
+				Transaction tran = new Transaction();
+				tran.hash = result.getBytes("Hash");
+				tran.height = result.getInt("Height");
+				tran.rawData = result.getBytes("RawData");
+//				tran.time = result.getDate("Time");
+				tran.type = result.getByte("Type");
+				trans.add(tran);
+			}
+			return trans.toArray(new Transaction[trans.size()]);
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+    }
+    
     public void insert(Coin[] coins)
     {
     	if (coins.length == 0) return;

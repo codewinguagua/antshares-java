@@ -35,7 +35,15 @@ public class Coin implements ITrackable<TransactionInput>
         {
             state = value;
             ITrackable<TransactionInput> _this = this;
-            if (_this.getTrackState() == TrackState.None)
+            /*
+             *  ********************ChangeLog**************************
+             *  date:20161117
+             *  auth:tsh
+             *  desp:to enum, sometimes "==" return false/true
+             *  
+             */
+            if (TrackState.None.equals(_this.getTrackState()))
+//          if (_this.getTrackState() == TrackState.None)
                 _this.setTrackState(TrackState.Changed);
         }
     }
