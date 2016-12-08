@@ -40,6 +40,12 @@ public abstract class Wallet implements AutoCloseable
         return current_height;
     }
 
+    public void syncBlockChain() throws Exception {
+    	int block_height = Blockchain.current().height();
+    	while(current_height < block_height) {
+    		Thread.sleep(100);
+    	}
+    }
     private Wallet(String path, byte[] passwordKey, boolean create) throws BadPaddingException, IllegalBlockSizeException
     {
         this.path = path;

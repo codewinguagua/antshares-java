@@ -88,12 +88,13 @@ public abstract class Transaction extends Inventory
 	{
         try
         {
-            if (reader.readByte() != version)
+        	byte b = reader.readByte();
+            if (b != version)
                 throw new IOException();
             deserializeExclusiveData(reader);
 			attributes = reader.readSerializableArray(TransactionAttribute.class);
-	        if (Arrays.stream(attributes).map(p -> p.usage).distinct().count() != attributes.length)
-	            throw new IOException();
+//	        if (Arrays.stream(attributes).map(p -> p.usage).distinct().count() != attributes.length)
+//	            throw new IOException();
 	        inputs = reader.readSerializableArray(TransactionInput.class);
 	        TransactionInput[] inputs_all = getAllInputs().toArray(TransactionInput[]::new);
 	        for (int i = 1; i < inputs_all.length; i++)

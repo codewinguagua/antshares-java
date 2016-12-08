@@ -99,9 +99,9 @@ public class Contract implements Serializable
 //	        for (ECPoint publicKey : Arrays.stream(publicKeys).sorted().toArray(ECPoint[]::new))
 	        ECPoint[] ecPoint = Arrays.stream(publicKeys).sorted((o1,o2) -> {
 	        	if(o1.getYCoord().toString().compareTo(o2.getYCoord().toString()) == 0) {
-	        		return o1.getYCoord().toString().compareTo(o2.getYCoord().toString());
+	        		return o1.getXCoord().toString().compareTo(o2.getXCoord().toString());
 	        	}
-	        	return o1.getXCoord().toString().compareTo(o2.getXCoord().toString());
+	        	return o1.getYCoord().toString().compareTo(o2.getYCoord().toString());
 	        }).toArray(ECPoint[]::new);
 	        for (ECPoint publicKey : ecPoint)
 	        {
