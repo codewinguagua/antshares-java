@@ -10,7 +10,8 @@ class StackItem // TODO : IEquatable<StackItem>, IReadOnlyCollection<StackItem>
     private byte[] _bytes;
     private Serializable _object;
     private StackItem[] _array;
-    private byte[] _hash;
+    @SuppressWarnings("unused")
+	private byte[] _hash;
 
     public StackItem get(int index)
     {

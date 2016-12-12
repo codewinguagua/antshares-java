@@ -6,7 +6,7 @@ import java.util.*;
 import OnChain.UInt256;
 import OnChain.IO.Serializable;
 import OnChain.Network.Payloads.*;
-
+@SuppressWarnings("unused")
 public class RemoteNode // TODO : IDisposable
 {
     // TODO

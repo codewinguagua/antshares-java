@@ -204,6 +204,40 @@ public class UserWallet extends Wallet
         }
     }
 
+    public Map<OnChain.Core.Transaction,Integer> LoadTransations() {
+    	// 等待区块链数据同步至本地钱包
+    	try {
+    		syncBlockChain();
+    	} catch (Exception e) {
+    		throw new RuntimeException("syncBlockErr:"+e.getMessage(),e);
+    	}
+    	Map<OnChain.Core.Transaction, Integer> txMap = new HashMap<OnChain.Core.Transaction, Integer>();
+    	try (WalletDataContext ctx = new WalletDataContext(dbPath())) {
+    		Transaction[] trans  = ctx.getTransaction();
+        	for (int i = 0; i < trans.length; i++)
+        	{
+        		try {
+        			byte type = trans[i].type;
+        			if(TransactionType.RegisterTransaction.value() == type) {
+        				OnChain.Core.RegisterTransaction tx = Serializable.from(trans[i].rawData, OnChain.Core.RegisterTransaction.class);
+        				txMap.put(tx, trans[i].height);
+        			} else if(TransactionType.IssueTransaction.value() == type) {
+        				OnChain.Core.IssueTransaction tx = Serializable.from(trans[i].rawData, OnChain.Core.IssueTransaction.class);
+        				txMap.put(tx, trans[i].height);
+        			} else if(TransactionType.ContractTransaction.value() == type) {
+        				OnChain.Core.ContractTransaction tx = Serializable.from(trans[i].rawData, OnChain.Core.ContractTransaction.class);
+        				txMap.put(tx, trans[i].height);
+        			} else {
+        				System.err.println("Not support typeByte:"+type+",typeEnum:"+TransactionType.valueOf(type));
+        			}
+				} catch (Exception e) {
+					String errMsg = String.format("Failed to LoadTx,tx.type:%s,height:%s,errMsg:%s",trans[i].type,trans[i].height,e.getMessage());
+					throw new RuntimeException(errMsg, e);
+				}
+        	}
+        	return txMap;
+    	}
+    }
     //TODO
 //    public Iterable<TransactionInfo> LoadTransactions()
 //    {

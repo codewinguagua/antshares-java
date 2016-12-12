@@ -12,7 +12,7 @@ import OnChain.Core.Block;
 import OnChain.Core.Transaction;
 import OnChain.Core.TransactionInput;
 import OnChain.IO.Caching.RelayCache;
-
+@SuppressWarnings("unused")
 public class LocalNode // TODO : IDisposable
 {
     // TODO

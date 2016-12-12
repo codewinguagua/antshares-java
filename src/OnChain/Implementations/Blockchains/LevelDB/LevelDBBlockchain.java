@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import OnChain.*;
 import OnChain.Core.*;
 import OnChain.IO.Caching.*;
-
+@SuppressWarnings("unused")
 public class LevelDBBlockchain extends Blockchain
 {
 //    private DB db;
@@ -23,7 +23,8 @@ public class LevelDBBlockchain extends Blockchain
     private int current_block_height = 0;
     private int stored_header_count = 0;
     // TODO
-    private /*AutoResetEvent*/ Object new_block_event = new Object();//AutoResetEvent(false);
+   
+	private /*AutoResetEvent*/ Object new_block_event = new Object();//AutoResetEvent(false);
     private boolean disposed = false;
 
     @Override
