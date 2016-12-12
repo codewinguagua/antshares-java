@@ -1,6 +1,5 @@
 package OnChain.Core.Scripts;
-//package AntShares.Core.Scripts;
-//
+
 //import java.io.ByteArrayInputStream;
 //import java.io.IOException;
 //import java.util.Stack;
@@ -8,11 +7,11 @@ package OnChain.Core.Scripts;
 //import org.bouncycastle.math.ec.ECCurve;
 //import org.bouncycastle.math.ec.ECPoint;
 //
-//import AntShares.Core.Signable;
-//import AntShares.IO.BinaryReader;
-//
-//public class ScriptEngine
-//{
+//import OnChain.Core.Signable;
+//import OnChain.IO.BinaryReader;
+
+public class ScriptEngine
+{
 //    private static final int MAXSTEPS = 1200;
 //    private static final int ECDSA_PUBLIC_P256_MAGIC = 0x31534345;
 //
@@ -1130,4 +1129,4 @@ package OnChain.Core.Scripts;
 ////        }
 //        return false;
 //    }
-//}
+}

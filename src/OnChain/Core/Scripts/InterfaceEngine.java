@@ -1,6 +1,5 @@
 package OnChain.Core.Scripts;
-//package AntShares.Core.Scripts;
-//
+
 //import java.math.BigInteger;
 //import java.util.ArrayList;
 //import java.util.Arrays;
@@ -9,12 +8,12 @@ package OnChain.Core.Scripts;
 //
 //import org.bouncycastle.math.ec.ECPoint;
 //
-//import AntShares.UInt160;
-//import AntShares.UInt256;
-//import AntShares.Core.*;
-//
-//public class InterfaceEngine
-//{
+//import OnChain.UInt160;
+//import OnChain.UInt256;
+//import OnChain.Core.*;
+
+public class InterfaceEngine
+{
 //    private final Stack<StackItem> stack;
 //    private final Stack<StackItem> altStack;
 //    private final Signable signable;
@@ -27,7 +26,7 @@ package OnChain.Core.Scripts;
 //    }
 //
 //    // TODO
-//    public boolean ExecuteOp(InterfaceOp code) throws Exception
+//    public boolean ExecuteOp(InterfaceEngine code) throws Exception
 //    {
 //        switch (code)
 //        {
@@ -612,4 +611,4 @@ package OnChain.Core.Scripts;
 //            stack.push(new StackItem(r[0]));
 //        return true;
 //    }
-//}
+}
