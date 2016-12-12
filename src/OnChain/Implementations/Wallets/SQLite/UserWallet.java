@@ -204,7 +204,7 @@ public class UserWallet extends Wallet
         }
     }
 
-    public Map<OnChain.Core.Transaction,Integer> LoadTransations() {
+    public Map<OnChain.Core.Transaction,Integer> LoadTransactions() {
     	// 等待区块链数据同步至本地钱包
     	try {
     		syncBlockChain();
