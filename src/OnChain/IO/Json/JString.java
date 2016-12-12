@@ -20,7 +20,6 @@ public class JString extends JObject
     {
         Collection<String> falseValues = new HashSet<String>();
         falseValues.add("0");
-        falseValues.add("0");
         falseValues.add("f");
         falseValues.add("false");
         falseValues.add("n");
