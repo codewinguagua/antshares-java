@@ -205,12 +205,6 @@ public class UserWallet extends Wallet
     }
 
     public Map<OnChain.Core.Transaction,Integer> LoadTransactions() {
-    	// 等待区块链数据同步至本地钱包
-    	try {
-    		syncBlockChain();
-    	} catch (Exception e) {
-    		throw new RuntimeException("syncBlockErr:"+e.getMessage(),e);
-    	}
     	Map<OnChain.Core.Transaction, Integer> txMap = new HashMap<OnChain.Core.Transaction, Integer>();
     	try (WalletDataContext ctx = new WalletDataContext(dbPath())) {
     		Transaction[] trans  = ctx.getTransaction();
@@ -366,9 +360,19 @@ public class UserWallet extends Wallet
         //TransactionsChanged?.Invoke(this, GetTransactionInfo(new[] { tx_changed }));
     }
 
-    public static UserWallet open(String path, String password) throws BadPaddingException, IllegalBlockSizeException
+    public static UserWallet open(String path, String password) // throws BadPaddingException, IllegalBlockSizeException
     {
-        return new UserWallet(path, password, false);
+//      return new UserWallet(path, password, false);
+    	UserWallet wallet;
+    	try
+		{
+			wallet = new UserWallet(path, password, false);
+		}
+		catch (BadPaddingException | IllegalBlockSizeException ex)
+		{
+			throw new RuntimeException(ex);
+		}
+		return wallet;
     }
 
     @Override

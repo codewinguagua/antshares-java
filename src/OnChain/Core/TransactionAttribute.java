@@ -21,6 +21,7 @@ public class TransactionAttribute implements Serializable
             writer.writeByte((byte)data.length);
         else if (usage == TransactionAttributeUsage.Description || Byte.toUnsignedInt(usage.value()) >= Byte.toUnsignedInt(TransactionAttributeUsage.Remark.value()))
             writer.writeByte((byte)data.length);
+//            writer.writeVarInt(data.length);
         if (usage == TransactionAttributeUsage.ECDH02 || usage == TransactionAttributeUsage.ECDH03)
             writer.write(data, 1, 32);
         else
@@ -52,6 +53,7 @@ public class TransactionAttribute implements Serializable
         else if (usage == TransactionAttributeUsage.Description || Byte.toUnsignedInt(usage.value()) >= Byte.toUnsignedInt(TransactionAttributeUsage.Remark.value()))
         {
             data = reader.readVarBytes(255);
+//            data = reader.readVarBytes(65535);
         }
         else
         {

@@ -666,9 +666,12 @@ public abstract class Wallet implements AutoCloseable
                 }
 //                current_height++;
                 changeset = coins.getChangeSet(Coin[]::new);
-                Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
-                Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
-                Coin[] deleted = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Deleted).toArray(Coin[]::new);
+//                Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Added).toArray(Coin[]::new);
+//                Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Changed).toArray(Coin[]::new);
+//                Coin[] deleted = Arrays.stream(changeset).filter(p -> p.getTrackState() == TrackState.Deleted).toArray(Coin[]::new);
+                Coin[] added = Arrays.stream(changeset).filter(p -> p.getTrackState().equals(TrackState.Added)).toArray(Coin[]::new);
+                Coin[] changed = Arrays.stream(changeset).filter(p -> p.getTrackState().equals(TrackState.Changed)).toArray(Coin[]::new);
+                Coin[] deleted = Arrays.stream(changeset).filter(p -> p.getTrackState().equals(TrackState.Deleted)).toArray(Coin[]::new);
                 onProcessNewBlock(block, added, changed, deleted);
                 coins.commit();
                 current_height++;

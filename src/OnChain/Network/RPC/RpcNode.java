@@ -94,4 +94,33 @@ public class RpcNode
 		JObject result = rpc.call("sendrawtransaction", new JString(Helper.toHexString(tx.toArray())));
 		return result.asBoolean();
 	}
+	
+	/**
+	 * ChangLog: add rpcCallMethod, Auth:tsh, Date:2016-12-12
+	 */
+	public String getBlockHashByTxid(UInt256 txid) throws RpcException, IOException
+	{
+		JObject result = rpc.call("getrawtransaction", new JString(txid.toString()), new JNumber(1));
+		System.out.println("result:"+result);
+		String blockhash = result.get("blockhash").asString();
+		return blockhash;
+	}
+	public JObject getRawTransactionToJson(UInt256 txid) throws RpcException, IOException
+	{
+		JObject result = rpc.call("getrawtransaction", new JString(txid.toString()), new JNumber(1));
+		return result;
+	}
+	public JObject getBlockToJson(UInt256 hash) throws RpcException, IOException
+	{
+		JObject result = rpc.call("getblock", new JString(hash.toString()), new JNumber(1));
+		return result;
+	}
+	
+	public JObject getBlockToJson(int index) throws RpcException, IOException
+	{
+		JObject result = rpc.call("getblock", new JNumber(index), new JNumber(1));
+		return result;
+	}
+	
+	
 }

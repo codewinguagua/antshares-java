@@ -88,8 +88,7 @@ public abstract class Transaction extends Inventory
 	{
         try
         {
-        	byte b = reader.readByte();
-            if (b != version)
+            if (reader.readByte() != version)
                 throw new IOException();
             deserializeExclusiveData(reader);
 			attributes = reader.readSerializableArray(TransactionAttribute.class);
