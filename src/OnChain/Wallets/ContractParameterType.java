@@ -10,6 +10,10 @@ public enum ContractParameterType
      */
     Signature,
     /**
+     * 布尔
+     */
+    Boolean,
+    /**
      *  整数
      */
     Integer,

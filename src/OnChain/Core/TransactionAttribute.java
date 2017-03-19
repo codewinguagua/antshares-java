@@ -15,14 +15,11 @@ public class TransactionAttribute implements Serializable
 	public void serialize(BinaryWriter writer) throws IOException
 	{
         writer.writeByte(usage.value());
-        if (usage == TransactionAttributeUsage.Script)
-            writer.writeVarInt(data.length);
-        else if (usage == TransactionAttributeUsage.CertUrl || usage == TransactionAttributeUsage.DescriptionUrl)
+        if (usage == TransactionAttributeUsage.DescriptionUrl)
             writer.writeByte((byte)data.length);
         else if (usage == TransactionAttributeUsage.Description || Byte.toUnsignedInt(usage.value()) >= Byte.toUnsignedInt(TransactionAttributeUsage.Remark.value()))
-            writer.writeByte((byte)data.length);
-//            writer.writeVarInt(data.length);
-        if (usage == TransactionAttributeUsage.ECDH02 || usage == TransactionAttributeUsage.ECDH03)
+            writer.writeVarInt(data.length);
+        else if (usage == TransactionAttributeUsage.ECDH02 || usage == TransactionAttributeUsage.ECDH03)
             writer.write(data, 1, 32);
         else
             writer.write(data);
@@ -44,16 +41,15 @@ public class TransactionAttribute implements Serializable
         }
         else if (usage == TransactionAttributeUsage.Script)
         {
-            data = reader.readVarBytes(65535);
+            data = reader.readBytes(20);
         }
-        else if (usage == TransactionAttributeUsage.CertUrl || usage == TransactionAttributeUsage.DescriptionUrl)
+        else if (usage == TransactionAttributeUsage.DescriptionUrl)
         {
-            data = reader.readVarBytes(255);
+            data = reader.readBytes(reader.readByte());
         }
         else if (usage == TransactionAttributeUsage.Description || Byte.toUnsignedInt(usage.value()) >= Byte.toUnsignedInt(TransactionAttributeUsage.Remark.value()))
         {
-            data = reader.readVarBytes(255);
-//            data = reader.readVarBytes(65535);
+            data = reader.readVarBytes(65535);
         }
         else
         {

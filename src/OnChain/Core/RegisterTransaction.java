@@ -35,7 +35,7 @@ public class RegisterTransaction extends Transaction
 			assetType = AssetType.valueOf(reader.readByte());
 	        if (assetType == AssetType.CreditFlag || assetType == AssetType.DutyFlag)
 	            throw new IOException();
-	        name = reader.readVarString();
+	        name = reader.readVarString(1024);
 	        amount = reader.readSerializable(Fixed8.class);
 	        if (amount.equals(Fixed8.ZERO) || amount.compareTo(Fixed8.SATOSHI.negate()) < 0)
 	        	throw new IOException();
@@ -44,7 +44,8 @@ public class RegisterTransaction extends Transaction
 	        if (assetType == AssetType.Invoice && !amount.equals(Fixed8.SATOSHI.negate()))
 	            throw new IOException();
             precision = reader.readByte();
-            if (precision < 0 || precision > 8) throw new IOException();
+            if (precision < 0 || precision > 8) 
+            	throw new IOException();
 	        issuer = reader.readECPoint();
 	        admin = reader.readSerializable(UInt160.class);
 		}
@@ -97,6 +98,17 @@ public class RegisterTransaction extends Transaction
         hashes.add(Script.toScriptHash(Contract.createSignatureRedeemScript(issuer)));
         hashes.add(admin);
         return hashes.stream().sorted().toArray(UInt160[]::new);
+	}
+	
+	@Override
+	protected void onDeserialized() throws IOException {
+		super.onDeserialized();
+		if(assetType == AssetType.AntShare && !hash().equals(Blockchain.ANTSHARE.hash())) {
+			throw new IOException();
+		}
+		if(assetType == AssetType.AntCoin && !hash().equals(Blockchain.ANTCOIN.hash())) {
+			throw new IOException();
+		}
 	}
 	
 	@Override

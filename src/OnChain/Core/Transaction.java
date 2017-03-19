@@ -37,12 +37,62 @@ public abstract class Transaction extends Inventory
 		{
 			throw new RuntimeException(ex);
 		}
+		onDeserialized();
+	}
+	@Override
+	public void deserializeUnsigned(BinaryReader reader) throws IOException
+	{
+        if (type.value() != reader.readByte())
+            throw new IOException();
+        deserializeUnsignedWithoutType(reader);
+	}
+
+	private void deserializeUnsignedWithoutType(BinaryReader reader) throws IOException
+	{
+        try
+        {
+            if (reader.readByte() != version)
+                throw new IOException();
+            deserializeExclusiveData(reader);
+			attributes = reader.readSerializableArray(TransactionAttribute.class);
+	        inputs = reader.readSerializableArray(TransactionInput.class);
+	        TransactionInput[] inputs_all = getAllInputs().toArray(TransactionInput[]::new);
+	        for (int i = 1; i < inputs_all.length; i++)
+	            for (int j = 0; j < i; j++)
+	                if (inputs_all[i].prevHash == inputs_all[j].prevHash && inputs_all[i].prevIndex == inputs_all[j].prevIndex)
+	                    throw new IOException();
+	        outputs = reader.readSerializableArray(TransactionOutput.class);
+	        if (outputs.length > 65536) 
+	        	throw new IOException();
+	        if (Blockchain.ANTSHARE != null)
+	            for (TransactionOutput output : Arrays.stream(outputs).filter(p -> p.assetId.equals(Blockchain.ANTSHARE.hash())).toArray(TransactionOutput[]::new))
+	                if (output.value.getData() % 100000000 != 0)
+	                    throw new IOException();
+		}
+        catch (InstantiationException | IllegalAccessException ex)
+        {
+			throw new IOException(ex);
+		}
 	}
 	
 	protected void deserializeExclusiveData(BinaryReader reader) throws IOException
 	{
 	}
 	
+	/**
+	 * 通知子类反序列化完毕
+	 * @throws IOException
+	 */
+	protected void onDeserialized() throws IOException
+    {
+    }
+	
+	/**
+	 * 从指定的字节数组反序列化一笔交易
+	 * @param value
+	 * @return
+	 * @throws IOException
+	 */
 	public static Transaction deserializeFrom(byte[] value) throws IOException
 	{
 		return deserializeFrom(value, 0);
@@ -75,43 +125,6 @@ public abstract class Transaction extends Inventory
 			throw new IOException(ex);
 		}
 	}
-	
-	@Override
-	public void deserializeUnsigned(BinaryReader reader) throws IOException
-	{
-        if (type.value() != reader.readByte())
-            throw new IOException();
-        deserializeUnsignedWithoutType(reader);
-	}
-
-	private void deserializeUnsignedWithoutType(BinaryReader reader) throws IOException
-	{
-        try
-        {
-            if (reader.readByte() != version)
-                throw new IOException();
-            deserializeExclusiveData(reader);
-			attributes = reader.readSerializableArray(TransactionAttribute.class);
-//	        if (Arrays.stream(attributes).map(p -> p.usage).distinct().count() != attributes.length)
-//	            throw new IOException();
-	        inputs = reader.readSerializableArray(TransactionInput.class);
-	        TransactionInput[] inputs_all = getAllInputs().toArray(TransactionInput[]::new);
-	        for (int i = 1; i < inputs_all.length; i++)
-	            for (int j = 0; j < i; j++)
-	                if (inputs_all[i].prevHash == inputs_all[j].prevHash && inputs_all[i].prevIndex == inputs_all[j].prevIndex)
-	                    throw new IOException();
-	        outputs = reader.readSerializableArray(TransactionOutput.class);
-	        if (outputs.length > 65536) throw new IOException();
-	        if (Blockchain.ANTSHARE != null)
-	            for (TransactionOutput output : Arrays.stream(outputs).filter(p -> p.assetId.equals(Blockchain.ANTSHARE.hash())).toArray(TransactionOutput[]::new))
-	                if (output.value.getData() % 100000000 != 0)
-	                    throw new IOException();
-		}
-        catch (InstantiationException | IllegalAccessException ex)
-        {
-			throw new IOException(ex);
-		}
-	}
 
 	@Override
 	public boolean equals(Object obj)
@@ -128,6 +141,20 @@ public abstract class Transaction extends Inventory
 		return Arrays.stream(inputs);
 	}
 	
+	/**
+	 * 清单类型
+	 * @return
+	 */
+	@Override
+	public final InventoryType inventoryType()
+	{
+		return InventoryType.TX;
+	}
+	
+	/**
+	 * 获取需要校验的脚本散列值
+	 * @return
+	 */
 	@Override
 	public UInt160[] getScriptHashesForVerifying()
 	{
@@ -154,6 +181,10 @@ public abstract class Transaction extends Inventory
         return hashes.stream().sorted().toArray(UInt160[]::new);
 	}
 	
+	/**
+	 * 获取交易后各资产的变化量
+	 * @return
+	 */
     public TransactionResult[] getTransactionResults()
     {
         if (references() == null) return null;
@@ -169,12 +200,12 @@ public abstract class Transaction extends Inventory
 		return hash().hashCode();
 	}
 
-	@Override
-	public final InventoryType inventoryType()
-	{
-		return InventoryType.TX;
-	}
 	
+	
+	/**
+	 * 转换json对象
+	 * @return
+	 */
 	public JObject json()
 	{
         JObject json = new JObject();
@@ -188,11 +219,9 @@ public abstract class Transaction extends Inventory
         return json;
 	}
 	
-	protected void onDeserialized() throws IOException
-	{
-	}
-	
-    //[NonSerialized]
+    /**
+     * 交易输入所引用的上一交易输出
+     */
     private Map<TransactionInput, TransactionOutput> _references = null;
     public Map<TransactionInput, TransactionOutput> references()
 	{
@@ -228,10 +257,6 @@ public abstract class Transaction extends Inventory
         writer.writeSerializableArray(scripts);
 	}
 	
-	protected void serializeExclusiveData(BinaryWriter writer) throws IOException
-	{
-	}
-	
 	@Override
 	public void serializeUnsigned(BinaryWriter writer) throws IOException
 	{
@@ -243,11 +268,22 @@ public abstract class Transaction extends Inventory
         writer.writeSerializableArray(outputs);
 	}
 	
+	protected void serializeExclusiveData(BinaryWriter writer) throws IOException
+	{
+	}
+	
+	/**
+	 * 系统费用
+	 * @return
+	 */
 	public Fixed8 systemFee()
 	{
 		return Fixed8.ZERO;
 	}
 	
+	/**
+	 * 验证交易
+	 */
 	@Override
 	public boolean verify()
 	{

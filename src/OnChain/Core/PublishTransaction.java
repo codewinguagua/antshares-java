@@ -29,11 +29,11 @@ public class PublishTransaction extends Transaction {
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new IOException();
 		}
-		name = reader.readVarString();// 252
-		codeVersion = reader.readVarString(); // 252
-		author = reader.readVarString();// 252
-		email = reader.readVarString();// 252
-		description = reader.readVarString();// 65535
+		name = reader.readVarString(252);
+		codeVersion = reader.readVarString(252);
+		author = reader.readVarString(252);
+		email = reader.readVarString(252);
+		description = reader.readVarString(65535);
 	}
 	
 	@Override

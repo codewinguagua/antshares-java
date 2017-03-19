@@ -170,4 +170,8 @@ public class BinaryReader implements AutoCloseable
 	{
 		return new String(readVarBytes(), "UTF-8");
 	}
+	
+	public String readVarString(int max) throws IOException {
+		return new String(readVarBytes(max), "UTF-8");
+	}
 }
