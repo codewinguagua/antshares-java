@@ -25,6 +25,21 @@ public interface Signable extends Serializable
      */
     void deserializeUnsigned(BinaryReader reader) throws IOException;
     
+    /**
+     *  序列化未签名的数据
+     *  <param name="writer">存放序列化后的结果</param>
+     * @throws IOException 
+     */
+    void serializeUnsigned(BinaryWriter writer) throws IOException;
+
+    /**
+     *  获得需要校验的脚本Hash值
+     *  <returns>返回需要校验的脚本Hash值</returns>
+     */
+    UInt160[] getScriptHashesForVerifying();
+    
+    
+    
     default byte[] getHashData()
     {
     	try (ByteArrayOutputStream ms = new ByteArrayOutputStream())
@@ -41,19 +56,6 @@ public interface Signable extends Serializable
     		throw new UnsupportedOperationException(ex);
     	}
     }
-
-    /**
-     *  获得需要校验的脚本Hash值
-     *  <returns>返回需要校验的脚本Hash值</returns>
-     */
-    UInt160[] getScriptHashesForVerifying();
-    
-    /**
-     *  序列化未签名的数据
-     *  <param name="writer">存放序列化后的结果</param>
-     * @throws IOException 
-     */
-    void serializeUnsigned(BinaryWriter writer) throws IOException;
     
     default byte[] sign(Account account)
     {

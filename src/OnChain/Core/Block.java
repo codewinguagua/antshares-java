@@ -93,13 +93,19 @@ public class Block extends Inventory
 
     public static Fixed8 calculateNetFee(Stream<Transaction> transactions)
     {
-    	//TODO
-//        Transaction[] ts = transactions.Where(p => p.Type != TransactionType.MinerTransaction && p.Type != TransactionType.ClaimTransaction).ToArray();
-//        Fixed8 amount_in = ts.SelectMany(p => p.References.Values.Where(o => o.AssetId == Blockchain.AntCoin.Hash)).Sum(p => p.Value);
-//        Fixed8 amount_out = ts.SelectMany(p => p.Outputs.Where(o => o.AssetId == Blockchain.AntCoin.Hash)).Sum(p => p.Value);
-//        Fixed8 amount_sysfee = ts.Sum(p => p.SystemFee);
-//        return amount_in - amount_out - amount_sysfee;
-        return new Fixed8(0);
+    	Transaction[] ts = transactions.filter(p -> p.type != TransactionType.MinerTransaction && p.type != TransactionType.ClaimTransaction).toArray(Transaction[]::new);
+    	Fixed8[] in = Arrays.stream(ts).flatMap(
+    			p -> p.references().values().stream().filter(
+    					o -> o.assetId.equals(Blockchain.ANTCOIN.hash()))).map(p -> p.value).toArray(Fixed8[]::new);
+    	Fixed8 amount_in = Fixed8.sum(in);
+    	
+    	Fixed8[] out = Arrays.stream(ts).map(p -> p.outputs).flatMap(Arrays::stream).filter(p -> p.assetId.equals(Blockchain.ANTCOIN)).map(p -> p.value).toArray(Fixed8[]::new);
+    	Fixed8 amount_out = Fixed8.sum(out);
+    	
+    	Fixed8[] sysfee = Arrays.stream(ts).map(p -> p.systemFee()).toArray(Fixed8[]::new);
+    	Fixed8 amount_sysfee = Fixed8.sum(sysfee);
+    	
+    	return amount_in.subtract(amount_out).subtract(amount_sysfee);
     }
 
     /**

@@ -28,5 +28,23 @@ public enum InventoryType
     public int get() {
         return value;
     }
+    
+    
+    
+//    private byte vv;
+//    private InventoryType(byte vv) {
+//    	this.vv = vv;
+//    }
+//    public byte getValue() {
+//    	return vv;
+//    }
+    public static InventoryType from(byte b) {
+    	for(InventoryType t: InventoryType.values()) {
+    		if(t.get() == b) {
+    			return t;
+    		}
+    	}
+    	return null;
+    }
 }
 

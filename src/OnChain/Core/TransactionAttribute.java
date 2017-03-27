@@ -19,7 +19,7 @@ public class TransactionAttribute implements Serializable
             writer.writeByte((byte)data.length);
         else if (usage == TransactionAttributeUsage.Description || Byte.toUnsignedInt(usage.value()) >= Byte.toUnsignedInt(TransactionAttributeUsage.Remark.value()))
             writer.writeVarInt(data.length);
-        else if (usage == TransactionAttributeUsage.ECDH02 || usage == TransactionAttributeUsage.ECDH03)
+        if (usage == TransactionAttributeUsage.ECDH02 || usage == TransactionAttributeUsage.ECDH03)
             writer.write(data, 1, 32);
         else
             writer.write(data);

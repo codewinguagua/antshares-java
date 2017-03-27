@@ -12,37 +12,19 @@ import OnChain.Core.*;
 import OnChain.IO.Serializable;
 import OnChain.Wallets.*;
 
-public class UserWallet extends Wallet
-{
-    // TODO
-    //public event EventHandler<Iterable<TransactionInfo>> TransactionsChanged;
-
+public class UserWallet extends Wallet {
+	
     protected UserWallet(String path, String password, boolean create) throws BadPaddingException, IllegalBlockSizeException
     {
         super(path, password, create);
     }
 
-    @Override
-    public void addContract(OnChain.Wallets.Contract contract)
-    {
-        super.addContract(contract);
-        try (WalletDataContext ctx = new WalletDataContext(dbPath()))
-        {
-        	Contract entity = new Contract();
-        	entity.scriptHash = contract.scriptHash().toArray();
-        	entity.publicKeyHash = contract.publicKeyHash.toArray();
-        	entity.rawData = contract.toArray();
-        	ctx.insertOrUpdate(entity);
-        }
-    }
-
-    @Override
-    protected void buildDatabase()
-    {
-    	File file = new File(dbPath());
-    	file.delete();
-    }
-
+    /**
+     * 创建钱包
+     * @param path
+     * @param password
+     * @return
+     */
     public static UserWallet create(String path, String password)
     {
         UserWallet wallet;
@@ -57,14 +39,75 @@ public class UserWallet extends Wallet
         wallet.createAccount();
         return wallet;
     }
+    
+    /**
+     * 打开钱包
+     * @param path
+     * @param password
+     * @return
+     */
+    public static UserWallet open(String path, String password) // throws BadPaddingException, IllegalBlockSizeException
+    {
+    	UserWallet wallet;
+    	try
+		{
+			wallet = new UserWallet(path, password, false);
+		}
+		catch (BadPaddingException | IllegalBlockSizeException ex)
+		{
+			throw new RuntimeException(ex);
+		}
+		return wallet;
+    }
 
+    @Override
+    protected void buildDatabase()
+    {
+    	File file = new File(dbPath());
+    	file.delete();
+    }
+    
     @Override
     public OnChain.Wallets.Account createAccount(byte[] privateKey)
     {
+    	// account
     	OnChain.Wallets.Account account = super.createAccount(privateKey);
-        onCreateAccount(account);
-        addContract(OnChain.Wallets.Contract.createSignatureContract(account.publicKey));
+        addAccount(account);
+        // contract
+        OnChain.Wallets.Contract contract = OnChain.Wallets.Contract.createSignatureContract(account.publicKey);
+        addContract(contract);
         return account;
+    }
+    
+    @Override
+    public void addContract(OnChain.Wallets.Contract contract)
+    {
+        super.addContract(contract);
+        try (WalletDataContext ctx = new WalletDataContext(dbPath()))
+        {
+        	Contract entity = new Contract();
+        	entity.scriptHash = contract.scriptHash().toArray();
+        	entity.publicKeyHash = contract.publicKeyHash.toArray();
+        	entity.rawData = contract.toArray();
+        	ctx.insertOrUpdate(entity);
+        }
+    }
+    private void addAccount(OnChain.Wallets.Account account)
+    {
+        byte[] decryptedPrivateKey = new byte[96];
+        System.arraycopy(account.publicKey.getEncoded(false), 1, decryptedPrivateKey, 0, 64);
+        //using (account.Decrypt())
+        {
+        	System.arraycopy(account.privateKey, 0, decryptedPrivateKey, 64, 32);
+        }
+    	Account entity = new Account();
+    	entity.privateKeyEncrypted = encryptPrivateKey(decryptedPrivateKey);
+    	entity.publicKeyHash = account.publicKeyHash.toArray();
+        Arrays.fill(decryptedPrivateKey, (byte)0);
+        try (WalletDataContext ctx = new WalletDataContext(dbPath()))
+        {
+        	ctx.insertOrUpdate(entity);
+        }
     }
 
     @Override
@@ -222,7 +265,7 @@ public class UserWallet extends Wallet
         				OnChain.Core.ContractTransaction tx = Serializable.from(trans[i].rawData, OnChain.Core.ContractTransaction.class);
         				txMap.put(tx, trans[i].height);
         			} else {
-        				System.err.println("Not support typeByte:"+type+",typeEnum:"+TransactionType.valueOf(type));
+        				throw new RuntimeException("Not support typeByte:"+type+",typeEnum:"+TransactionType.valueOf(type));
         			}
 				} catch (Exception e) {
 					String errMsg = String.format("Failed to LoadTx,tx.type:%s,height:%s,errMsg:%s",trans[i].type,trans[i].height,e.getMessage());
@@ -288,24 +331,6 @@ public class UserWallet extends Wallet
     	}).toArray(Coin[]::new));
     }
 
-    private void onCreateAccount(OnChain.Wallets.Account account)
-    {
-        byte[] decryptedPrivateKey = new byte[96];
-        System.arraycopy(account.publicKey.getEncoded(false), 1, decryptedPrivateKey, 0, 64);
-        //using (account.Decrypt())
-        {
-        	System.arraycopy(account.privateKey, 0, decryptedPrivateKey, 64, 32);
-        }
-    	Account entity = new Account();
-    	entity.privateKeyEncrypted = encryptPrivateKey(decryptedPrivateKey);
-    	entity.publicKeyHash = account.publicKeyHash.toArray();
-        Arrays.fill(decryptedPrivateKey, (byte)0);
-        try (WalletDataContext ctx = new WalletDataContext(dbPath()))
-        {
-        	ctx.insertOrUpdate(entity);
-        }
-    }
-
     @Override
     protected void onProcessNewBlock(Block block, OnChain.Wallets.Coin[] added, OnChain.Wallets.Coin[] changed, OnChain.Wallets.Coin[] deleted)
     {
@@ -358,21 +383,6 @@ public class UserWallet extends Wallet
         }
         //TODO
         //TransactionsChanged?.Invoke(this, GetTransactionInfo(new[] { tx_changed }));
-    }
-
-    public static UserWallet open(String path, String password) // throws BadPaddingException, IllegalBlockSizeException
-    {
-//      return new UserWallet(path, password, false);
-    	UserWallet wallet;
-    	try
-		{
-			wallet = new UserWallet(path, password, false);
-		}
-		catch (BadPaddingException | IllegalBlockSizeException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-		return wallet;
     }
 
     @Override
