@@ -58,7 +58,7 @@ public class RpcNode
 	public UInt256 getBlockHash(int index) throws RpcException, IOException
 	{
 		JObject result = rpc.call("getblockhash", new JNumber(index));
-		return UInt256.parse(result.toString());
+		return UInt256.parse(result.asString());
 	}
 	
 	public int getConnectionCount() throws RpcException, IOException
